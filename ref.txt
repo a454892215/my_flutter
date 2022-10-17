@@ -1,0 +1,13 @@
+adb tcpip 5555
+adb -s 4fe65c99 tcpip 5555
+
+adb connect 192.168.1.100:40359
+adb connect 192.168.1.101:5555
+adb connect 192.168.1.102:5555
+adb connect 192.168.1.103:35971
+adb connect 192.168.1.105:37019
+完全无线adb试调 需要执行下面两条命令：
+adb pair 192.168.1.105:42577 345963 // 1. 验证配对
+adb connect 192.168.1.105:43909 // 2. 建立连接
+
+/data/data/应用包名/

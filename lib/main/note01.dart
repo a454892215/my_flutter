@@ -46,7 +46,9 @@ class StatelessWidget01 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {  Toast.toast("你好啊！");},
+      onTap: () {
+        Toast.toast("你好啊！");
+      },
       //监听更多方法可以在这里添加
       child: const Center(
         child: Text(
@@ -82,12 +84,12 @@ class _State01 extends State<StatefulWidget> {
 }
 
 ///05. Echo 使用示例， 构造函数传参示例, Center示例
-class EchoWidget extends StatelessWidget  {
+class EchoWidget extends StatelessWidget {
   const EchoWidget({
     Key? key,
     required this.text,
     this.backgroundColor = Colors.grey, //默认为灰色
-  }):super(key:key);
+  }) : super(key: key);
 
   final String text;
   final Color backgroundColor;
@@ -95,7 +97,8 @@ class EchoWidget extends StatelessWidget  {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container( // Container的大小会包裹内容大小
+      child: Container(
+        // Container的大小会包裹内容大小
         color: backgroundColor,
         child: Text(text),
       ),
@@ -103,8 +106,8 @@ class EchoWidget extends StatelessWidget  {
   }
 }
 
-///06. findAncestorWidgetOfExactType使用
-class ContextRoute extends StatelessWidget  {
+///06. findAncestorWidgetOfExactType 获取父节点的使用使用
+class ContextRoute extends StatelessWidget {
   const ContextRoute({super.key});
 
   @override
@@ -115,9 +118,10 @@ class ContextRoute extends StatelessWidget  {
       ),
       body: Builder(builder: (context) {
         // 在 widget 树中向上查找最近的父级`Scaffold`  widget
-        Scaffold? scaffold = context.findAncestorWidgetOfExactType<Scaffold>();
+        dynamic widget = context.findAncestorWidgetOfExactType<Scaffold>();
         // 直接返回 AppBar的title， 此处实际上是Text("Context测试")
-        Widget? title = (scaffold?.appBar as AppBar).title;
+       // Toast.toast(widget);
+        Widget? title = (widget.appBar as AppBar).title;
         return title!;
       }),
     );

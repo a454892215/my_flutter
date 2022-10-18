@@ -3,9 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 
 class Toast {
-  static void toast(String msg) {
+  static void toast(Object msg) {
     Fluttertoast.showToast(
-        msg: msg,
+        msg: msg.toString(),
         gravity: ToastGravity.CENTER,
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.red,

@@ -19,8 +19,10 @@ class MyApp2 extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: getWidget01(),
+    //  home: getWidget01(),
     //  home: const StatelessWidget01(),
+      home: const ContextRoute(),
+    //  home: const EchoWidget(text: "EchoWidget测试",),
     );
   }
 }

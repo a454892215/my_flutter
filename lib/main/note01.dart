@@ -15,6 +15,7 @@ void test(){
 * */
 
 import 'package:flutter/material.dart';
+import 'package:my_flutter_lib_3/util/LogUtil.dart';
 
 import '../util/toast_util.dart';
 
@@ -38,7 +39,7 @@ Widget getWidget01() {
   );
 }
 
-/// 02. 简单的 StatelessWidget示例
+/// 02. 简单的 StatelessWidget 示例， StatelessWidget需要重写Widget build(BuildContext context)函数
 class StatelessWidget01 extends StatelessWidget {
   const StatelessWidget01({super.key});
 
@@ -55,9 +56,14 @@ class StatelessWidget01 extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  StatelessElement createElement() {
+    return super.createElement();
+  }
 }
 
-/// 03. 简单的 StatefulWidget 示例： StatefulWidget需要配合 State 使用
+/// 03. 简单的 StatefulWidget 示例： StatefulWidget 需要重写createState()函数  返回State配合使用
 class StatefulWidget02 extends StatefulWidget {
   const StatefulWidget02({super.key});
 
@@ -72,5 +78,48 @@ class _State01 extends State<StatefulWidget> {
   @override
   Widget build(BuildContext context) {
     return const Text("简单的 State 示例!");
+  }
+}
+
+///05. Echo 使用示例， 构造函数传参示例, Center示例
+class EchoWidget extends StatelessWidget  {
+  const EchoWidget({
+    Key? key,
+    required this.text,
+    this.backgroundColor = Colors.grey, //默认为灰色
+  }):super(key:key);
+
+  final String text;
+  final Color backgroundColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container( // Container的大小会包裹内容大小
+        color: backgroundColor,
+        child: Text(text),
+      ),
+    );
+  }
+}
+
+///06. findAncestorWidgetOfExactType使用
+class ContextRoute extends StatelessWidget  {
+  const ContextRoute({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Context测试"),
+      ),
+      body: Builder(builder: (context) {
+        // 在 widget 树中向上查找最近的父级`Scaffold`  widget
+        Scaffold? scaffold = context.findAncestorWidgetOfExactType<Scaffold>();
+        // 直接返回 AppBar的title， 此处实际上是Text("Context测试")
+        Widget? title = (scaffold?.appBar as AppBar).title;
+        return title!;
+      }),
+    );
   }
 }

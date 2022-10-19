@@ -1,0 +1,4 @@
+1. 为了使用 debugPrint()  导入 import 'package:flutter/cupertino.dart'; 时候报：
+    1. bottom_tab_bar.dart:5:8: Error: Not found: 'dart:ui'import 'dart:ui' show ImageFilter;
+    解决搜索： 控制台执行： flutter clean && flutter pub get
+    猜测原因： debugPrint()需要在flutter环境下面运行， 单独的dart程序无法正常使用

@@ -1,25 +1,36 @@
-///
-///   final 可以开始不复值 只复值一次
-///   const定义常量, 不能再修改 否则报错
-const name = "note01"; //
+
+import 'package:my_flutter_lib_3/util/Log.dart';
+
+/// 1. 常量的定义
+///  01. final 定义常量(不能再修改 否则报错) 可以开始不赋值 后面只能赋值一次
+///  02. const 定义常量(不能再修改 否则报错)
+const name = "note01";
 
 void main() {
-  print("========note01=======：$name");
-  // 01. dart变量命名规则 不能以数字开头，不能是关键字 不能有空格等...
-  const age = 12; // var申明的变量 类型一单给定，不能换其他类型赋值
-
-  //02. 常用数据类型：int, double, bool ,String List Map
-  int i1 = 19;
-  double d2 = 19;
-  String s1 = "19";
-  bool b1 = false;
-  List ls = [10, 12];
-  Map map = {"a1": "a2", "b1": "b2"};
-  print("Ls: $ls  ${ls.length}");
-  print("map: $map  ${ls.length}");
-
-  // 03. 声明变量的三种方式： 01.dynamic  02.var  03.具体类型申明
+  /// 2. 声明变量的三种方式： 01.dynamic   02.var  03.具体类型申明
   dynamic dd1 = "a";
   var vv1 = "a";
   String ss1 = "a";
+
+  /// 3. 数字类型 num 子类：  1.整型int  2.浮点型double
+  ///  01. 使用 num 声明整型或者浮点型变量
+  num n1 = 3.5;
+
+  ///  02. 使用 int 声明整型变量
+  int i1 = 19;
+
+  /// 03. 使用 double 声明整型或者浮点型变量
+  double d2 = 19;
+
+  /// 4.String 类型： 1.使用单引号 也可以使用双引号赋值  2.字符串模板语法${}, 其中{}是单个变量{}可以省略
+  String str = 'abc';
+  String str2 = "abc";
+  String str3 = "123$str";
+  Log.d(str3);
+
+  /// 5.bool 类型： 只能赋值true或者false
+  bool b1 = true;
+  bool b2 = false;
+
+
 }

@@ -15,7 +15,7 @@ void test(){
 * */
 
 import 'package:flutter/material.dart';
-import 'package:my_flutter_lib_3/util/LogUtil.dart';
+import 'package:my_flutter_lib_3/util/Log.dart';
 
 import '../util/toast_util.dart';
 

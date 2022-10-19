@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_lib_3/util/LogUtil.dart';
+import 'package:my_flutter_lib_3/util/Log.dart';
 import 'package:my_flutter_lib_3/util/toast_util.dart';
 
 import 'main/note01.dart';
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
      Toast.toast("build=gaga");
-    LogUtil.d("==========build=================_counter:$_counter");
+    Log.d("==========build=================_counter:$_counter");
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_lib_3/pages/button_sample_page.dart';
 import 'package:my_flutter_lib_3/pages/err_page.dart';
 import 'package:my_flutter_lib_3/pages/page1.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';
@@ -31,14 +32,15 @@ Widget getMaterialApp(var title) {
       /// 2. ThemeData 是 MaterialDesign Widget种的主题数据， Material种的Widget需要遵循相应的设计规范
       /// 3. 次设计规范能自定义部分都在ThemeData, 故通过ThemeData来自定义Material主题样式
       /// 4. Theme.of方法可以获取当前的 ThemeData，MaterialDesign种有些样式不能自定义，比如导航栏高度
-      theme: getThemeDataConfig(),
+      theme: appThemeData,
 
       /// routes 路由配置：对象是Map<String, WidgetBuilder>
       routes: {
         // '/': (BuildContext context) => getHome(),
         '/page1': (BuildContext context) => const Page1(),
         '/page2': (BuildContext context) => const Page2(),
-        '/page3': (BuildContext context) => const Page3()
+        '/page3': (BuildContext context) => const Page3(),
+        '/ButtonSamplePage': (BuildContext context) => const ButtonSamplePage()
       },
 
       /// 配置404页面: 如果路由不存在则跳到该页面
@@ -55,44 +57,82 @@ Widget getMaterialApp(var title) {
       home: const Page1());
 }
 
-/// app Theme 配置
-ThemeData getThemeDataConfig() {
-  return ThemeData(
-    /// primarySwatch 用于导航栏和floatActionButton的背景色等
-    primarySwatch: Colors.blue,
+/// ============== Theme 配置 ===============
+ThemeData appThemeData = ThemeData(
+  /// primarySwatch 用于导航栏和floatActionButton的背景色等
+  primarySwatch: Colors.blue,
 
-    /// brightness 应用程序亮色或者暗色, 会调整导航栏和页面的背景色(如果不显示设置)
-    brightness: Brightness.light,
+  /// brightness 应用程序亮色或者暗色, 会调整导航栏和页面的背景色(如果不显示设置)
+  brightness: Brightness.light,
 
-    /// 配置主背景色
-    primaryColor: Colors.red,
+  /// 配置主背景色
+  primaryColor: Colors.red,
 
-    /// 设置 appBarTheme， 颜色如果没有指定取 primarySwatch
-    appBarTheme: getAppBarThemeConfig(),
+  /// 设置 appBarTheme， 颜色如果没有指定取 primarySwatch
+  appBarTheme: appBarTheme,
 
-    /// 设置 app 中所有icon 颜色样式
-    iconTheme: const IconThemeData(color: Colors.amber, size: 28, opacity: 0.86),
+  /// 设置 app 中所有icon 颜色样式
+  iconTheme: const IconThemeData(color: Colors.amber, size: 28, opacity: 0.86),
 
-    /// 设置 app 中所有icon 颜色样式: 如果appBarTheme 没有设置，默认取此， 与 primaryColor形成对比的图标主题
-    primaryIconTheme: const IconThemeData(color: Colors.orange, size: 28, opacity: 0.86),
-  );
-}
+  /// 设置 app 中所有icon 颜色样式: 如果appBarTheme 没有设置，默认取此， 与 primaryColor形成对比的图标主题
+  primaryIconTheme: const IconThemeData(color: Colors.orange, size: 28, opacity: 0.86),
 
-/// app AppBarTheme 配置
-AppBarTheme getAppBarThemeConfig() {
-  return const AppBarTheme(
+  ///  设置button 点击效果 为什么不生效？
+  highlightColor: Colors.transparent,
 
-      ///  配置app bar 图标颜色
-      color: Colors.amberAccent,
+  /// 为什么不生效？
+  splashColor: Colors.red,
 
-      /// 设置阴影显示
-      elevation: 20,
+  buttonTheme: buttonTheme,
 
-      /// 设置app bar 中的icon 颜色 大小, 不透明度
-      iconTheme: IconThemeData(color: Colors.black, size: 28, opacity: 0.86),
+  /// 设置button 的 theme
+  textButtonTheme: textButtonTheme,
+);
 
-      ///  配置app bar 右侧图标样式
-      actionsIconTheme: IconThemeData(color: Colors.deepPurple, size: 28, opacity: 0.86));
-}
+///  ============== AppBarTheme 配置 ===============
+AppBarTheme appBarTheme = const AppBarTheme(
+  ///  配置app bar 图标颜色
+  color: Colors.amberAccent,
+
+  /// 设置阴影显示
+  elevation: 20,
+
+  /// 设置app bar 中的icon 颜色 大小, 不透明度
+  iconTheme: IconThemeData(color: Colors.black, size: 28, opacity: 0.86),
+
+  ///  配置app bar 右侧图标样式
+  actionsIconTheme: IconThemeData(color: Colors.deepPurple, size: 28, opacity: 0.86),
+);
+
+/// ============== ButtonTheme 配置 ===============
+ButtonThemeData buttonTheme = const ButtonThemeData(
+  textTheme: ButtonTextTheme.normal,
+  // 无效？
+  minWidth: 188.0,
+  // 无效？
+  height: 136.0,
+
+  /// 点击高亮时候的颜色   --无效？
+  highlightColor: Colors.purple,
+
+  /// 不可以点击时候的颜色
+  disabledColor: Colors.grey,
+
+  buttonColor: Colors.green,
+  /// 无效 ？
+  splashColor: Colors.amberAccent,
+  /// 鼠标悬停颜色 无效 ？
+  hoverColor: Colors.amberAccent,
+  /// 获取焦点颜色 无效 ？
+  focusColor: Colors.black26,
+);
+
+/// ============== TextButtonTheme 配置 ===============
+TextButtonThemeData textButtonTheme = const TextButtonThemeData(
+  style: ButtonStyle(
+      //  backgroundColor: MaterialStateProperty.all(const Color.fromARGB(99, 152, 203, 82)),
+      splashFactory: NoSplash.splashFactory // 为什么无效？
+      ),
+);
 
 /// 5. MaterialApp种配置默认页面的三种方式，1.home  2.initialRoute(需要和routes配合使用)， 3. routes种的/

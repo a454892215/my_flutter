@@ -50,6 +50,12 @@ class Page1State extends State {
             ),
             TextButton(
               onPressed: () {
+                Navigator.of(context).pushNamed("/ButtonSamplePage");
+              },
+              child: const Text("按钮示例页面"),
+            ),
+            TextButton(
+              onPressed: () {
                 Navigator.of(context).pushNamed("/page999");
               },
               child: const Text("去页面999"),

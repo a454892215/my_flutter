@@ -4,6 +4,8 @@ import 'package:my_flutter_lib_3/pages/page1.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
+import 'navitator/observer.dart';
+
 //默认配置下： 只有此目录下文件名字为main的dart文件的main函数才能正常启动flutter material开发环境？
 void main() {
   runApp(const MyMaterialApp(title: "MaterialApp2"));
@@ -38,15 +40,21 @@ Widget getMaterialApp(var title) {
         '/page2': (BuildContext context) => const Page2(),
         '/page3': (BuildContext context) => const Page3()
       },
-      // 配置404页面
+      // 配置404页面: 如果路由不存在则跳到该页面
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(
             builder: (BuildContext context) => const ErrPage());
       },
+      // 配置页面离开和进入的监听
+      navigatorObservers: [
+        MyNavigatorObserver()
+      ],
       // 与 routes 中的 / 效果基本一致， 指定应用的第一个显示页面
       //   initialRoute: '/page1',
       // home 与 routes配置的 / 互斥 同时配置会抛异常
       home: const Page1());
 }
+
+
 
 /// 5. MaterialApp种配置默认页面的三种方式，1.home  2.initialRoute(需要和routes配合使用)， 3. routes种的/

@@ -39,6 +39,12 @@ class Page1State extends State {
               },
               child: const Text("去页面3"),
             ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamed("/page999");
+              },
+              child: const Text("去页面999"),
+            ),
           ],
         ));
   }

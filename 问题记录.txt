@@ -1,6 +1,17 @@
 1. 为了使用 debugPrint()  导入 import 'package:flutter/cupertino.dart'; 时候报：
     1. bottom_tab_bar.dart:5:8: Error: Not found: 'dart:ui'import 'dart:ui' show ImageFilter;
-    解决搜索： 控制台执行： flutter clean && flutter pub get
     猜测原因： debugPrint()需要在flutter环境下面运行， 单独的dart程序无法正常使用
 
 2. MaterialApp 下加入 debugShowCheckedModeBanner: false, // 加入这行代码,即可关闭'DEBUG'字样
+
+3. No MediaQuery widget ancestor found.
+   问题搜索解决：flutter 界面的根组件必须是MaterialApp
+
+4. 异常 Scaffold.of() called with a context that does not contain a Scaffold.
+   Scaffold.of(context).closeDrawer() 执行该句报错
+   错误原因：Scaffold.of()所需的context是Scaffold的，并不是 Widget build(BuildContext context)中的，这两个并不是一个。
+   解决：在 Scaffold 的body属性上使用 Builder 构建出一个Scaffold的 context， 使用该context传入Scaffold.of(context):
+        body: Builder(builder: (BuildContext context) {return buildBody(context);},),
+
+5. 侧滑菜单颜色设置为蓝色，发现菜单内的按钮没有显示：
+   原因： 按钮的文字颜色和侧滑菜单背景颜色一致，并且按钮背景接近透明，所以看不有按钮...

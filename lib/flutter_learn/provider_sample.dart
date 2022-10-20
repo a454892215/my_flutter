@@ -5,8 +5,10 @@ import '../util/Log.dart';
 
 /// provider使用示例
 ///   01. ChangeNotifier：模型类，状态发生改变时调用 notifyListeners()通知数据发生变化
-///   02. MultiProvider/ChangeNotifierProvider ：负责监听模型变化从而通知Consumer更新UI
+///   02. MultiProvider[ChangeNotifierProvider...] ：负责监听模型变化从而通知Consumer更新UI
 ///   03. Consumer：消费者类，收到通知重构UI, Consumer是 StatelessWidget子类
+///   04.技巧1：Consumer 放在 widget 树尽量低的位置上， 使重构的widget尽量少
+///   05.技巧2：Provider.of<CounterNotifier>(context, listen: false).clear(); 用来访问Notifier模型中不需要更新UI的函数
 main() {
   runApp(_MyApp());
 }
@@ -43,6 +45,8 @@ class _Page extends StatelessWidget {
         const Text('Counter', style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold, color: Colors.blue)),
         //02.  使用Consumer控件定义需要更新的Widget
         Consumer<CounterNotifier>(
+          ///notifier: 模型实例。通过该实例修改模型更新UI
+          ///child: 用于优化目的。如果 Consumer下面有一个庞大的子树，当模型发生改变的时候，该子树并不会改变，那么你就可以仅仅创建它一次，然后通过 builder获得该实例
           builder: (BuildContext context, notifier, Widget? child) {
             // child 返回null
             Log.d("==Consumer=builder====child:${child?.runtimeType}");
@@ -68,5 +72,10 @@ class CounterNotifier with ChangeNotifier {
   void increment() {
     count++;
     notifyListeners();
+  }
+
+  /// 不需要更新UI的函数
+  void clear(){
+    count = 0;
   }
 }

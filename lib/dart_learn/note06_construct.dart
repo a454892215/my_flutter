@@ -90,6 +90,7 @@ class St5 {
   }
 }
 
+
 main() {
   Log.d(St1(11, "sand"));
   Log.d(St2(111, "sandy"));
@@ -97,4 +98,5 @@ main() {
   Log.d(St3Sub.createInstance(111, "sandy"));
   Log.d(const St4(111, "sandy"));
   Log.d(St5(1112, "alen"));
+
 }

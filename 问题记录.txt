@@ -15,3 +15,8 @@
 
 5. 侧滑菜单颜色设置为蓝色，发现菜单内的按钮没有显示：
    原因： 按钮的文字颜色和侧滑菜单背景颜色一致，并且按钮背景接近透明，所以看不有按钮...
+
+
+6. Error: Assertion failed: file:///D:/fluterSdk/flutter/packages/flutter/lib/src/painting/text_painter.dart:975:12
+   描述： 做tab页面切换的时候包此log, 但是页面逻辑正常
+   解决：关闭浏览器程序， 重新启动后，正常了？

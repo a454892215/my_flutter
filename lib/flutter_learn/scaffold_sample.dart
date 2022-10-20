@@ -15,14 +15,16 @@ class _App extends StatelessWidget {
       title: "FloatActionSample",
       home: MultiProvider(
         providers: [ChangeNotifierProvider(create: (context) => SelectorNotifier())],
-        child: const ScaffoldSamplePage(),
+        child: const MainPage(),
       ),
     );
   }
 }
 
-class ScaffoldSamplePage extends StatelessWidget {
-  const ScaffoldSamplePage({super.key});
+List<Widget> mainPageList = [const MainPage1(), const MainPage2(), const MainPage3()];
+
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,84 +51,21 @@ class ScaffoldSamplePage extends StatelessWidget {
         color: Colors.yellow,
         width: 300,
       ),
-      body: Builder(
-        builder: (BuildContext context) {
-          return buildBody(context);
+      body: Consumer<SelectorNotifier>(
+        builder: (context, value, child) {
+          return mainPageList[value.curIndex];
         },
       ),
       bottomNavigationBar: buildBottomNavigationBar(context),
     );
   }
+}
 
-  Consumer<SelectorNotifier> buildBottomNavigationBar(BuildContext context) {
-    return Consumer<SelectorNotifier>(builder: (a, selectorNotifier, c) {
-      return BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "主页"),
-          BottomNavigationBarItem(icon: Icon(Icons.message), label: "信息"),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "设置")
-        ],
-        onTap: (pos){
-          Toast.show("pos:$pos");
-          selectorNotifier.setCurIndex(pos);
-        },
-        currentIndex: selectorNotifier.curIndex,
-        selectedLabelStyle: const TextStyle(color: Colors.blue),
-        unselectedLabelStyle: const TextStyle(color: Colors.grey),
-      );
-    });
-  }
+class MainPage1 extends StatelessWidget {
+  const MainPage1({super.key});
 
-  FloatingActionButton buildFloatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        Toast.show("FloatingActionButton Sample");
-      },
-      // 鼠标悬停提示
-      tooltip: "自带提示...",
-      backgroundColor: Colors.red,
-      // focusColor not work?
-      focusColor: Colors.green,
-      //ok
-      hoverColor: Colors.yellow,
-      splashColor: Colors.purple,
-      // child的图标颜色
-      foregroundColor: Colors.white,
-      elevation: 20,
-      child: const Icon(Icons.add),
-    );
-  }
-
-  Container buildLeftMenu(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      width: 400,
-      child: Center(
-        child: Column(
-          children: [
-            TextButton(
-              onPressed: () {
-                Toast.show("左边侧滑菜单内的按钮 被点击");
-                Log.d("左边侧滑菜单内的按钮 被点击");
-
-                /// 第1种关闭侧滑菜单方式:  Scaffold.of() called with a context that does not contain a Scaffold.
-                // Scaffold.of(context).closeDrawer();
-
-                /// 第2种关闭侧滑菜单方式, 默认点击侧滑菜单空白处，会关闭侧滑菜单，不会触发此回调...
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                "关闭菜单",
-                style: TextStyle(color: Colors.white),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Center buildBody(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Column(
         children: [
@@ -160,6 +99,102 @@ class ScaffoldSamplePage extends StatelessWidget {
       ),
     );
   }
+}
+
+class MainPage2 extends StatelessWidget {
+  const MainPage2({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.blue,
+      child: const Center(
+        child: Text("主页面2"),
+      ),
+    );
+  }
+}
+
+class MainPage3 extends StatelessWidget {
+  const MainPage3({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.yellow,
+      child: const Center(
+        child: Text("主页面2"),
+      ),
+    );
+  }
+}
+
+Consumer<SelectorNotifier> buildBottomNavigationBar(BuildContext context) {
+  return Consumer<SelectorNotifier>(builder: (context, selectorNotifier, child) {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: "主页"),
+        BottomNavigationBarItem(icon: Icon(Icons.message), label: "信息"),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "设置")
+      ],
+      onTap: (pos) {
+        Toast.show("pos:$pos");
+        selectorNotifier.setCurIndex(pos);
+      },
+      currentIndex: selectorNotifier.curIndex,
+      selectedLabelStyle: const TextStyle(color: Colors.blue),
+      unselectedLabelStyle: const TextStyle(color: Colors.grey),
+    );
+  });
+}
+
+FloatingActionButton buildFloatingActionButton() {
+  return FloatingActionButton(
+    onPressed: () {
+      Toast.show("FloatingActionButton Sample");
+    },
+    // 鼠标悬停提示
+    tooltip: "自带提示...",
+    backgroundColor: Colors.red,
+    // focusColor not work?
+    focusColor: Colors.green,
+    //ok
+    hoverColor: Colors.yellow,
+    splashColor: Colors.purple,
+    // child的图标颜色
+    foregroundColor: Colors.white,
+    elevation: 20,
+    child: const Icon(Icons.add),
+  );
+}
+
+Container buildLeftMenu(BuildContext context) {
+  return Container(
+    color: Colors.blue,
+    width: 400,
+    child: Center(
+      child: Column(
+        children: [
+          TextButton(
+            onPressed: () {
+              Toast.show("左边侧滑菜单内的按钮 被点击");
+              Log.d("左边侧滑菜单内的按钮 被点击");
+
+              /// 第1种关闭侧滑菜单方式:  Scaffold.of() called with a context that does not contain a Scaffold.
+              // Scaffold.of(context).closeDrawer();
+
+              /// 第2种关闭侧滑菜单方式, 默认点击侧滑菜单空白处，会关闭侧滑菜单，不会触发此回调...
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              "关闭菜单",
+              style: TextStyle(color: Colors.white),
+            ),
+          )
+        ],
+      ),
+    ),
+  );
 }
 
 class SelectorNotifier extends ChangeNotifier {

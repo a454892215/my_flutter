@@ -36,7 +36,7 @@ class _MyState extends State {
               onPressed: () {},
               style: ButtonStyle(
                 textStyle: _MyTextStyle(),
-                backgroundColor: _MyColorStyle(Colors.grey),
+                backgroundColor: _MyColorStyle(Colors.blue),
               ),
               child: const Text("按钮1"),
             ),
@@ -60,7 +60,7 @@ class _MyTextStyle extends MaterialStateProperty<TextStyle> {
 }
 
 class _MyColorStyle extends MaterialStateProperty<Color> {
-  _MyColorStyle(Color color);
+  _MyColorStyle(this.color);
 
   Color color = Colors.white70;
 

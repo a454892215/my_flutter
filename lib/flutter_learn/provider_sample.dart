@@ -1,40 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../util/Log.dart';
+
 /// provider使用示例
-///   01. ChangeNotifier：模型类，状态发生改变时调用 notifyListeners()
-///   02. ChangeNotifierProvider ：负责监听模型变化从而通知Consumer
-///   03. Consumer：消费者类，收到通知负责重构UI, StatelessWidget继承了StatelessWidget
+///   01. ChangeNotifier：模型类，状态发生改变时调用 notifyListeners()通知数据发生变化
+///   02. ChangeNotifierProvider ：负责监听模型变化从而通知Consumer更新UI
+///   03. Consumer：消费者类，收到通知重构UI, Consumer是 StatelessWidget子类
 main() {
   runApp(_MyApp());
 }
 
-class CounterNotifier with ChangeNotifier {
-  int count = 0;
-
-  void increment() {
-    count++;
-    _notification();
-  }
-
-  void decrement() {
-    count--;
-    _notification();
-  }
-
-  void _notification() {
-    notifyListeners();
-  }
-}
-
-class _MyApp extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() {
-    return _MyState();
-  }
-}
-
-class _MyState extends State {
+class _MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -65,6 +42,8 @@ class _Page extends StatelessWidget {
         //02.  使用Consumer控件定义需要更新的Widget
         Consumer<CounterNotifier>(
           builder: (BuildContext context, notifier, Widget? child) {
+            // child 返回null
+            Log.d("==Consumer=builder====child:${child?.runtimeType}");
             return Text(
               notifier.count.toString(),
               style: const TextStyle(fontSize: 38),
@@ -78,5 +57,14 @@ class _Page extends StatelessWidget {
             icon: const Icon(Icons.add)),
       ]),
     );
+  }
+}
+
+class CounterNotifier with ChangeNotifier {
+  int count = 0;
+
+  void increment() {
+    count++;
+    notifyListeners();
   }
 }

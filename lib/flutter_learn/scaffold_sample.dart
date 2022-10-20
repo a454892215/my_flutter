@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../util/Log.dart';
 import '../util/toast_util.dart';
@@ -10,53 +11,70 @@ main() {
 class _App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: "FloatActionSample",
-      home: FloatActionSamplePage(),
+      home: MultiProvider(
+        providers: [ChangeNotifierProvider(create: (context) => SelectorNotifier())],
+        child: const ScaffoldSamplePage(),
+      ),
     );
   }
 }
 
-class FloatActionSamplePage extends StatelessWidget {
-  const FloatActionSamplePage({super.key});
+class ScaffoldSamplePage extends StatelessWidget {
+  const ScaffoldSamplePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Float_Action_button_Sample"),
-        ),
+      appBar: AppBar(
+        title: const Text("Float_Action_button_Sample"),
+      ),
 
-        /// 配置 FloatingActionButton
-        floatingActionButton: buildFloatingActionButton(),
+      /// 配置 FloatingActionButton
+      floatingActionButton: buildFloatingActionButton(),
 
-        /// endFloat 默认值  centerFloat-底部中心, startFloat-底部右边， centerFloat-底部右边不悬浮...
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      /// endFloat 默认值  centerFloat-底部中心, startFloat-底部右边， centerFloat-底部右边不悬浮...
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 
-        /// 悬浮按钮底部按钮组
-        persistentFooterButtons: const [
-          Text("按钮"),
-          Text("按钮"),
+      /// 悬浮按钮底部按钮组
+      persistentFooterButtons: const [
+        Text("按钮"),
+        Text("按钮"),
+      ],
+
+      ///配置左侧侧滑页面
+      drawer: buildLeftMenu(context),
+      endDrawer: Container(
+        color: Colors.yellow,
+        width: 300,
+      ),
+      body: Builder(
+        builder: (BuildContext context) {
+          return buildBody(context);
+        },
+      ),
+      bottomNavigationBar: buildBottomNavigationBar(context),
+    );
+  }
+
+  Consumer<SelectorNotifier> buildBottomNavigationBar(BuildContext context) {
+    return Consumer<SelectorNotifier>(builder: (a, selectorNotifier, c) {
+      return BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "主页"),
+          BottomNavigationBarItem(icon: Icon(Icons.message), label: "信息"),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "设置")
         ],
-
-        ///配置左侧侧滑页面
-        drawer: buildLeftMenu(context),
-        endDrawer: Container(
-          color: Colors.yellow,
-          width: 300,
-        ),
-        body: Builder(
-          builder: (BuildContext context) {
-            return buildBody(context);
-          },
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "主页"),
-            BottomNavigationBarItem(icon: Icon(Icons.message), label: "信息"),
-            BottomNavigationBarItem(icon: Icon(Icons.settings), label: "设置")
-          ],
-        ));
+        onTap: (pos){
+          Toast.show("pos:$pos");
+          selectorNotifier.setCurIndex(pos);
+        },
+        currentIndex: selectorNotifier.curIndex,
+        selectedLabelStyle: const TextStyle(color: Colors.blue),
+        unselectedLabelStyle: const TextStyle(color: Colors.grey),
+      );
+    });
   }
 
   FloatingActionButton buildFloatingActionButton() {
@@ -141,5 +159,14 @@ class FloatActionSamplePage extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class SelectorNotifier extends ChangeNotifier {
+  int curIndex = 0;
+
+  void setCurIndex(int curIndex) {
+    this.curIndex = curIndex;
+    notifyListeners();
   }
 }

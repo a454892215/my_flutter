@@ -5,7 +5,7 @@ import '../util/Log.dart';
 
 /// provider使用示例
 ///   01. ChangeNotifier：模型类，状态发生改变时调用 notifyListeners()通知数据发生变化
-///   02. ChangeNotifierProvider ：负责监听模型变化从而通知Consumer更新UI
+///   02. MultiProvider/ChangeNotifierProvider ：负责监听模型变化从而通知Consumer更新UI
 ///   03. Consumer：消费者类，收到通知重构UI, Consumer是 StatelessWidget子类
 main() {
   runApp(_MyApp());
@@ -20,10 +20,12 @@ class _MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text("provider使用示例"),
         ),
-        // 01. ChangeNotifierProvider包过结点
-        body: ChangeNotifierProvider(
-          lazy: true,
-          create: (BuildContext context) => CounterNotifier(),
+        // 01. ChangeNotifierProvider 包裹需要使用Consumer更新UI的结点
+        body: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (context) => CounterNotifier()),
+          //  Provider(create: (context) => SomeOtherClass()),
+          ],
           child: const _Page(),
         ),
       ),
@@ -38,7 +40,7 @@ class _Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        const Text('Counter', style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold)),
+        const Text('Counter', style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold, color: Colors.blue)),
         //02.  使用Consumer控件定义需要更新的Widget
         Consumer<CounterNotifier>(
           builder: (BuildContext context, notifier, Widget? child) {

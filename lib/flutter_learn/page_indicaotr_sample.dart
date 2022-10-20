@@ -22,7 +22,7 @@ class _App extends StatelessWidget {
   }
 }
 
-List<Widget> mainPageList = [const MainPage1(), const MainPage2(), const MainPage3()];
+
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -62,7 +62,7 @@ class MainPage extends StatelessWidget {
       ),
       body: Consumer<SelectorNotifier>(
         builder: (context, value, child) {
-          return mainPageList[value.curIndex];
+          return const MainPage1();
         },
       ),
       bottomNavigationBar: buildBottomNavigationBar(context),

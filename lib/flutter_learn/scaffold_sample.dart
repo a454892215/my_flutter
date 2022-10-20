@@ -65,6 +65,7 @@ class MainPage extends StatelessWidget {
           return mainPageList[value.curIndex];
         },
       ),
+      bottomSheet: Container(height: 30, color: Colors.pink),
       bottomNavigationBar: buildBottomNavigationBar(context),
     );
   }

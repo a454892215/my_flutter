@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../util/Log.dart';
-import '../util/toast_util.dart';
 
 main() {
   runApp(_App());
@@ -22,17 +21,31 @@ class _App extends StatelessWidget {
   }
 }
 
-
-
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   const MainPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return MainPageState();
+  }
+}
+
+/// SingleTickerProviderStateMixin 只能被State的实现类with
+class MainPageState extends State with SingleTickerProviderStateMixin {
+  late TabController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    Log.d("======对象创建后之会被调用一次====");
+    controller = TabController(length: 4, vsync: this);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Float_Action_button_Sample"),
-        /// 配置状态栏底部区域控件
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(28), // 不占用AppBar的高度，自己扩展出新高度
           child: Container(
@@ -41,170 +54,34 @@ class MainPage extends StatelessWidget {
           ),
         ),
       ),
-
-      /// 配置 FloatingActionButton
-      floatingActionButton: buildFloatingActionButton(),
-
-      /// endFloat 默认值  centerFloat-底部中心, startFloat-底部右边， centerFloat-底部右边不悬浮...
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-
-      /// 悬浮按钮底部按钮组
-      persistentFooterButtons: const [
-        Text("按钮"),
-        Text("按钮"),
-      ],
-
-      ///配置左侧侧滑页面
-      drawer: buildLeftMenu(context),
-      endDrawer: Container(
-        color: Colors.yellow,
+      bottomSheet: Container(
+        height: 30,
+        color: Colors.white,
+        child: Center(
+          /// 显示indicator列表 items
+          child: TabPageSelector(
+            controller: controller,
+            indicatorSize: 7,
+            color: Colors.grey,
+            selectedColor: Colors.blue,
+            borderStyle: BorderStyle.none,
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(height: 80, color: Colors.pink),
+      drawer: Container(
         width: 300,
+        color: Colors.blue,
       ),
-      body: Consumer<SelectorNotifier>(
-        builder: (context, value, child) {
-          return const MainPage1();
-        },
-      ),
-      bottomNavigationBar: buildBottomNavigationBar(context),
-    );
-  }
-}
-
-class MainPage1 extends StatelessWidget {
-  const MainPage1({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          TextButton(
-            onPressed: () {
-              Toast.show("左边侧滑菜单开关 被点击");
-              Log.d("左边侧滑菜单开关 被点击");
-              if (Scaffold.of(context).isDrawerOpen) {
-                /// 第1种关闭侧滑菜单方式
-                // Scaffold.of(context).closeDrawer();
-                /// 第2种关闭侧滑菜单方式, 默认点击侧滑菜单空白处，会关闭侧滑菜单，不会触发此回调...
-                Navigator.of(context).pop();
-              } else {
-                Scaffold.of(context).openDrawer();
-              }
-            },
-            child: const Text("左边侧滑菜单开关"),
-          ),
-          TextButton(
-            onPressed: () {
-              if (Scaffold.of(context).isEndDrawerOpen) {
-                //Scaffold.of(context).closeEndDrawer();
-                Navigator.of(context).pop();
-              } else {
-                Scaffold.of(context).openEndDrawer();
-              }
-            },
-            child: const Text("右边侧滑菜单开关"),
-          ),
-        ],
+      //创建滑动页面并且和 TabPageSelector 关联
+      body: TabBarView(
+        controller: controller,
+        children: const [Text("页面1"), Text("页面2"), Text("页面3"), Text("页面4")],
       ),
     );
   }
 }
 
-class MainPage2 extends StatelessWidget {
-  const MainPage2({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      child: const Center(
-        child: Text("主页面2"),
-      ),
-    );
-  }
-}
-
-class MainPage3 extends StatelessWidget {
-  const MainPage3({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.yellow,
-      child: const Center(
-        child: Text("主页面2"),
-      ),
-    );
-  }
-}
-
-Consumer<SelectorNotifier> buildBottomNavigationBar(BuildContext context) {
-  return Consumer<SelectorNotifier>(builder: (context, selectorNotifier, child) {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "主页"),
-        BottomNavigationBarItem(icon: Icon(Icons.message), label: "信息"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "设置")
-      ],
-      onTap: (pos) {
-        Toast.show("pos:$pos");
-        selectorNotifier.setCurIndex(pos);
-      },
-      currentIndex: selectorNotifier.curIndex,
-      selectedLabelStyle: const TextStyle(color: Colors.blue),
-      unselectedLabelStyle: const TextStyle(color: Colors.grey),
-    );
-  });
-}
-
-FloatingActionButton buildFloatingActionButton() {
-  return FloatingActionButton(
-    onPressed: () {
-      Toast.show("FloatingActionButton Sample");
-    },
-    // 鼠标悬停提示
-    tooltip: "自带提示...",
-    backgroundColor: Colors.red,
-    // focusColor not work?
-    focusColor: Colors.green,
-    //ok
-    hoverColor: Colors.yellow,
-    splashColor: Colors.purple,
-    // child的图标颜色
-    foregroundColor: Colors.white,
-    elevation: 20,
-    child: const Icon(Icons.add),
-  );
-}
-
-Container buildLeftMenu(BuildContext context) {
-  return Container(
-    color: Colors.blue,
-    width: 400,
-    child: Center(
-      child: Column(
-        children: [
-          TextButton(
-            onPressed: () {
-              Toast.show("左边侧滑菜单内的按钮 被点击");
-              Log.d("左边侧滑菜单内的按钮 被点击");
-
-              /// 第1种关闭侧滑菜单方式:  Scaffold.of() called with a context that does not contain a Scaffold.
-              // Scaffold.of(context).closeDrawer();
-
-              /// 第2种关闭侧滑菜单方式, 默认点击侧滑菜单空白处，会关闭侧滑菜单，不会触发此回调...
-              Navigator.of(context).pop();
-            },
-            child: const Text(
-              "关闭菜单",
-              style: TextStyle(color: Colors.white),
-            ),
-          )
-        ],
-      ),
-    ),
-  );
-}
 
 class SelectorNotifier extends ChangeNotifier {
   int curIndex = 0;

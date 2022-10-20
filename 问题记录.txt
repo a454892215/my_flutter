@@ -20,3 +20,9 @@
 6. Error: Assertion failed: file:///D:/fluterSdk/flutter/packages/flutter/lib/src/painting/text_painter.dart:975:12
    描述： 做tab页面切换的时候包此log, 但是页面逻辑正常
    解决：关闭浏览器程序， 重新启动后，正常了？
+
+7. MainPageState is a SingleTickerProviderStateMixin but multiple tickers were created.
+   A SingleTickerProviderStateMixin can only be used as a TickerProvider once.
+   分析： controller: TabController(length: 4, vsync: this), 直接在属性中创建TabController传入，vsync: this,
+             导致在build(BuildContext context)函数再次调用widget重构后，vsync被2次使用到新的TabController对象，所以报错
+   解决： 把 TabController(length: 4, vsync: this)提成成员变量，只创建一次，因为使用到this,故可以在 void initState()中创建TabController对象

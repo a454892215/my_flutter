@@ -10,26 +10,33 @@ import '../util/Log.dart';
 ///   04.技巧1：Consumer 放在 widget 树尽量低的位置上， 使重构的widget尽量少
 ///   05.技巧2：Provider.of<CounterNotifier>(context, listen: false).clear(); 用来访问Notifier模型中不需要更新UI的函数
 main() {
-  runApp(_MyApp());
+  runApp(_getMaterialApp());
 }
 
-class _MyApp extends StatelessWidget {
+MaterialApp _getMaterialApp() {
+  return const MaterialApp(
+    title: "provider使用示例",
+    home: ProviderSamplePage(),
+  );
+}
+
+class ProviderSamplePage extends StatelessWidget {
+  const ProviderSamplePage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "provider使用示例",
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("provider使用示例"),
-        ),
-        /// 01. ChangeNotifierProvider 包裹需要使用Consumer更新UI的结点
-        body: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (context) => CounterNotifier()),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("provider使用示例"),
+      ),
+
+      /// 01. ChangeNotifierProvider 包裹需要使用Consumer更新UI的结点
+      body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => CounterNotifier()),
           //  Provider(create: (context) => SomeOtherClass()),
-          ],
-          child: const _Page(),
-        ),
+        ],
+        child: const _Page(),
       ),
     );
   }
@@ -43,6 +50,7 @@ class _Page extends StatelessWidget {
     return Center(
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         const Text('Counter', style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold, color: Colors.blue)),
+
         /// 02.  使用Consumer控件定义需要更新的Widget
         Consumer<CounterNotifier>(
           ///notifier: 模型实例。通过该实例修改模型更新UI
@@ -57,6 +65,7 @@ class _Page extends StatelessWidget {
           },
         ),
         TextButton.icon(
+
             /// 03. 调用 BuildContext 对象的read函数，传入CounterNotifier泛型。调用Notifier目标函数更改数据，触发更新
             onPressed: () => context.read<CounterNotifier>().increment(),
             label: const Text('increment'),
@@ -75,7 +84,7 @@ class CounterNotifier with ChangeNotifier {
   }
 
   /// 不需要更新UI的函数
-  void clear(){
+  void clear() {
     count = 0;
   }
 }

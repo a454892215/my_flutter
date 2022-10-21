@@ -6,6 +6,7 @@ import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
 import 'flutter_learn/page_indicaotr_sample.dart';
+import 'flutter_learn/provider_sample.dart';
 import 'flutter_learn/scaffold_sample.dart';
 import 'navigator/observer.dart';
 
@@ -45,6 +46,7 @@ Widget getMaterialApp(var title) {
       '/ButtonSamplePage': (BuildContext context) => const ButtonSamplePage(),
       '/TabIndicatorPageSample': (BuildContext context) => const TabIndicatorPageSample(),
       '/ScaffoldPageSample': (BuildContext context) => const ScaffoldPageSample(),
+      '/ProviderSamplePage': (BuildContext context) => const ProviderSamplePage(),
     },
 
     /// 配置404页面: 如果路由不存在则跳到该页面

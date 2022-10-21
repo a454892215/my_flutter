@@ -37,6 +37,7 @@ class Page1State extends State {
           RouterButton(params: ["/ButtonSamplePage", "按钮示例页面"]),
           RouterButton(params: ["/TabIndicatorPageSample", "去-TabIndicatorPageSample-页面"]),
           RouterButton(params: ["/ScaffoldPageSample", "去-ScaffoldPageSample-页面"]),
+          RouterButton(params: ["/ProviderSamplePage", "去-ProviderSamplePage-页面"]),
           RouterButton(params: ["/page999", "去404页面"]),
         ],
       )),

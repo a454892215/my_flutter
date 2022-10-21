@@ -81,9 +81,11 @@ class MainScaffoldPageState extends State with SingleTickerProviderStateMixin {
   }
 
   PreferredSize _buildBottomPreferredSize() {
+    const double tabHeight = 42;
     return PreferredSize(
-      preferredSize: const Size.fromHeight(34), // 不占用AppBar的高度，自己扩展出新高度
+      preferredSize: const Size.fromHeight(tabHeight), // 不占用AppBar的高度，自己扩展出新高度
       child: Container(
+        height: tabHeight,
         color: const Color.fromARGB(255, 252, 189, 35),
         child: TabBar(
           tabs: const [

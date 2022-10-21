@@ -44,8 +44,8 @@ Widget getMaterialApp(var title) {
       '/page2': (BuildContext context) => const Page2(),
       '/page3': (BuildContext context) => const Page3(),
       '/ButtonSamplePage': (BuildContext context) => const ButtonSamplePage(),
-      '/TabIndicatorPageSample': (BuildContext context) => const TabIndicatorPageSample(),
-      '/ScaffoldPageSample': (BuildContext context) => const ScaffoldPageSample(),
+      '/TabIndicatorSamplePage': (BuildContext context) => const TabIndicatorSamplePage(),
+      '/ScaffoldSamplePage': (BuildContext context) => const ScaffoldSamplePage(),
       '/ProviderSamplePage': (BuildContext context) => const ProviderSamplePage(),
     },
 

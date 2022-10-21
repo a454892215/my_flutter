@@ -10,14 +10,14 @@ class _App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Tab_Page_Selector_Sample",
-      home: TabIndicatorPageSample(),
+      title: "TabIndicatorSamplePage",
+      home: TabIndicatorSamplePage(),
     );
   }
 }
 
-class TabIndicatorPageSample extends StatefulWidget {
-  const TabIndicatorPageSample({super.key});
+class TabIndicatorSamplePage extends StatefulWidget {
+  const TabIndicatorSamplePage({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -29,7 +29,7 @@ class TabIndicatorPageSample extends StatefulWidget {
 class MainScaffoldPageState extends State with SingleTickerProviderStateMixin {
   late TabController controller;
 
-  ///==对象创建后之会被调用一次==
+  //==对象创建后之会被调用一次==
   @override
   void initState() {
     super.initState();
@@ -42,7 +42,7 @@ class MainScaffoldPageState extends State with SingleTickerProviderStateMixin {
       providers: [ChangeNotifierProvider(create: (context) => SelectorNotifier())],
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Tab_Page_Selector_Sample"),
+          title: const Text("TabIndicatorSamplePage"),
           leading: IconButton(
             onPressed: () => Navigator.of(context).pop(),
             icon: const Icon(
@@ -54,7 +54,7 @@ class MainScaffoldPageState extends State with SingleTickerProviderStateMixin {
         ),
         bottomSheet: _buildBottomSheet(),
         bottomNavigationBar: Container(height: 80, color: Colors.pink),
-        //创建滑动页面并且和 TabPageSelector 关联
+        /// 1. 创建TabBarView 滑动页面并且和 TabPageSelector, TabBar 关联
         body: TabBarView(
           controller: controller,
           children: const [Text("页面1"), Text("页面2"), Text("页面3"), Text("页面4")],
@@ -68,7 +68,7 @@ class MainScaffoldPageState extends State with SingleTickerProviderStateMixin {
       height: 30,
       color: Colors.white,
       child: Center(
-        /// 显示indicator列表 items
+        /// 2，设置 圆点 indicators
         child: TabPageSelector(
           controller: controller,
           indicatorSize: 7,
@@ -87,6 +87,8 @@ class MainScaffoldPageState extends State with SingleTickerProviderStateMixin {
       child: Container(
         height: tabHeight,
         color: const Color.fromARGB(255, 252, 189, 35),
+
+        /// 3. 设置 文字和和下横条 indicators
         child: TabBar(
           tabs: const [
             Text("tab-1"),
@@ -98,7 +100,7 @@ class MainScaffoldPageState extends State with SingleTickerProviderStateMixin {
           // indicatorPadding: const EdgeInsets.fromLTRB(36, 0, 36, 0),
           indicatorWeight: 2,
           // indicator线的高度
-          /// 设置indicator宽度 label：文字等宽， tab：等分宽度
+          // 设置indicator宽度 label：文字等宽， tab：等分宽度
           indicatorSize: TabBarIndicatorSize.tab,
           //选中的样式
           labelStyle: const TextStyle(fontSize: 20, color: Colors.white),

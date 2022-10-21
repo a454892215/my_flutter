@@ -13,16 +13,16 @@ class _App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "ScaffoldPageSample",
-      home: ScaffoldPageSample(),
+      title: "ScaffoldSamplePage",
+      home: ScaffoldSamplePage(),
     );
   }
 }
 
 List<Widget> mainPageList = [const MainPage1(), const MainPage2(), const MainPage3()];
 
-class ScaffoldPageSample extends StatelessWidget {
-  const ScaffoldPageSample({super.key});
+class ScaffoldSamplePage extends StatelessWidget {
+  const ScaffoldSamplePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class ScaffoldPageSample extends StatelessWidget {
       providers: [ChangeNotifierProvider(create: (context) => _SelectorNotifier())],
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("ScaffoldPageSample"),
+          title: const Text("ScaffoldSamplePage"),
 
           /// 配置状态栏底部区域控件
           bottom: PreferredSize(

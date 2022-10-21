@@ -26,3 +26,9 @@
    分析： controller: TabController(length: 4, vsync: this), 直接在属性中创建TabController传入，vsync: this,
              导致在build(BuildContext context)函数再次调用widget重构后，vsync被2次使用到新的TabController对象，所以报错
    解决： 把 TabController(length: 4, vsync: this)提成成员变量，只创建一次，因为使用到this,故可以在 void initState()中创建TabController对象
+
+8. FilteringTextInputFormatter后在IOS输入中文出现问题, 假如输入“摸鱼”，开始打字，mo是正常的，当想打yu时候，已经输入的mo会被顶掉。
+   单个字可以输入，多个字连续输入就会有问题。:原因是因为，IOS默认输入法在输入汉字时候，每个拼音之间会分词
+   原因：如果输入“摸鱼”，在使用拼音打字时候，输入框会显示“mo yu”正是中间的这个空格，由于被FilteringTextInputFormatter过滤掉了，导致了问题
+        将这个字符加上即可 : FilteringTextInputFormatter.allow(RegExp("[-_\u4E00-\u9FA5a-zA-Z0-96/MSP]")).
+

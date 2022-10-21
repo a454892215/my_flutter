@@ -8,6 +8,7 @@ import 'package:my_flutter_lib_3/pages/page3.dart';
 import 'flutter_learn/page_indicaotr_sample.dart';
 import 'flutter_learn/provider_sample.dart';
 import 'flutter_learn/scaffold_sample.dart';
+import 'flutter_learn/text_sample.dart';
 import 'navigator/observer.dart';
 
 //默认配置下： 只有此目录下文件名字为main的dart文件的main函数才能正常启动flutter material开发环境？
@@ -47,6 +48,7 @@ Widget getMaterialApp(var title) {
       '/TabIndicatorSamplePage': (BuildContext context) => const TabIndicatorSamplePage(),
       '/ScaffoldSamplePage': (BuildContext context) => const ScaffoldSamplePage(),
       '/ProviderSamplePage': (BuildContext context) => const ProviderSamplePage(),
+      '/TextSamplePage': (BuildContext context) => const TextSamplePage(),
     },
 
     /// 配置404页面: 如果路由不存在则跳到该页面

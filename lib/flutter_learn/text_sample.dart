@@ -1,8 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:my_flutter_lib_3/util/toast_util.dart';
 
 /// 1. 设置控件宽高使用 使用：SizedBox()
 /// 2. 设置控件背景颜色  使用：Container()
 /// 3. Text 常见属性用法
+/// 4. const Text.rich 用法示例
 class TextSamplePage extends StatefulWidget {
   const TextSamplePage({super.key});
 
@@ -35,6 +38,11 @@ class TextSamplePageState extends State {
               height: 10,
             ),
             buildSizedBox3(),
+            const SizedBox(
+              width: 0,
+              height: 10,
+            ),
+            buildSizedBox4(),
           ],
         ),
       ),
@@ -126,6 +134,50 @@ class TextSamplePageState extends State {
           maxLines: 3,
           style: TextStyle(backgroundColor: Colors.blue),
         ),
+      ),
+    );
+  }
+
+  SizedBox buildSizedBox4() {
+    return SizedBox(
+      width: 120,
+      height: 180,
+      child: Container(
+        color: const Color.fromARGB(255, 119, 119, 119),
+        child:  Text.rich(TextSpan(
+          text: "我是TextSpan1 ",
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+          ),
+          children: [
+            TextSpan(
+              text: "我是TextSpan2 ",
+              style: const TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+              ),
+              // 设置点击事件
+              recognizer: TapGestureRecognizer()..onTap=(){
+                 Toast.show("我是TextSpan2 ");
+              },
+            ),
+            const TextSpan(
+              text: "我是TextSpan3 ",
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 12,
+              ),
+            ),
+            const TextSpan(
+              text: "我是TextSpan4 ",
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        )),
       ),
     );
   }

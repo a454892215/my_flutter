@@ -16,30 +16,9 @@ class Page3State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("页面三"),
+          title: const Text("页面3"),
         ),
-        backgroundColor: const Color.fromARGB(255, 195, 239, 122),
-        body: Row(
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/page1");
-              },
-              child: const Text("去首页"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/page2");
-              },
-              child: const Text("去页面2"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/page3");
-              },
-              child: const Text("去页面3"),
-            ),
-          ],
-        ));
+        backgroundColor: const Color.fromARGB(222, 255, 109, 109),
+        body: const Center(child: Text("页面3")));
   }
 }

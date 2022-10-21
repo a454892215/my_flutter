@@ -19,27 +19,6 @@ class Page2State extends State {
           title: const Text("页面二"),
         ),
         backgroundColor: const Color.fromARGB(222, 255, 109, 109),
-        body: Row(
-          children: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/page1");
-              },
-              child: const Text("去首页"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/page2");
-              },
-              child: const Text("去页面2"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pushNamed("/page3");
-              },
-              child: const Text("去页面3"),
-            ),
-          ],
-        ));
+        body: const Center(child: Text("页面二")));
   }
 }

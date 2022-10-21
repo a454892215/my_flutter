@@ -6,6 +6,7 @@ import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
 import 'flutter_learn/page_indicaotr_sample.dart';
+import 'flutter_learn/scaffold_sample.dart';
 import 'navigator/observer.dart';
 
 //默认配置下： 只有此目录下文件名字为main的dart文件的main函数才能正常启动flutter material开发环境？
@@ -25,6 +26,7 @@ class MyMaterialApp extends StatelessWidget {
 
 Widget getMaterialApp(var title) {
   return MaterialApp(
+    debugShowCheckedModeBanner: false,
     /// title 只对Android生效，ios种，任务视图名称取的是 Info.pList 文件中的CFBundleDisplayName或CFBundleName
     title: title,
 
@@ -42,6 +44,7 @@ Widget getMaterialApp(var title) {
       '/page3': (BuildContext context) => const Page3(),
       '/ButtonSamplePage': (BuildContext context) => const ButtonSamplePage(),
       '/TabIndicatorPageSample': (BuildContext context) => const TabIndicatorPageSample(),
+      '/ScaffoldPageSample': (BuildContext context) => const ScaffoldPageSample(),
     },
 
     /// 配置404页面: 如果路由不存在则跳到该页面
@@ -79,11 +82,10 @@ ThemeData appThemeData = ThemeData(
   /// 设置 app 中所有icon 颜色样式: 如果appBarTheme 没有设置，默认取此， 与 primaryColor形成对比的图标主题
   primaryIconTheme: const IconThemeData(color: Colors.orange, size: 28, opacity: 0.86),
 
-  ///  设置button 点击效果 为什么不生效？
-  highlightColor: Colors.transparent,
+  ///  设置button 点击效果
+ // highlightColor: Colors.transparent,
 
-  /// 为什么不生效？
-  splashColor: Colors.red,
+ //  splashColor: Colors.red,
 
   buttonTheme: buttonTheme,
 
@@ -94,25 +96,21 @@ ThemeData appThemeData = ThemeData(
 ///  ============== AppBarTheme 配置 ===============
 AppBarTheme appBarTheme = const AppBarTheme(
   ///  配置app bar 图标颜色
-  color: Colors.amberAccent,
+  color: Color.fromARGB(255, 168, 225, 255),
 
   /// 设置阴影显示
   elevation: 20,
 
   /// 设置app bar 中的icon 颜色 大小, 不透明度
-  iconTheme: IconThemeData(color: Colors.black, size: 28, opacity: 0.86),
+  iconTheme: IconThemeData(color: Color.fromARGB(222, 255, 255, 255), size: 28, opacity: 1),
 
   ///  配置app bar 右侧图标样式
-  actionsIconTheme: IconThemeData(color: Colors.deepPurple, size: 28, opacity: 0.86),
+  actionsIconTheme: IconThemeData(color: Colors.white, size: 28, opacity: 1),
 );
 
 /// ============== ButtonTheme 配置 ===============
 ButtonThemeData buttonTheme = const ButtonThemeData(
   textTheme: ButtonTextTheme.normal,
-  // 无效？
-  minWidth: 188.0,
-  // 无效？
-  height: 136.0,
 
   /// 点击高亮时候的颜色   --无效？
   highlightColor: Colors.purple,

@@ -11,62 +11,64 @@ main() {
 class _App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "FloatActionSample",
-      home: MultiProvider(
-        providers: [ChangeNotifierProvider(create: (context) => SelectorNotifier())],
-        child: const MainPage(),
-      ),
+      title: "ScaffoldPageSample",
+      home: ScaffoldPageSample(),
     );
   }
 }
 
 List<Widget> mainPageList = [const MainPage1(), const MainPage2(), const MainPage3()];
 
-class MainPage extends StatelessWidget {
-  const MainPage({super.key});
+class ScaffoldPageSample extends StatelessWidget {
+  const ScaffoldPageSample({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Float_Action_button_Sample"),
-        /// 配置状态栏底部区域控件
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(28), // 不占用AppBar的高度，自己扩展出新高度
-          child: Container(
-            height: 28,
-            color: Colors.grey,
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (context) => _SelectorNotifier())],
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("ScaffoldPageSample"),
+
+          /// 配置状态栏底部区域控件
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(28), // 不占用AppBar的高度，自己扩展出新高度
+            child: Container(
+              height: 28,
+              color: Colors.grey,
+            ),
           ),
         ),
+
+        /// 配置 FloatingActionButton
+        floatingActionButton: buildFloatingActionButton(),
+
+        /// endFloat 默认值  centerFloat-底部中心, startFloat-底部右边， centerFloat-底部右边不悬浮...
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
+        /// 悬浮按钮底部按钮组
+        persistentFooterButtons: const [
+          Text("按钮"),
+          Text("按钮"),
+        ],
+
+        ///配置左侧侧滑页面
+      //  drawer: buildLeftMenu(context),
+        ///配置右侧侧滑页面
+        endDrawer: Container(
+          color: Colors.yellow,
+          width: 300,
+        ),
+        body: Consumer<_SelectorNotifier>(
+          builder: (context, value, child) {
+            return mainPageList[value.curIndex];
+          },
+        ),
+        bottomSheet: Container(height: 30, color: Colors.pink),
+        bottomNavigationBar: buildBottomNavigationBar(context),
       ),
-
-      /// 配置 FloatingActionButton
-      floatingActionButton: buildFloatingActionButton(),
-
-      /// endFloat 默认值  centerFloat-底部中心, startFloat-底部右边， centerFloat-底部右边不悬浮...
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-
-      /// 悬浮按钮底部按钮组
-      persistentFooterButtons: const [
-        Text("按钮"),
-        Text("按钮"),
-      ],
-
-      ///配置左侧侧滑页面
-      drawer: buildLeftMenu(context),
-      endDrawer: Container(
-        color: Colors.yellow,
-        width: 300,
-      ),
-      body: Consumer<SelectorNotifier>(
-        builder: (context, value, child) {
-          return mainPageList[value.curIndex];
-        },
-      ),
-      bottomSheet: Container(height: 30, color: Colors.pink),
-      bottomNavigationBar: buildBottomNavigationBar(context),
     );
   }
 }
@@ -139,8 +141,8 @@ class MainPage3 extends StatelessWidget {
   }
 }
 
-Consumer<SelectorNotifier> buildBottomNavigationBar(BuildContext context) {
-  return Consumer<SelectorNotifier>(builder: (context, selectorNotifier, child) {
+Consumer<_SelectorNotifier> buildBottomNavigationBar(BuildContext context) {
+  return Consumer<_SelectorNotifier>(builder: (context, selectorNotifier, child) {
     return BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(icon: Icon(Icons.home), label: "主页"),
@@ -207,7 +209,7 @@ Container buildLeftMenu(BuildContext context) {
   );
 }
 
-class SelectorNotifier extends ChangeNotifier {
+class _SelectorNotifier extends ChangeNotifier {
   int curIndex = 0;
 
   void setCurIndex(int curIndex) {

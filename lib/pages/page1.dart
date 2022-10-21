@@ -20,8 +20,7 @@ class Page1State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Icon(Icons.account_circle),
-        iconTheme: const IconThemeData(color: Colors.blue),
+        title: const Icon(Icons.home)
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -36,7 +35,8 @@ class Page1State extends State {
           RouterButton(params: ["/page2", "去页面2"]),
           RouterButton(params: ["/page3", "去页面3"]),
           RouterButton(params: ["/ButtonSamplePage", "按钮示例页面"]),
-          RouterButton(params: ["/TabIndicatorPageSample", "去TabIndicatorPageSample页面"]),
+          RouterButton(params: ["/TabIndicatorPageSample", "去-TabIndicatorPageSample-页面"]),
+          RouterButton(params: ["/ScaffoldPageSample", "去-ScaffoldPageSample-页面"]),
           RouterButton(params: ["/page999", "去404页面"]),
         ],
       )),

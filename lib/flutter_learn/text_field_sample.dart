@@ -1,45 +1,41 @@
 import 'package:flutter/material.dart';
 
-
 class TextFieldSamplePage extends StatefulWidget {
   const TextFieldSamplePage({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return TextSamplePageState();
+    return _TextSamplePageState();
   }
 }
 
-class TextSamplePageState extends State {
+class _TextSamplePageState extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("TextFieldSamplePage")),
-      body: Center(
-        child: Column(
-          children: [
-            const SizedBox(
-              width: 0,
-              height: 10,
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: Column(children: [
+          buildEmptyBox(),
+          SizedBox(
+            width: 100,
+            height: 100,
+            child: Container(
+              color: Colors.grey,
+              child: Column(
+                children: [
+                  buildEmptyBox(),
+                ],
+              ),
             ),
-            _buildSizedBox1(),
-            const SizedBox(
-              width: 0,
-              height: 10,
-            ),
-
-          ],
-        ),
+          )
+        ],),
       ),
     );
   }
 
-  SizedBox _buildSizedBox1() {
-    return SizedBox(
-      width: 120,
-      height: 80,
-      child: Container(
-        color: Colors.blueGrey,
-      ),
-    );
+  SizedBox buildEmptyBox() {
+    return const SizedBox(width: 0, height: 20);
   }
+}

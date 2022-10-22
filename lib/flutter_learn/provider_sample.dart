@@ -14,6 +14,14 @@ import '../util/Log.dart';
 Consumer<_MyValuesNotifier>(builder: (context, notifier, child){
 return Center();
 }),
+
+MultiProvider(
+       providers: [
+         ChangeNotifierProvider(create: (context) => ChangeNotifier()),
+         //  Provider(create: (context) => SomeOtherClass()),
+       ],
+       child: const Center(),
+     ),
 */
 
 main() {

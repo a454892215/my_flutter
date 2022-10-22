@@ -9,6 +9,13 @@ import '../util/Log.dart';
 ///   03. Consumer：消费者类，收到通知重构UI, Consumer是 StatelessWidget子类
 ///   04.技巧1：Consumer 放在 widget 树尽量低的位置上， 使重构的widget尽量少
 ///   05.技巧2：Provider.of<CounterNotifier>(context, listen: false).clear(); 用来访问Notifier模型中不需要更新UI的函数
+///
+/*
+Consumer<_MyValuesNotifier>(builder: (context, notifier, child){
+return Center();
+}),
+*/
+
 main() {
   runApp(_getMaterialApp());
 }

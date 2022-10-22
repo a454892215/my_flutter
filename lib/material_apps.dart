@@ -5,6 +5,7 @@ import 'package:my_flutter_lib_3/pages/page1.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
+import 'flutter_learn/chexobx_radio_sample.dart';
 import 'flutter_learn/page_indicaotr_sample.dart';
 import 'flutter_learn/provider_sample.dart';
 import 'flutter_learn/scaffold_sample.dart';
@@ -51,6 +52,7 @@ Widget getMaterialApp(var title) {
       '/ProviderSamplePage': (BuildContext context) => const ProviderSamplePage(),
       '/TextSamplePage': (BuildContext context) => const TextSamplePage(),
       '/TextFieldSamplePage': (BuildContext context) => const TextFieldSamplePage(),
+      '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
     },
 
     /// 配置404页面: 如果路由不存在则跳到该页面

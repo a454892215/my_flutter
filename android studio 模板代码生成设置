@@ -1,4 +1,6 @@
 1. 进入Settings 选择 Editor > Live Templates
-2. 创建一个自己的组： 点击+， 选中template group, 填入组名：my_templates 点击ok
-3. 输入 abbrevlation 栏， 输入提示名字，提示名字不能过长，否则无效
-4. 选中左下角，该模板代码的应用语言范围
+2. 创建一个自己的模板组： 点击+， 选中template group, 填入组名：my_templates 点击ok
+3. 创建一个自己一个模板： 选中刚刚创建的模板组my_templates， 点击+， 选中live templates
+3. 输入 abbreviation 栏， 输入缩写名（名字不要过长）
+4. 点击左下角，选择该模板代码的应用语言范围
+5.点击ok,结束

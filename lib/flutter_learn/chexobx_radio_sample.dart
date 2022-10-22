@@ -198,6 +198,11 @@ SizedBox buildSizedBox6() {
           inactiveTrackColor: const Color.fromARGB(222, 175, 175, 175),
           title: const Text("我是一级标题"),
           subtitle: const Text("我是2级标题..."),
+          // 设置最左边控件，一般是图标
+          secondary: const Icon(
+            Icons.account_circle,
+            size: 55,
+          ),
           onChanged: (bool value) {
             notifier.setSwitchListTileEnable(value);
           },

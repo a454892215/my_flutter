@@ -18,9 +18,18 @@ class MyCheckBoxState extends State<MyCheckBox> {
   @override
   Widget build(BuildContext context) {
     String iconPath = checked ? 'images/check/ic_checked.png' : 'images/check/ic_uncheck.png';
-    return GestureDetector(
+    Color curColor = checked ? Colors.green : Colors.black;
+
+    /// GestureDetector无点击水波纹效果 InkWell有 。第一次点击会抖动一下？
+    return InkWell(
       child: Column(
-        children: [Image.asset(iconPath, width: 50,), Text(widget.title)],
+        children: [
+          Image.asset(
+            iconPath,
+            width: 50,
+          ),
+          Text(widget.title, style: TextStyle(color: curColor),)
+        ],
       ),
       onTap: () {
         setState(() {

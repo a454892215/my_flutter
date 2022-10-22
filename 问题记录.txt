@@ -32,3 +32,5 @@
    原因：如果输入“摸鱼”，在使用拼音打字时候，输入框会显示“mo yu”正是中间的这个空格，由于被FilteringTextInputFormatter过滤掉了，导致了问题
         将这个字符加上即可 : FilteringTextInputFormatter.allow(RegExp("[-_\u4E00-\u9FA5a-zA-Z0-96/MSP]")).
 
+9. 使用Column组合Image, Text自定义的Checkbox，浏览器测试中，第一次点击会抖动一下？？？
+

@@ -90,11 +90,11 @@ class _SamplePageState extends State {
   }
 
   SizedBox buildSizedBox3() {
+    /// 如果SizedBox不设置width, Container默认匹配父窗口大小 如果不设置 height, Container默认包过内容大小
     return SizedBox(
-      /// 如果SizedBox不设置width, Container默认匹配父窗口大小 如果不设置 height, Container默认包过内容大小
-      child: Container(
+      /// 如果是Container 有color 后，内部的InkWell 点击也没有水波纹效果了,
+      child: Ink(
         color: Colors.grey,
-        margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(0),
         child: const MyCheckBox(title: "Home"),
       ),

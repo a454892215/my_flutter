@@ -33,4 +33,5 @@
         将这个字符加上即可 : FilteringTextInputFormatter.allow(RegExp("[-_\u4E00-\u9FA5a-zA-Z0-96/MSP]")).
 
 9. 使用Column组合Image, Text自定义的Checkbox，浏览器测试中，第一次点击会抖动一下？？？
+   解决，使用注释代码缩小范围，定位到是Image造成此原因，加上属性， gaplessPlayback: true， 该属性表示切换前保留原图
 

@@ -81,10 +81,11 @@ class _TextSamplePageState extends State {
 
           ///光标设置
           cursorColor: Colors.green,
-          // 高度设置无效？？
-          cursorHeight: 1,
+          // cursorHeight 此高度不能过大或过小，浏览器测试，过小或者过大会显示不全或者越界
+          cursorHeight: 18,
           cursorWidth: 2,
-          cursorRadius: null,
+          // mouseCursor: SystemMouseCursors.text,
+          // cursorRadius: null,
 
           /// 允许的最大输入文字长度
           maxLength: 30,

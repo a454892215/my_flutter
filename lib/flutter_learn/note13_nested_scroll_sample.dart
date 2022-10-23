@@ -34,6 +34,7 @@ class _SamplePageState extends State {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverAppBar(
+              forceElevated: innerBoxIsScrolled,
               title: Container(color: Colors.red, child: const Text('复仇者联盟'),),
               leading: const SizedBox(),
 
@@ -54,26 +55,30 @@ class _SamplePageState extends State {
             )
           ];
         },
-        body: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              color: Colors.white,
-              //  padding: const EdgeInsets.only(left: 12, right: 12),
-              child: Container(
-                height: 80,
-                color: Colors.primaries[index % Colors.primaries.length],
-                alignment: Alignment.center,
-                child: Text(
-                  '$index',
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ),
-            );
-          },
-          itemCount: 20,
-        ),
+        body: buildListView(),
       ),
     );
+  }
+
+  ListView buildListView() {
+    return ListView.builder(
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            color: Colors.white,
+            //  padding: const EdgeInsets.only(left: 12, right: 12),
+            child: Container(
+              height: 80,
+              color: Colors.primaries[index % Colors.primaries.length],
+              alignment: Alignment.center,
+              child: Text(
+                '$index',
+                style: const TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
+          );
+        },
+        itemCount: 6,
+      );
   }
 }
 

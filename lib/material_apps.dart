@@ -8,6 +8,7 @@ import 'package:my_flutter_lib_3/pages/page3.dart';
 import 'flutter_learn/chexobx_radio_sample.dart';
 import 'flutter_learn/form_sample.dart';
 import 'flutter_learn/note10_container_sample.dart';
+import 'flutter_learn/note11_linear_layout_sample.dart';
 import 'flutter_learn/page_indicaotr_sample.dart';
 import 'flutter_learn/provider_sample.dart';
 import 'flutter_learn/scaffold_sample.dart';
@@ -56,6 +57,7 @@ Widget getMaterialApp(var title) {
       '/TextFieldSamplePage': (BuildContext context) => const TextFieldSamplePage(),
       '/FormSamplePage': (BuildContext context) => const FormSamplePage(),
       '/ContainerSamplePage': (BuildContext context) => const ContainerSamplePage(),
+      '/LinearLayoutSamplePage': (BuildContext context) => const LinearLayoutSamplePage(),
       '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
     },
 

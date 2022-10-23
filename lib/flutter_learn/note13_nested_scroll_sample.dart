@@ -28,7 +28,7 @@ class _SamplePageState extends State {
 
   Scaffold buildScaffold() {
     return Scaffold(
-      appBar: AppBar(title: const Text("NestedScrollView-示例")),
+    //  appBar: AppBar(title: const Text("NestedScrollView-示例")),
       // FractionallySizedBox 的 widthFactor 生效
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -56,7 +56,7 @@ class _SamplePageState extends State {
           itemBuilder: (BuildContext context, int index) {
             return Container(
               color: Colors.white,
-              padding: const EdgeInsets.only(left: 12, right: 12),
+            //  padding: const EdgeInsets.only(left: 12, right: 12),
               child: Container(
                 height: 80,
                 color: Colors.primaries[index % Colors.primaries.length],

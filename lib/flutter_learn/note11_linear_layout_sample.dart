@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_lib_3/util/ui_utils.dart';
 import 'package:provider/provider.dart';
 
 /// 1. FractionallySizedBox 的 widthFactor heightFactor 生效 可以在最外层填充父控件
 /// 2. Expanded 控件 通过flex设置权重 定义控件在Column种的高度
-/// 3. 怎么在外层高度明确情况下，自己高度包裹内容？？？ 答案：外面包一层无高度的控件，如-Align
+/// 3. Container 怎么在外层高度明确情况下，自己高度包裹内容？？？ 答案：外面包一层无高度的控件，如-Align
+/// 4. Column 常见属性示例用法
 class LinearLayoutSamplePage extends StatefulWidget {
   const LinearLayoutSamplePage({super.key});
 

@@ -25,7 +25,6 @@ class NestedScrollViewSamplePage2 extends StatefulWidget {
 class _SamplePageState extends State with SingleTickerProviderStateMixin {
   late TabController tabController;
   final List<String> titles = ['标题1', '标题2', '标题3'];
-
   @override
   void initState() {
     tabController = TabController(length: 3, vsync: this);
@@ -38,16 +37,17 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
       providers: [
         ChangeNotifierProvider(create: (context) => _MyValuesNotifier()),
       ],
-      child: buildScaffold(tabController),
+      child: buildScaffold(),
     );
   }
 
-  Scaffold buildScaffold(TabController tabController) {
+  Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(
         title: const Text("NestedScrollView2-示例"),
         backgroundColor: Colors.pink,
       ),
+
       /// 1. NestedScrollView
       body: NestedScrollView(
         // physics: const BouncingScrollPhysics(), 无效
@@ -60,13 +60,14 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
             )
           ];
         },
+
         /// 4. TabBarView
         body: TabBarView(
           controller: tabController,
           children: [
             getPage(buildSliverList(1, getFirstPageView())),
             getPage(buildSliverList()),
-            getPage(buildSliverList(20)),
+            getPage(buildSliverList(60, null, 2)),
           ],
         ),
       ),
@@ -75,13 +76,13 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   Widget getFirstPageView() {
     return Container(
-            alignment: Alignment.topCenter,
-            color: Colors.blue,
-            child: Text(
-              summary,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          );
+      alignment: Alignment.topCenter,
+      color: Colors.blue,
+      child: Text(
+        summary,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+      ),
+    );
   }
 
   Widget getPage(Widget page) {
@@ -110,6 +111,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
       /// floating true 表示可以完全隐藏flexibleSpace的background的高度...
       floating: true,
       expandedHeight: 180,
+
       /// 3. FlexibleSpaceBar
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
@@ -142,24 +144,27 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget buildSliverList([int count = 5, Widget? child]) {
+  Widget buildSliverList([int count = 5, Widget? child, int colorStartIndex = 0]) {
     double height = child == null ? 50 : 300;
+
     /// 7. SliverFixedExtentList需要此控件配合 NestedScrollView
     return SliverFixedExtentList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          return child ?? Container(
-            color: Colors.primaries[index % Colors.primaries.length],
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(bottom: 4),
-            child: Text(
-              '$index',
-              style: const TextStyle(color: Colors.white, fontSize: 10),
-            ),
-          );
+          return child ??
+              Container(
+                color: Colors.primaries[(index + colorStartIndex) % Colors.primaries.length],
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                  '$index',
+                  style: const TextStyle(color: Colors.white, fontSize: 10),
+                ),
+              );
         },
         childCount: count,
       ),
+
       /// item高度
       itemExtent: height,
     );

@@ -22,4 +22,9 @@ main() {
   Log.d("List集合使用 验证 removeAt() ：$ls2  被删除的元素：$removedObj");
   ls2.clear();
   Log.d("List集合使用 验证 clear() ：$ls2");
+
+  /// map迭代
+  var ls5 = [9, 2, 3, 4];
+  var ret = ls5.map((e) => e).toList();
+  Log.d("map 迭代：$ret");
 }

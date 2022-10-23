@@ -38,4 +38,10 @@
 10. 设置光标高度： cursorHeight: 1, 设置此高度，浏览器测试发现，当没有输入内容的时候光标显示不全:
     解决：经测试，把光标高度根据文字高度跳到20左右，正常显示
 
+11. ======== Exception caught by animation library =====================================================
+    The following assertion was thrown while notifying status listeners for AnimationController:
+    The provided ScrollController is currently attached to more than one ScrollPosition.
+    The Scrollbar requires a single ScrollPosition in order to be painted.
+    使用 NestedScrollView 做嵌套滚动的时候，滚动过程种有时候报.
+
 

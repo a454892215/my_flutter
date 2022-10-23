@@ -31,19 +31,15 @@ class _SamplePageState extends State {
     return Scaffold(
       appBar: AppBar(title: const Text("滚动-示例")),
       // FractionallySizedBox 的 widthFactor 生效
-      body: FractionallySizedBox(
-        widthFactor: 1,
-        heightFactor: 1,
-        child: Container(
-          color: const Color.fromARGB(222, 213, 213, 213),
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              buildContainer1(),
-              UIUtil.getEmptyBoxByHeight(12),
-              buildContainer2(),
-            ],
-          ),
+      body: Container(
+        color: const Color.fromARGB(222, 213, 213, 213),
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          children: [
+            buildContainer1(),
+            UIUtil.getEmptyBoxByHeight(12),
+            buildContainer2(),
+          ],
         ),
       ),
     );
@@ -52,12 +48,17 @@ class _SamplePageState extends State {
   Container buildContainer1() {
     return Container(
       color: Colors.orange,
-      height: 260,
+      height: 220,
       padding: const EdgeInsets.only(top: 12, bottom: 12),
       child: SingleChildScrollView(
         /// 设置滑动方向，上下/左右
         scrollDirection: Axis.vertical,
         reverse: false,
+
+        /// 滑动反弹效果： BouncingScrollPhysics()
+        /// 无滑动反弹效果： ClampingScrollPhysics()
+        /// 禁止滑动： NeverScrollableScrollPhysics()
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(left: 12, right: 12),
         child: Column(
           children: [
@@ -110,11 +111,12 @@ class _SamplePageState extends State {
   Container buildContainer2() {
     return Container(
       color: Colors.orange,
-      height: 260,
+      height: 160,
       padding: const EdgeInsets.only(top: 12, bottom: 12),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         reverse: false,
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(left: 12, right: 12),
         child: Row(
           children: [
@@ -163,6 +165,7 @@ class _SamplePageState extends State {
       ),
     );
   }
+
 }
 
 class _MyValuesNotifier extends ChangeNotifier {}

@@ -10,9 +10,12 @@ class NestedScrollViewSamplePage2 extends StatefulWidget {
   }
 }
 
-class _SamplePageState extends State {
+class _SamplePageState extends State with SingleTickerProviderStateMixin {
+  late TabController tabController;
+
   @override
   void initState() {
+    tabController = TabController(length: 3, vsync: this);
     super.initState();
   }
 
@@ -22,57 +25,103 @@ class _SamplePageState extends State {
       providers: [
         ChangeNotifierProvider(create: (context) => _MyValuesNotifier()),
       ],
-      child: buildScaffold(),
+      child: buildScaffold(tabController),
     );
   }
 
-  Scaffold buildScaffold() {
+  Scaffold buildScaffold(TabController tabController) {
     return Scaffold(
-      appBar: AppBar(title: const Text("NestedScrollView-示例")),
-      // FractionallySizedBox 的 widthFactor 生效
+      appBar: AppBar(
+        title: const Text("NestedScrollView2-示例"),
+        backgroundColor: Colors.pink,
+      ),
       body: NestedScrollView(
+       // physics: const BouncingScrollPhysics(), 无效
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              title: Container(color: Colors.red, child: const Text('复仇者联盟'),),
+              // title: Container(color: Colors.red, child: const Text(''),),
               leading: const SizedBox(),
 
               /// SliverAppBar  pinned 表示SliverAppBar/flexibleSpace的title 是否跟着一起滑动到不可见（true 钉住，不滑动到不可见）
               pinned: true,
-              //floating 看不出效果？ rue 的时候下滑先展示SliverAppBar，展示完成后才展示其他滑动组件内容
+
+              /// floating true 表示可以完全隐藏flexibleSpace的background的高度...
               floating: true,
               expandedHeight: 180,
               flexibleSpace: FlexibleSpaceBar(
-                title: Container(
-                  color: Colors.green,
-                  child: const Text('复仇者联盟'),
+                centerTitle: true,
+                // title: Container( child: const Text('复仇者联盟'),),
+                background: Align(
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    /// 标题栏的高度是： expandedHeight - height
+                    height: 130,
+                    color: Colors.blue,
+                    alignment: const Alignment(0, 0),
+                    child: const Text(
+                      "我是顶部头",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
-                background: Container(
-                    color: Colors.yellow,
-                ),
+              ),
+              bottom: TabBar(
+                labelColor: Colors.white,
+                controller: tabController,
+                tabs: const [
+                  Tab(
+                    child: Text("标题1"),
+                  ),
+                  Tab(
+                    child: Text("标题2"),
+                  ),
+                  Tab(
+                    child: Text("标题3"),
+                  ),
+                ],
               ),
             )
           ];
         },
-        body: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              color: Colors.white,
-              //  padding: const EdgeInsets.only(left: 12, right: 12),
-              child: Container(
-                height: 80,
-                color: Colors.primaries[index % Colors.primaries.length],
-                alignment: Alignment.center,
-                child: Text(
-                  '$index',
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                ),
+        body: TabBarView(
+          controller: tabController,
+          children: [
+            buildListView1(),
+            Container(
+              decoration: const BoxDecoration(
+                color: Colors.blue,
               ),
-            );
-          },
-          itemCount: 20,
+              alignment: const Alignment(0, 0),
+              child: const Text("页面2"),
+            ),
+            buildListView1(),
+          ],
         ),
       ),
+    );
+  }
+
+  ListView buildListView1() {
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          color: Colors.white,
+          //  padding: const EdgeInsets.only(left: 12, right: 12),
+          child: Container(
+            height: 80,
+            color: Colors.primaries[index % Colors.primaries.length],
+            alignment: Alignment.center,
+            child: Text(
+              '$index',
+              style: const TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ),
+        );
+      },
+      itemCount: 20,
     );
   }
 }

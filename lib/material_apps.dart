@@ -10,6 +10,7 @@ import 'flutter_learn/form_sample.dart';
 import 'flutter_learn/note10_container_sample.dart';
 import 'flutter_learn/note11_linear_layout_sample.dart';
 import 'flutter_learn/note12_scroll_sample.dart';
+import 'flutter_learn/note13_nested_scroll_sample.dart';
 import 'flutter_learn/page_indicaotr_sample.dart';
 import 'flutter_learn/provider_sample.dart';
 import 'flutter_learn/scaffold_sample.dart';
@@ -60,6 +61,7 @@ Widget getMaterialApp(var title) {
       '/ContainerSamplePage': (BuildContext context) => const ContainerSamplePage(),
       '/LinearLayoutSamplePage': (BuildContext context) => const LinearLayoutSamplePage(),
       '/SingleChildScrollViewSamplePage': (BuildContext context) => const SingleChildScrollViewSamplePage(),
+      '/NestedScrollViewSamplePage': (BuildContext context) => const NestedScrollViewSamplePage(),
       '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
     },
 

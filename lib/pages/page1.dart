@@ -45,6 +45,7 @@ class Page1State extends State {
           RouterButton(params: ["/ContainerSamplePage", "去-ContainerSamplePage-页面"]),
           RouterButton(params: ["/LinearLayoutSamplePage", "去-LinearLayoutSamplePage-页面"]),
           RouterButton(params: ["/SingleChildScrollViewSamplePage", "去-SingleChildScrollViewSamplePage-页面"]),
+          RouterButton(params: ["/NestedScrollViewSamplePage", "去-NestedScrollViewSamplePage-页面"]),
           RouterButton(params: ["/page999", "去404页面"]),
         ],
       )),

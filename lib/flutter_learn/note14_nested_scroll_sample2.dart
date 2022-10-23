@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+String summary = '''
+1. NestedScrollView用法示例
+2. SliverAppBar 用法示例
+3. FlexibleSpaceBar 用法示例
+4. TabBar 用法示例
+5. TabBarView 用法示例
+6. ListView.builder 简单用法示例
+
+''';
+
 class NestedScrollViewSamplePage2 extends StatefulWidget {
   const NestedScrollViewSamplePage2({super.key});
 
@@ -36,7 +46,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         backgroundColor: Colors.pink,
       ),
       body: NestedScrollView(
-       // physics: const BouncingScrollPhysics(), 无效
+        // physics: const BouncingScrollPhysics(), 无效
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverAppBar(
@@ -89,14 +99,15 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         body: TabBarView(
           controller: tabController,
           children: [
-            buildListView1(),
             Container(
+              height: 200,
               decoration: const BoxDecoration(
-                color: Colors.blue,
+                color: Colors.green,
               ),
-              alignment: const Alignment(0, 0),
-              child: const Text("页面2"),
+              alignment: const Alignment(0, -1),
+              child:  Text(summary, style:const TextStyle(color: Colors.white, fontSize: 16),),
             ),
+            buildListView1(),
             buildListView1(),
           ],
         ),
@@ -106,6 +117,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   ListView buildListView1() {
     return ListView.builder(
+      padding: const EdgeInsets.all(12),
       itemBuilder: (BuildContext context, int index) {
         return Container(
           color: Colors.white,

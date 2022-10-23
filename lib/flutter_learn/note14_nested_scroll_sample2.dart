@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NestedScrollViewSamplePage extends StatefulWidget {
-  const NestedScrollViewSamplePage({super.key});
+class NestedScrollViewSamplePage2 extends StatefulWidget {
+  const NestedScrollViewSamplePage2({super.key});
 
   @override
   State<StatefulWidget> createState() {

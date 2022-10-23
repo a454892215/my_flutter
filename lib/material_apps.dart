@@ -59,7 +59,7 @@ Widget getMaterialApp(var title) {
       '/FormSamplePage': (BuildContext context) => const FormSamplePage(),
       '/ContainerSamplePage': (BuildContext context) => const ContainerSamplePage(),
       '/LinearLayoutSamplePage': (BuildContext context) => const LinearLayoutSamplePage(),
-      '/ScrollSamplePage': (BuildContext context) => const ScrollSamplePage(),
+      '/SingleChildScrollViewSamplePage': (BuildContext context) => const SingleChildScrollViewSamplePage(),
       '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
     },
 

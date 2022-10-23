@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/util/ui_utils.dart';
 import 'package:provider/provider.dart';
 
-class ScrollSamplePage extends StatefulWidget {
-  const ScrollSamplePage({super.key});
+class SingleChildScrollViewSamplePage extends StatefulWidget {
+  const SingleChildScrollViewSamplePage({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -29,7 +29,7 @@ class _SamplePageState extends State {
 
   Scaffold buildScaffold() {
     return Scaffold(
-      appBar: AppBar(title: const Text("滚动-示例")),
+      appBar: AppBar(title: const Text("SingleChildScrollView-示例")),
       // FractionallySizedBox 的 widthFactor 生效
       body: Container(
         color: const Color.fromARGB(222, 213, 213, 213),

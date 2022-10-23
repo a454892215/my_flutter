@@ -31,9 +31,9 @@ class Page1State extends State {
       body: Center(
           child: Column(
         children: const <RouterButton>[
-          RouterButton(params: ["/page1", "去首页"]),
-          RouterButton(params: ["/page2", "去页面2"]),
-          RouterButton(params: ["/page3", "去页面3"]),
+       //   RouterButton(params: ["/page1", "去首页"]),
+       //   RouterButton(params: ["/page2", "去页面2"]),
+       //   RouterButton(params: ["/page3", "去页面3"]),
           RouterButton(params: ["/ButtonSamplePage", "按钮示例页面"]),
           RouterButton(params: ["/TabIndicatorSamplePage", "去-TabIndicatorSamplePage-页面"]),
           RouterButton(params: ["/ScaffoldSamplePage", "去-ScaffoldSamplePage-页面"]),
@@ -44,6 +44,7 @@ class Page1State extends State {
           RouterButton(params: ["/FormSamplePage", "去-FormSamplePage-页面"]),
           RouterButton(params: ["/ContainerSamplePage", "去-ContainerSamplePage-页面"]),
           RouterButton(params: ["/LinearLayoutSamplePage", "去-LinearLayoutSamplePage-页面"]),
+          RouterButton(params: ["/ScrollSamplePage", "去-ScrollSamplePage-页面"]),
           RouterButton(params: ["/page999", "去404页面"]),
         ],
       )),

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../util/Log.dart';
 import '../util/list_util.dart';
 
-/// 1. 简单的 ListView
+/// ListView 加载的三种方式和滚动监听等
 class ListViewSamplePage extends StatefulWidget {
   const ListViewSamplePage({super.key});
 

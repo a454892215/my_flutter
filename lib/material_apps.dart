@@ -15,6 +15,7 @@ import 'flutter_learn/note13_nested_scroll_sample.dart';
 import 'flutter_learn/note14_nested_scroll_sample2.dart';
 import 'flutter_learn/note15_custom_scroll_sample.dart';
 import 'flutter_learn/note17_list_view_sample.dart';
+import 'flutter_learn/note18_refresh_view_sample.dart';
 import 'flutter_learn/page_indicaotr_sample.dart';
 import 'flutter_learn/provider_sample.dart';
 import 'flutter_learn/scaffold_sample.dart';
@@ -70,6 +71,7 @@ Widget getMaterialApp(var title) {
       '/CustomScrollViewSamplePage': (BuildContext context) => const CustomScrollViewSamplePage(),
       '/CustomScrollViewSample2Page': (BuildContext context) => const CustomScrollViewSample2Page(),
       '/ListViewSamplePage': (BuildContext context) => const ListViewSamplePage(),
+      '/RefreshSamplePage': (BuildContext context) => const RefreshSamplePage(),
       '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
     },
 

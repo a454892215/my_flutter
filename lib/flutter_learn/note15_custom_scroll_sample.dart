@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../util/ui_utils.dart';
+
 class CustomScrollViewSamplePage extends StatefulWidget {
   const CustomScrollViewSamplePage({super.key});
 
@@ -33,30 +35,16 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: const Text("CustomScroll-示例"),
-        backgroundColor: Colors.pink,
       ),
-      body: CustomScrollView(),
-    );
-  }
-
-  ListView buildListView1() {
-    return ListView.builder(
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          color: Colors.white,
-          //  padding: const EdgeInsets.only(left: 12, right: 12),
-          child: Container(
-            height: 80,
-            color: Colors.primaries[index % Colors.primaries.length],
-            alignment: Alignment.center,
-            child: Text(
-              '$index',
-              style: const TextStyle(color: Colors.white, fontSize: 20),
-            ),
-          ),
-        );
-      },
-      itemCount: 20,
+      body: CustomScrollView(
+        slivers: [
+          // const SliverAppBar(title: Text("CustomScroll-示例")), 进度条会越界到 SliverAppBar
+          /// 不能使用普通 Padding
+          const SliverPadding(padding: EdgeInsets.only(top: 10)),
+          UIUtil.buildSliverGrid(20, null, 3),
+          // SliverFixedExtentList(delegate: delegat2e, itemExtent: 20);
+        ],
+      ),
     );
   }
 }

@@ -65,7 +65,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/
+    # 不能在最外层再建assets目录， 否则Android加载不出来...
+    - images/
     # - assets/images/check
 
   # An image asset can refer to one or more resolution-specific "variants", see

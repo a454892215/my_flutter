@@ -30,7 +30,7 @@ class UIUtil {
   }
 
   /// 7. SliverFixedExtentList
-  static Widget buildSliverList([int count = 5, Widget? child, double height = 50]) {
+  static Widget buildSliverFixedExtentList([int count = 5, Widget? child, double height = 50]) {
     return SliverFixedExtentList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {

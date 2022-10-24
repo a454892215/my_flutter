@@ -42,6 +42,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
           /// 不能使用普通 Padding
           const SliverPadding(padding: EdgeInsets.only(top: 10)),
           UIUtil.buildSliverGrid(20, null, 3),
+          const SliverPadding(padding: EdgeInsets.only(top: 10)),
+          UIUtil.buildSliverFixedExtentList(20, null, 40),
           // SliverFixedExtentList(delegate: delegat2e, itemExtent: 20);
         ],
       ),

@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../util/ui_utils.dart';
-/// 1. CustomScrollView 示例用法
-/// 2. SliverPadding 示例用法
-/// 3. SliverGrid 示例用法
-/// 4. SliverFixedExtentList
-class CustomScrollViewSamplePage extends StatefulWidget {
-  const CustomScrollViewSamplePage({super.key});
+/// 1. 只有下面的List可以滑动了，头部才能滑动隐藏
+class CustomScrollViewSample2Page extends StatefulWidget {
+  const CustomScrollViewSample2Page({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -36,19 +33,26 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   Scaffold buildScaffold(TabController tabController) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("CustomScroll-示例"),
-      ),
       body: CustomScrollView(
         slivers: [
-          // const SliverAppBar(title: Text("CustomScroll-示例")), 进度条会越界到 SliverAppBar
-          /// 不能使用普通 Padding
+          UIUtil.buildSliverAppBar(const Text("CustomScrollView2-示例"), buildFlexibleSpace(180)),
           const SliverPadding(padding: EdgeInsets.only(top: 10)),
-          UIUtil.buildSliverGrid((context, index) => UIUtil.buildContainer(index), 20, 3),
-          const SliverPadding(padding: EdgeInsets.only(top: 10)),
-          UIUtil.buildSliverFixedExtentList((context, index) => UIUtil.buildContainer(index), 20),
-          // SliverFixedExtentList(delegate: delegat2e, itemExtent: 20);
+          /// 只有下面的List可以滑动了，头部才能滑动隐藏
+          UIUtil.buildSliverList((context, index) => UIUtil.buildContainer(index), 20),
         ],
+      ),
+    );
+  }
+
+  Container buildFlexibleSpace(double height) {
+    return Container(
+      height: height,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.green, Colors.blue, Colors.red],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
       ),
     );
   }

@@ -1,49 +1,59 @@
 import 'package:flutter/material.dart';
 
+typedef WidgetCreate = Widget Function(BuildContext context, int index);
+
 class UIUtil {
   /// 获取 EmptyBoxByHeight
   static Widget getEmptyBoxByHeight(double height) {
     return SizedBox(width: 0, height: height);
   }
 
+  static SliverAppBar buildSliverAppBar(
+      [Widget? title, Widget? flexibleSpace, double expandedHeight = 180, bool pinned = true]) {
+    return SliverAppBar(
+      pinned: pinned,
+      floating: true,
+      expandedHeight: expandedHeight,
+      title: title,
+      flexibleSpace: flexibleSpace,
+    );
+  }
+
+  static SliverList buildSliverList(WidgetCreate widgetCreate, int count) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate((context, index) => widgetCreate(context, index), childCount: count),
+    );
+  }
+
+  static Container buildContainer(int listIndex) {
+    return Container(
+      height: 50,
+      color: Colors.primaries[(listIndex) % Colors.primaries.length],
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(bottom: 4),
+      child: Text(
+        '$listIndex',
+        style: const TextStyle(color: Colors.black, fontSize: 10),
+      ),
+    );
+  }
+
   /// 获取 ListView
-  static ListView buildListView(int count, Widget? child) {
+  static ListView buildListView(int count, WidgetCreate widgetCreate) {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
-        return Container(
-          color: Colors.white,
-          //  padding: const EdgeInsets.only(left: 12, right: 12),
-          child: child ??
-              Container(
-                height: 80,
-                color: Colors.primaries[index % Colors.primaries.length],
-                alignment: Alignment.center,
-                child: Text(
-                  'Test-$index',
-                  style: const TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ),
-        );
+        return widgetCreate(context, index);
       },
       itemCount: count,
     );
   }
 
-  /// 7. SliverFixedExtentList
-  static Widget buildSliverFixedExtentList([int count = 5, Widget? child, double height = 50]) {
+  /// SliverFixedExtentList
+  static Widget buildSliverFixedExtentList(WidgetCreate widgetCreate, [int count = 5, double height = 50]) {
     return SliverFixedExtentList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          return child ??
-              Container(
-                color: Colors.primaries[(index) % Colors.primaries.length],
-                alignment: Alignment.center,
-                margin: const EdgeInsets.only(bottom: 4),
-                child: Text(
-                  '$index',
-                  style: const TextStyle(color: Colors.black, fontSize: 10),
-                ),
-              );
+          return widgetCreate(context, index);
         },
         childCount: count,
       ),
@@ -54,8 +64,8 @@ class UIUtil {
   }
 
   static SliverGrid buildSliverGrid(
+      WidgetCreate widgetCreate,
       [int childCount = 20,
-      Widget? child,
       int crossAxisCount = 3,
       double childAspectRatio = 1,
       double mainAxisSpacing = 8,
@@ -63,12 +73,7 @@ class UIUtil {
     return SliverGrid(
         delegate: SliverChildBuilderDelegate(
             childCount: childCount,
-            (context, index) =>
-                child ??
-                Container(
-                  // margin: const EdgeInsets.all(12),
-                  color: Colors.blue,
-                )),
+            (context, index) => widgetCreate(context, index)),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: crossAxisCount,
 

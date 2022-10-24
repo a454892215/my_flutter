@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_lib_3/flutter_learn/note16_custom_scroll_sample2.dart';
 import 'package:my_flutter_lib_3/pages/button_sample_page.dart';
 import 'package:my_flutter_lib_3/pages/err_page.dart';
 import 'package:my_flutter_lib_3/pages/page1.dart';
@@ -66,6 +67,7 @@ Widget getMaterialApp(var title) {
       '/NestedScrollViewSamplePage': (BuildContext context) => const NestedScrollViewSamplePage(),
       '/NestedScrollViewSamplePage2': (BuildContext context) => const NestedScrollViewSamplePage2(),
       '/CustomScrollViewSamplePage': (BuildContext context) => const CustomScrollViewSamplePage(),
+      '/CustomScrollViewSample2Page': (BuildContext context) => const CustomScrollViewSample2Page(),
       '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
     },
 

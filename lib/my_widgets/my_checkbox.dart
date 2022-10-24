@@ -19,12 +19,12 @@ class _MyCheckBoxState extends State<MyCheckBox> {
   @override
   void initState() {
     selectedImg = Image.asset(
-      'images/check/ic_checked.png',
+      'images/ic_checked.png',
       width: 50,
       gaplessPlayback: true,
     );
     unselectedImg = Image.asset(
-      'images/check/ic_uncheck.png',
+      'images/ic_uncheck.png',
       width: 50,
       gaplessPlayback: true,
     );

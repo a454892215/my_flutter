@@ -14,6 +14,7 @@ import 'flutter_learn/note12_scroll_sample.dart';
 import 'flutter_learn/note13_nested_scroll_sample.dart';
 import 'flutter_learn/note14_nested_scroll_sample2.dart';
 import 'flutter_learn/note15_custom_scroll_sample.dart';
+import 'flutter_learn/note17_2_grid_view_sample.dart';
 import 'flutter_learn/note17_list_view_sample.dart';
 import 'flutter_learn/note18_refresh_view_sample.dart';
 import 'flutter_learn/note19_smart_refresh_sample.dart';
@@ -63,6 +64,7 @@ Widget getMaterialApp(var title) {
       '/ProviderSamplePage': (BuildContext context) => const ProviderSamplePage(),
       '/TextSamplePage': (BuildContext context) => const TextSamplePage(),
       '/TextFieldSamplePage': (BuildContext context) => const TextFieldSamplePage(),
+      '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
       '/FormSamplePage': (BuildContext context) => const FormSamplePage(),
       '/ContainerSamplePage': (BuildContext context) => const ContainerSamplePage(),
       '/LinearLayoutSamplePage': (BuildContext context) => const LinearLayoutSamplePage(),
@@ -72,9 +74,10 @@ Widget getMaterialApp(var title) {
       '/CustomScrollViewSamplePage': (BuildContext context) => const CustomScrollViewSamplePage(),
       '/CustomScrollViewSample2Page': (BuildContext context) => const CustomScrollViewSample2Page(),
       '/ListViewSamplePage': (BuildContext context) => const ListViewSamplePage(),
+      '/GridViewSamplePage': (BuildContext context) => const GridViewSamplePage(),
       '/RefreshSamplePage': (BuildContext context) => const RefreshSamplePage(),
       '/SmartRefreshSamplePage': (BuildContext context) => const SmartRefreshSamplePage(),
-      '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
+
     },
 
     /// 配置404页面: 如果路由不存在则跳到该页面

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/flutter_learn/note16_custom_scroll_sample2.dart';
-import 'package:my_flutter_lib_3/pages/button_sample_page.dart';
+import 'package:my_flutter_lib_3/flutter_learn/note03_button_sample_page.dart';
 import 'package:my_flutter_lib_3/pages/err_page.dart';
 import 'package:my_flutter_lib_3/pages/page1.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';

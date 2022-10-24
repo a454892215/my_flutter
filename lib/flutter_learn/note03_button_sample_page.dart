@@ -12,14 +12,17 @@ class ButtonSamplePage extends StatelessWidget {
       ),
       body: Align(
         alignment: Alignment.topCenter,
-        child: Column(
+        child: ListView(
           children: [
             TextButton(
               onPressed: () => Toast.toast("默认-TextButton"),
               child: const Text("默认-TextButton"),
             ),
+            const Padding(padding: EdgeInsets.only(top: 12)),
             ElevatedButton(onPressed: () => Toast.toast("默认-ElevatedButton"), child: const Text("默认-ElevatedButton")),
+            const Padding(padding: EdgeInsets.only(top: 12)),
             OutlinedButton(onPressed: () => Toast.toast("默认-OutlinedButton"), child: const Text("默认-OutlinedButton")),
+            const Padding(padding: EdgeInsets.only(top: 12)),
             TextButton(
               onPressed: () => Toast.toast("自定义-TextButton"),
               style: ButtonStyle(
@@ -27,7 +30,14 @@ class ButtonSamplePage extends StatelessWidget {
               ),
               child: const Text("自定义-TextButton"),
             ),
+            const Padding(padding: EdgeInsets.only(top: 12)),
             ElevatedButton(onPressed: () => Toast.toast("ElevatedButton"), child: const Text("ElevatedButton2")),
+            const Padding(padding: EdgeInsets.only(top: 12)),
+            MaterialButton(
+              onPressed: () =>Toast.toast("MaterialButton"),
+              color: Colors.blue,
+              child: const Text("MaterialButton"),
+            ),
           ],
         ),
       ),

@@ -154,13 +154,13 @@ ButtonThemeData buttonTheme = const ButtonThemeData(
   buttonColor: Colors.green,
 
   /// 无效 ？
-  splashColor: Colors.amberAccent,
+  splashColor: Colors.pink,
 
-  /// 鼠标悬停颜色 无效 ？
-  hoverColor: Colors.amberAccent,
+  /// 鼠标悬停颜色 对MaterialButton背景颜色有效
+  // hoverColor: Colors.amberAccent,
 
   /// 获取焦点颜色 无效 ？
-  focusColor: Colors.black26,
+  focusColor: Colors.orange,
 );
 
 /// ============== TextButtonTheme 配置 ===============

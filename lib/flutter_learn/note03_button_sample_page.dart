@@ -35,7 +35,22 @@ class ButtonSamplePage extends StatelessWidget {
             const Padding(padding: EdgeInsets.only(top: 12)),
             MaterialButton(
               onPressed: () =>Toast.toast("MaterialButton"),
+              //1.按钮按下回调value=true，2.按钮抬起回调value=false
+              onHighlightChanged: (value){},
+              textColor: Colors.white,
               color: Colors.blue,
+              // 按下时候的颜色
+              highlightColor: Colors.lightBlueAccent,
+              // 不能点击时候的阴影高度
+              disabledElevation: 5,
+              //shape: Border.all(color: Colors.pink, width: 2),
+              //shape: const Border(bottom: BorderSide(color: Colors.pink, width: 2)),
+              //设置底部边框
+              // shape: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.pink, width: 2)),
+              // 圆角矩形边框
+              shape: const RoundedRectangleBorder(side: BorderSide(color: Colors.pink, width: 2)),
+              // 圆形边框
+              //shape: const CircleBorder(side: BorderSide(color: Colors.pink, width: 2)),
               child: const Text("MaterialButton"),
             ),
           ],

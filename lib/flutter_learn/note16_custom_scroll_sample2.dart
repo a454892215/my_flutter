@@ -17,7 +17,6 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    tabController = TabController(length: 3, vsync: this);
     super.initState();
   }
 
@@ -27,11 +26,11 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
       providers: [
         ChangeNotifierProvider(create: (context) => _MyValuesNotifier()),
       ],
-      child: buildScaffold(tabController),
+      child: buildScaffold(),
     );
   }
 
-  Scaffold buildScaffold(TabController tabController) {
+  Scaffold buildScaffold() {
     return Scaffold(
       body: CustomScrollView(
         slivers: [

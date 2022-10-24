@@ -23,8 +23,10 @@ main() {
   ls2.clear();
   Log.d("List集合使用 验证 clear() ：$ls2");
 
+  Log.d("filled: ${List.filled(10, 1)}");
+
   /// map迭代
   var ls5 = [9, 2, 3, 4];
-  var ret = ls5.map((e) => e).toList();
+  var ret = ls5.map((e) => "a$e").toList();
   Log.d("map 迭代：$ret");
 }

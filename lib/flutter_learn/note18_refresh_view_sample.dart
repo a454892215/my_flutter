@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../util/Log.dart';
 
-/// 下拉刷新，和加载更多
+/// RefreshIndicator 下拉刷新，和加载更多
 class RefreshSamplePage extends StatefulWidget {
   const RefreshSamplePage({super.key});
 
@@ -44,7 +44,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("ListView-示例"),
+        title: const Text("RefreshIndicator-示例"),
       ),
       body: Container(
         color: Colors.grey[200],

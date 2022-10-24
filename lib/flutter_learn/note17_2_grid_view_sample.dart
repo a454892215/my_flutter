@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,16 +14,9 @@ class GridViewSamplePage extends StatefulWidget {
 }
 
 class _SamplePageState extends State with SingleTickerProviderStateMixin {
-  final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
-    // 监听滑动
-    _scrollController.addListener(() {
-      //   num scrolledOffset = _scrollController.offset;
-      //  Log.d("scrolledOffset $scrolledOffset");
-    });
   }
 
   @override
@@ -40,15 +31,6 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   Scaffold buildScaffold() {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            // 滚动到ListView 顶部
-            _scrollController.animateTo(0, duration: const Duration(milliseconds: 200), curve: Curves.easeInSine);
-          });
-        },
-        child: const Icon(Icons.arrow_upward),
-      ),
       appBar: AppBar(
         title: const Text("GridView-示例"),
       ),
@@ -74,17 +56,22 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               color: Colors.grey[500],
               child: buildGridView3(),
             ),
+            Container(
+              height: 200,
+              margin: const EdgeInsets.only(top: 12),
+              color: Colors.grey[500],
+              child: buildGridView4(),
+            ),
           ],
         ),
       ),
     );
   }
 
-  /// 3. 按需加载： GridView.custom
-  GridView buildGridView3() {
+  /// 4. 按需加载： GridView.custom
+  GridView buildGridView4() {
     return GridView.custom(
       physics: const BouncingScrollPhysics(),
-      controller: _scrollController,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         mainAxisSpacing: 8,
@@ -97,8 +84,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     );
   }
 
-  /// 2. 按需加载，当需要显示就返回指定index的Item Widget： GridView.builder
-  GridView buildGridView2() {
+  /// 3. 按需加载，当需要显示就返回指定index的Item Widget： GridView.builder
+  GridView buildGridView3() {
     return GridView.builder(
         itemCount: 100,
         physics: const BouncingScrollPhysics(),
@@ -120,13 +107,34 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         });
   }
 
-  /// 1. 直接加载所有 GridView Item
+  /// 2. 适用于条目比较少的情况， 一次性全部加载： GridView.count
+  /// 2. 适用于条目比较少的情况, 创建不固定列表数， 一次性全部加载： GridView.extent
+  GridView buildGridView2() {
+    return GridView.extent(
+      // 纵坐标最大item 宽度
+      maxCrossAxisExtent: 150,
+      childAspectRatio: 0.8,
+      mainAxisSpacing: 12,
+      crossAxisSpacing: 12,
+      physics: const BouncingScrollPhysics(),
+      children: ListU.fillRange(0, 6)
+          .map((e) => Container(
+                color: Colors.yellow,
+                alignment: Alignment.center,
+                child: Text("文本$e"),
+              ))
+          .toList(),
+    );
+  }
+
+  /// 1.  适用于条目比较少的情况, 一次性全部加载: GridView()
   GridView buildGridView1() {
     return GridView(
       // 内容不足的时候是否能够滑动？(不一定生效)
       primary: false,
       shrinkWrap: false,
       scrollDirection: Axis.vertical,
+
       /// 当内容没有超过父容器 并且 primary: false, Android测试也有滑动效果
       physics: const AlwaysScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

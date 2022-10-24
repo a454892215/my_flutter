@@ -48,6 +48,7 @@ class _SamplePageState extends State {
             buildSizedBox4(),
             buildSizedBox5(),
             buildSizedBox6(),
+            buildSizedBox7(),
           ],
         ),
       ),
@@ -144,72 +145,94 @@ class _SamplePageState extends State {
       ),
     );
   }
-}
 
-/// 2. Switch, 用法示例: Switch的value属性为true表示打，false表示关闭
-///    Switch 没有提供api Track Thumb的大小？？？
-SizedBox buildSizedBox5() {
-  return SizedBox(
-    child: Container(
-      height: 80,
-      width: 180,
-      color: Colors.greenAccent,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(0),
-      child: Consumer<_MyValuesNotifier>(builder: (context, _MyValuesNotifier notifier, child) {
-        return Switch(
-          value: notifier.switchEnable,
-          // 打开时候 开关样式
+  /// 2. Switch, 用法示例: Switch的value属性为true表示打，false表示关闭
+  ///    Switch 没有提供api Track Thumb的大小？？？
+  SizedBox buildSizedBox5() {
+    return SizedBox(
+      child: Container(
+        height: 80,
+        width: 180,
+        color: Colors.greenAccent,
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(0),
+        child: Consumer<_MyValuesNotifier>(builder: (context, _MyValuesNotifier notifier, child) {
+          return Switch(
+            value: notifier.switchEnable,
+            // 打开时候 开关样式
+            activeColor: Colors.blue,
+            activeTrackColor: Colors.white,
+            // activeThumbImage: ,
+            // 关闭时候开关样式
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: const Color.fromARGB(222, 175, 175, 175),
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            onChanged: (bool value) {
+              notifier.setSwitchEnable(value);
+            },
+          );
+        }),
+      ),
+    );
+  }
+
+  /// 2. SwitchListTile, 用法示例: Switch的value属性为true表示打，false表示关闭
+  ///    SwitchListTile 没有提供api Track Thumb的大小？？？
+  SizedBox buildSizedBox6() {
+    return SizedBox(
+      child: Container(
+        height: 80,
+        width: 280,
+        color: Colors.greenAccent,
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(0),
+        child: Consumer<_MyValuesNotifier>(builder: (context, _MyValuesNotifier notifier, child) {
+          return SwitchListTile(
+            value: notifier.switchListTileEnable,
+            // 打开时候 开关样式
+            activeColor: Colors.blue,
+            activeTrackColor: Colors.white,
+            // activeThumbImage: ,
+            // 关闭时候开关样式
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: const Color.fromARGB(222, 175, 175, 175),
+            title: const Text("我是一级标题"),
+            subtitle: const Text("我是2级标题..."),
+            // 设置最左边控件，一般是图标
+            secondary: const Icon(
+              Icons.account_circle,
+              size: 55,
+            ),
+            onChanged: (bool value) {
+              notifier.setSwitchListTileEnable(value);
+            },
+          );
+        }),
+      ),
+    );
+  }
+
+
+
+  /// 2. Slider, 用法示例:
+  Widget buildSizedBox7() {
+    return Container(
+        height: 80,
+        width: 280,
+        color: Colors.pink,
+        child: Consumer<_MyValuesNotifier>(builder: (context, notifier, child){
+        return Slider(
+          value: notifier.sliderValue,
+          min: 0,
+          max: 100,
+          inactiveColor: Colors.grey,
           activeColor: Colors.blue,
-          activeTrackColor: Colors.white,
-          // activeThumbImage: ,
-          // 关闭时候开关样式
-          inactiveThumbColor: Colors.white,
-          inactiveTrackColor: const Color.fromARGB(222, 175, 175, 175),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          onChanged: (bool value) {
-            notifier.setSwitchEnable(value);
+          onChanged: (double value) {
+            notifier.setSliderValue(value);
           },
         );
-      }),
-    ),
-  );
-}
-
-/// 2. SwitchListTile, 用法示例: Switch的value属性为true表示打，false表示关闭
-///    SwitchListTile 没有提供api Track Thumb的大小？？？
-SizedBox buildSizedBox6() {
-  return SizedBox(
-    child: Container(
-      height: 80,
-      width: 280,
-      color: Colors.greenAccent,
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(0),
-      child: Consumer<_MyValuesNotifier>(builder: (context, _MyValuesNotifier notifier, child) {
-        return SwitchListTile(
-          value: notifier.switchListTileEnable,
-          // 打开时候 开关样式
-          activeColor: Colors.blue,
-          activeTrackColor: Colors.white,
-          // activeThumbImage: ,
-          // 关闭时候开关样式
-          inactiveThumbColor: Colors.white,
-          inactiveTrackColor: const Color.fromARGB(222, 175, 175, 175),
-          title: const Text("我是一级标题"),
-          subtitle: const Text("我是2级标题..."),
-          // 设置最左边控件，一般是图标
-          secondary: const Icon(
-            Icons.account_circle,
-            size: 55,
-          ),
-          onChanged: (bool value) {
-            notifier.setSwitchListTileEnable(value);
-          },
-        );
-      }),
-    ),
-  );
+        }),);
+  }
 }
 
 class _MyValuesNotifier extends ChangeNotifier {
@@ -219,7 +242,7 @@ class _MyValuesNotifier extends ChangeNotifier {
   bool boolValue2 = false;
   bool switchEnable = false;
   bool switchListTileEnable = false;
-
+  double sliderValue = 0;
   void setIntValue(int value) {
     intValue = value;
     notifyListeners();
@@ -247,6 +270,11 @@ class _MyValuesNotifier extends ChangeNotifier {
 
   void setSwitchListTileEnable(bool value) {
     switchListTileEnable = value;
+    notifyListeners();
+  }
+
+  void setSliderValue(double value) {
+    sliderValue = value;
     notifyListeners();
   }
 }

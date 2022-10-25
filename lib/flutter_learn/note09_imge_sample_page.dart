@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 String summary = '''
@@ -16,6 +17,7 @@ String summary = '''
 4. Image加载网络图片. 
       01. Image.network("path"):  加载网络图片
       02. FadeInImage.assetNetwork(placeholder: "images/xx.jpeg", image: imgUrl)
+      03. CachedNetworkImage 第三方框架加载图片
 ''';
 
 class ImageSamplePage extends StatefulWidget {
@@ -61,6 +63,7 @@ class _MyState extends State {
           image2(),
           image3(),
           image4(),
+          image5(),
         ],
       ),
     );
@@ -154,6 +157,8 @@ class _MyState extends State {
   ///  02. Image.asset("images/xx.jpeg") 加载本地图片
   ///  03. Image.network("path"):  加载网络图片
   ///  04. FadeInImage.assetNetwork(placeholder: "images/js.jpeg", image: imgUrl) // 带展位图加载图片
+  ///  05. ClipOval(child: null,) ClipRect() 裁剪widget
+  ///  06. CircleAvatar() 圆角图片...
   Positioned image4() {
     return Positioned(
       width: 100,
@@ -165,6 +170,26 @@ class _MyState extends State {
         alignment: Alignment.topLeft,
         // child: Image.network(imgUrl),
         child: FadeInImage.assetNetwork(placeholder: "images/js.jpeg", image: imgUrl),
+      ),
+    );
+  }
+
+  // 5 第三方框架（cached_network_image: ^3.2.2） CachedNetworkImage 加载图片
+  Positioned image5() {
+    return Positioned(
+      width: 100,
+      height: 80,
+      right: 10,
+      bottom: 10,
+      child: Container(
+        color: const Color(0xffa4ff3c),
+        alignment: Alignment.topLeft,
+        // child: Image.network(imgUrl),
+        child: CachedNetworkImage(
+          imageUrl: imgUrl,
+          placeholder: (context, url) => const CircularProgressIndicator(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
       ),
     );
   }

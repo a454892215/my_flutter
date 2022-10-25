@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+String summary = '''
+1. Image只有宽或者高的时候，另一边等比缩放：
 
-/// 1. Image只有宽或者高的时候，另一边等比缩放
-/// 2. BoxFit.fill, 图片缩放宽高填Image充设置大小
-/// 3. BoxFit.cover, 图片保持宽高比，填满Image设置的宽高，多余部分裁剪
-/// 4. BoxFit.contain 默认模式，图片保持宽高比，居中Image显示，
-/// 5. BoxFit.fitWidth 图片根据Image的width等比缩放， 填充width，多余部分裁剪
-/// 6. BoxFit.fitHeight 图片根据Image的Height等比缩放， 填充Height，多余部分裁剪
-/// 7. 注意 Image的 alignment: Alignment.center, 默认居中
+2. Image的 fit 模式：
+      01. BoxFit.fill, 图片缩放宽高填Image充设置大小
+      02. BoxFit.cover, 图片保持宽高比，填满Image设置的宽高，多余部分裁剪
+      03. BoxFit.contain 默认模式，图片保持宽高比，居中Image显示，
+      04. BoxFit.fitWidth 图片根据Image的width等比缩放， 填充width，多余部分裁剪
+      05. BoxFit.fitHeight 图片根据Image的Height等比缩放， 填充Height，多余部分裁剪
+      06. Image的 alignment: Alignment.center, 默认居中
+
+3. Image的 colorBlendMode 设置图片混色模式
+
+4. Image加载网络图片. 
+      01. Image.network("path"):  加载网络图片
+      02. FadeInImage.assetNetwork(placeholder: "images/xx.jpeg", image: imgUrl)
+''';
 class ImageSamplePage extends StatefulWidget {
   const ImageSamplePage({super.key});
 
@@ -26,6 +35,7 @@ class _MyState extends State {
       body: ListView(
         children: [
           buildContainer1(),
+          Text(summary,softWrap: true, style: const TextStyle(color: Colors.black, fontSize: 13),)
         ],
       ),
     );
@@ -33,10 +43,9 @@ class _MyState extends State {
 
   double itemWidth = 30;
 
-  /// 绝对定位： Stack， Positioned
   Container buildContainer1() {
     return Container(
-      height: 300,
+      height: 200,
       color: Colors.orange,
       child: Stack(
         //  StackFit.expand 没有Positioned定位的子空间填充满窗口
@@ -46,16 +55,14 @@ class _MyState extends State {
           image2(),
           image3(),
           image4(),
-          image5(),
-          image6(),
         ],
       ),
     );
   }
-
+  /// 1. 只有宽或者高的时候，另一边等比缩放
   Positioned image1() {
     return Positioned(
-      width: 120,
+      width: 100,
       height: 80,
       left: 10,
       top: 10,
@@ -65,7 +72,7 @@ class _MyState extends State {
             color: Colors.pink,
             alignment: Alignment.topLeft,
             child: const Image(
-              /// 只有宽或者高的时候，另一边等比缩放
+              /// 1. 只有宽或者高的时候，另一边等比缩放
               height: 50,
               image: AssetImage("images/js.jpeg"),
             ),
@@ -83,20 +90,26 @@ class _MyState extends State {
     );
   }
 
+  /// 2.Image fit 属性 设置图片缩放模式
   Positioned image2() {
     return Positioned(
-      width: 120,
+      width: 100,
       height: 80,
-      left: 180,
+      left: 120,
       top: 10,
       child: Container(
         color: Colors.white,
         alignment: Alignment.topLeft,
         child: const Image(
-          width: 110,
+          width: 90,
           height: 30,
 
-          /// 2. BoxFit.fill, 图片缩放宽高填充设置大小
+          /// 2. BoxFit.fill, 图片缩放宽高填Image充设置大小
+          /// 3. BoxFit.cover, 图片保持宽高比，填满Image设置的宽高，多余部分裁剪
+          /// 4. BoxFit.contain 默认模式，图片保持宽高比，居中Image显示，
+          /// 5. BoxFit.fitWidth 图片根据Image的width等比缩放， 填充width，多余部分裁剪
+          /// 6. BoxFit.fitHeight 图片根据Image的Height等比缩放， 填充Height，多余部分裁剪
+          /// 7. 注意 Image的 alignment: Alignment.center, 默认居中
           fit: BoxFit.fill,
           image: AssetImage("images/js.jpeg"),
         ),
@@ -104,90 +117,45 @@ class _MyState extends State {
     );
   }
 
+  /// 3. Image的 colorBlendMode 设置图片混色模式
   Positioned image3() {
     return Positioned(
-      width: 120,
+      width: 100,
       height: 80,
       right: 10,
       top: 10,
       child: Container(
-        color: Colors.green,
+        color: const Color(0xffa4ff3c),
         alignment: Alignment.topLeft,
         child: const Image(
-          width: 110,
-          height: 30,
-
-          /// 3. BoxFit.cover, 图片保持宽高比，填满设置的宽高，多余部分裁剪
-          fit: BoxFit.cover,
+          fit: BoxFit.fitWidth,
+          color: Colors.red,
+          // 颜色混合模式
+          colorBlendMode: BlendMode.hue,
           image: AssetImage("images/js.jpeg"),
         ),
       ),
     );
   }
 
+  String imgUrl =
+      "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Flmg.jj20.com%2Fup%2Fallimg%2F1114%2F010421142927%2F210104142927-8-1200."
+      "jpg&refer=http%3A%2F%2Flmg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1669270662&t=03ce40a177b79c646757c80de0f9ed74";
+
+  /// 4 Image加载网络图片.
+  ///  01. Image.network("path"):  加载网络图片
+  ///  02. FadeInImage.assetNetwork(placeholder: "images/js.jpeg", image: imgUrl) // 带展位图加载图片
   Positioned image4() {
     return Positioned(
-      width: 120,
+      width: 100,
       height: 80,
       left: 10,
-      top: 120,
-      child: Container(
-        color: Colors.yellow,
-        alignment: Alignment.topLeft,
-        child: const Image(
-          // width， height 超过父容器大小，会取父容器大小
-          width: 110,
-          height: 30,
-
-          /// 4. BoxFit.contain 默认模式，图片保持宽高比，居中显示，
-          fit: BoxFit.contain,
-          image: AssetImage("images/js.jpeg"),
-        ),
-      ),
-    );
-  }
-
-  Positioned image5() {
-    return Positioned(
-      width: 120,
-      height: 80,
-      right: 10,
-      top: 120,
-      child: Container(
-        color: Colors.blue,
-        alignment: Alignment.topLeft,
-        child: const Image(
-          // width， height 超过父容器大小，会取父容器大小
-          width: 110,
-          height: 30,
-
-          /// 5. BoxFit.fitWidth 图片根据Image的width等比缩放， 填充width，多余部分裁剪
-          fit: BoxFit.fitWidth,
-          image: AssetImage("images/js.jpeg"),
-        ),
-      ),
-    );
-  }
-
-  Positioned image6() {
-    return Positioned(
-      width: 120,
-      height: 80,
-      left: 180,
       bottom: 10,
       child: Container(
-        color: Colors.green,
+        color: const Color(0xffa4ff3c),
         alignment: Alignment.topLeft,
-        child: const Image(
-          // width， height 超过父容器大小，会取父容器大小
-          width: 110,
-          height: 30,
-
-          /// 6. BoxFit.fitHeight 图片根据Image的Height等比缩放， 填充Height，多余部分裁剪
-          fit: BoxFit.fitHeight,
-          alignment: Alignment.topLeft,
-          image: AssetImage("images/js.jpeg"),
-        ),
+       // child: Image.network(imgUrl),
+        child: FadeInImage.assetNetwork(placeholder: "images/js.jpeg", image: imgUrl),
       ),
     );
   }

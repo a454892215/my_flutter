@@ -8,7 +8,8 @@ import 'package:my_flutter_lib_3/pages/page3.dart';
 
 import 'flutter_learn/note06_chexobx_radio_sample.dart';
 import 'flutter_learn/note07_form_sample.dart';
-import 'flutter_learn/note08_image_sample_page.dart';
+import 'flutter_learn/note08_stack_wrap_sample_page.dart';
+import 'flutter_learn/note09_imge_sample_page.dart';
 import 'flutter_learn/note10_container_sample.dart';
 import 'flutter_learn/note11_linear_layout_sample.dart';
 import 'flutter_learn/note12_scroll_sample.dart';
@@ -67,7 +68,8 @@ Widget getMaterialApp(var title) {
       '/TextFieldSamplePage': (BuildContext context) => const TextFieldSamplePage(),
       '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
       '/FormSamplePage': (BuildContext context) => const FormSamplePage(),
-      '/ImageSamplePage': (BuildContext context) => const StackAndWrapSamplePage(),
+      '/StackAndWrapSamplePage': (BuildContext context) => const StackAndWrapSamplePage(),
+      '/ImageSamplePage': (BuildContext context) => const ImageSamplePage(),
       '/ContainerSamplePage': (BuildContext context) => const ContainerSamplePage(),
       '/LinearLayoutSamplePage': (BuildContext context) => const LinearLayoutSamplePage(),
       '/SingleChildScrollViewSamplePage': (BuildContext context) => const SingleChildScrollViewSamplePage(),

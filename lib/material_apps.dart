@@ -6,8 +6,9 @@ import 'package:my_flutter_lib_3/pages/page1.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
-import 'flutter_learn/chexobx_radio_sample.dart';
-import 'flutter_learn/form_sample.dart';
+import 'flutter_learn/note06_chexobx_radio_sample.dart';
+import 'flutter_learn/note07_form_sample.dart';
+import 'flutter_learn/note08_image_sample_page.dart';
 import 'flutter_learn/note10_container_sample.dart';
 import 'flutter_learn/note11_linear_layout_sample.dart';
 import 'flutter_learn/note12_scroll_sample.dart';
@@ -18,11 +19,11 @@ import 'flutter_learn/note17_2_grid_view_sample.dart';
 import 'flutter_learn/note17_list_view_sample.dart';
 import 'flutter_learn/note18_refresh_view_sample.dart';
 import 'flutter_learn/note19_smart_refresh_sample.dart';
-import 'flutter_learn/page_indicaotr_sample.dart';
-import 'flutter_learn/provider_sample.dart';
-import 'flutter_learn/scaffold_sample.dart';
-import 'flutter_learn/text_field_sample.dart';
-import 'flutter_learn/text_sample.dart';
+import 'flutter_learn/note00_page_indicaotr_sample.dart';
+import 'flutter_learn/note02_provider_sample.dart';
+import 'flutter_learn/note01_scaffold_sample.dart';
+import 'flutter_learn/note05_text_field_sample.dart';
+import 'flutter_learn/note04_text_sample.dart';
 import 'navigator/observer.dart';
 
 //默认配置下： 只有此目录下文件名字为main的dart文件的main函数才能正常启动flutter material开发环境？
@@ -66,6 +67,7 @@ Widget getMaterialApp(var title) {
       '/TextFieldSamplePage': (BuildContext context) => const TextFieldSamplePage(),
       '/CheckboxSamplePage': (BuildContext context) => const CheckboxSamplePage(),
       '/FormSamplePage': (BuildContext context) => const FormSamplePage(),
+      '/ImageSamplePage': (BuildContext context) => const ImageSamplePage(),
       '/ContainerSamplePage': (BuildContext context) => const ContainerSamplePage(),
       '/LinearLayoutSamplePage': (BuildContext context) => const LinearLayoutSamplePage(),
       '/SingleChildScrollViewSamplePage': (BuildContext context) => const SingleChildScrollViewSamplePage(),

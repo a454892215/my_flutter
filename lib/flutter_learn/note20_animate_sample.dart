@@ -73,8 +73,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
             return AnimatedPositioned(
               left: notifier.positionLeft,
               top: 10,
-              width: 50,
-              height: 50,
+              width: 100,
+              height: 100,
               duration: const Duration(milliseconds: 250),
               child: Container(
                 color: Colors.blue,

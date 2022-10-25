@@ -46,5 +46,8 @@
     2. 使用 flutter sdk 中提供的示例代码（examples\api\lib\widgets\nested_scroll_view\nested_scroll_view.0.dart），web滑动测试中也报此错
     3. 解决？ 暂无
 
+12. Cannot hit test a render box that has never been laid out.
+     Stack 内部 Positioned 报次错误...
+
 
 

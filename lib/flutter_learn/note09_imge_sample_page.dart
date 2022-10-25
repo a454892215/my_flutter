@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 /// 1. Image只有宽或者高的时候，另一边等比缩放
 /// 2. BoxFit.fill, 图片缩放宽高填Image充设置大小
 /// 3. BoxFit.cover, 图片保持宽高比，填满Image设置的宽高，多余部分裁剪
@@ -54,11 +55,13 @@ class _MyState extends State {
 
   Positioned image1() {
     return Positioned(
-          width: 120,
-          height: 80,
-          left: 10,
-          top: 10,
-          child: Container(
+      width: 120,
+      height: 80,
+      left: 10,
+      top: 10,
+      child: Stack(
+        children: [
+          Container(
             color: Colors.pink,
             alignment: Alignment.topLeft,
             child: const Image(
@@ -67,8 +70,19 @@ class _MyState extends State {
               image: AssetImage("images/js.jpeg"),
             ),
           ),
-        );
+          const Positioned(
+            bottom: 3,
+            left: 3,
+            child: Text(
+              "only height",
+              style: TextStyle(color: Colors.black),
+            ),
+          )
+        ],
+      ),
+    );
   }
+
   Positioned image2() {
     return Positioned(
       width: 120,
@@ -81,6 +95,7 @@ class _MyState extends State {
         child: const Image(
           width: 110,
           height: 30,
+
           /// 2. BoxFit.fill, 图片缩放宽高填充设置大小
           fit: BoxFit.fill,
           image: AssetImage("images/js.jpeg"),
@@ -88,6 +103,7 @@ class _MyState extends State {
       ),
     );
   }
+
   Positioned image3() {
     return Positioned(
       width: 120,
@@ -100,6 +116,7 @@ class _MyState extends State {
         child: const Image(
           width: 110,
           height: 30,
+
           /// 3. BoxFit.cover, 图片保持宽高比，填满设置的宽高，多余部分裁剪
           fit: BoxFit.cover,
           image: AssetImage("images/js.jpeg"),
@@ -107,6 +124,7 @@ class _MyState extends State {
       ),
     );
   }
+
   Positioned image4() {
     return Positioned(
       width: 120,
@@ -120,6 +138,7 @@ class _MyState extends State {
           // width， height 超过父容器大小，会取父容器大小
           width: 110,
           height: 30,
+
           /// 4. BoxFit.contain 默认模式，图片保持宽高比，居中显示，
           fit: BoxFit.contain,
           image: AssetImage("images/js.jpeg"),
@@ -127,6 +146,7 @@ class _MyState extends State {
       ),
     );
   }
+
   Positioned image5() {
     return Positioned(
       width: 120,
@@ -140,6 +160,7 @@ class _MyState extends State {
           // width， height 超过父容器大小，会取父容器大小
           width: 110,
           height: 30,
+
           /// 5. BoxFit.fitWidth 图片根据Image的width等比缩放， 填充width，多余部分裁剪
           fit: BoxFit.fitWidth,
           image: AssetImage("images/js.jpeg"),
@@ -147,6 +168,7 @@ class _MyState extends State {
       ),
     );
   }
+
   Positioned image6() {
     return Positioned(
       width: 120,
@@ -160,6 +182,7 @@ class _MyState extends State {
           // width， height 超过父容器大小，会取父容器大小
           width: 110,
           height: 30,
+
           /// 6. BoxFit.fitHeight 图片根据Image的Height等比缩放， 填充Height，多余部分裁剪
           fit: BoxFit.fitHeight,
           alignment: Alignment.topLeft,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 String summary = '''
 1. Image只有宽或者高的时候，另一边等比缩放：
 
@@ -16,6 +17,7 @@ String summary = '''
       01. Image.network("path"):  加载网络图片
       02. FadeInImage.assetNetwork(placeholder: "images/xx.jpeg", image: imgUrl)
 ''';
+
 class ImageSamplePage extends StatefulWidget {
   const ImageSamplePage({super.key});
 
@@ -35,7 +37,11 @@ class _MyState extends State {
       body: ListView(
         children: [
           buildContainer1(),
-          Text(summary,softWrap: true, style: const TextStyle(color: Colors.black, fontSize: 13),)
+          Text(
+            summary,
+            softWrap: true,
+            style: const TextStyle(color: Colors.black, fontSize: 13),
+          )
         ],
       ),
     );
@@ -59,6 +65,7 @@ class _MyState extends State {
       ),
     );
   }
+
   /// 1. 只有宽或者高的时候，另一边等比缩放
   Positioned image1() {
     return Positioned(
@@ -142,9 +149,11 @@ class _MyState extends State {
       "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Flmg.jj20.com%2Fup%2Fallimg%2F1114%2F010421142927%2F210104142927-8-1200."
       "jpg&refer=http%3A%2F%2Flmg.jj20.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1669270662&t=03ce40a177b79c646757c80de0f9ed74";
 
-  /// 4 Image加载网络图片.
-  ///  01. Image.network("path"):  加载网络图片
-  ///  02. FadeInImage.assetNetwork(placeholder: "images/js.jpeg", image: imgUrl) // 带展位图加载图片
+  /// 4.  Image加载网络图片.
+  ///  01. AssetImage("images/js.jpeg") 加载本地图片
+  ///  02. Image.asset("images/xx.jpeg") 加载本地图片
+  ///  03. Image.network("path"):  加载网络图片
+  ///  04. FadeInImage.assetNetwork(placeholder: "images/js.jpeg", image: imgUrl) // 带展位图加载图片
   Positioned image4() {
     return Positioned(
       width: 100,
@@ -154,7 +163,7 @@ class _MyState extends State {
       child: Container(
         color: const Color(0xffa4ff3c),
         alignment: Alignment.topLeft,
-       // child: Image.network(imgUrl),
+        // child: Image.network(imgUrl),
         child: FadeInImage.assetNetwork(placeholder: "images/js.jpeg", image: imgUrl),
       ),
     );

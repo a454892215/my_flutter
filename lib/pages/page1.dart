@@ -39,7 +39,7 @@ class Page1State extends State {
               RouterButton(params: ["/TextFieldSamplePage", "去-TextFieldSamplePage-页面"]),
               RouterButton(params: ["/CheckboxSamplePage", "去-CheckboxSamplePage-页面"]),
               RouterButton(params: ["/FormSamplePage", "去-FormSamplePage-页面"]),
-              RouterButton(params: ["/ImageSamplePage", "去-ImageSamplePage-页面"]),
+              RouterButton(params: ["/StackAndWrapSamplePage", "去-StackAndWrapSamplePage-页面"]),
               RouterButton(params: ["/ContainerSamplePage", "去-ContainerSamplePage-页面"]),
               RouterButton(params: ["/LinearLayoutSamplePage", "去-LinearLayoutSamplePage-页面"]),
               RouterButton(params: ["/SingleChildScrollViewSamplePage", "去-SingleChildScrollViewSamplePage-页面"]),

@@ -1,10 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:my_flutter_lib_3/util/toast_util.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import '../util/Log.dart';
 
 class AnimationSamplePage extends StatefulWidget {
   const AnimationSamplePage({super.key});
@@ -16,13 +11,9 @@ class AnimationSamplePage extends StatefulWidget {
 }
 
 class _SamplePageState extends State with SingleTickerProviderStateMixin {
-  int listSize = 3;
-  final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {});
   }
 
   @override
@@ -40,13 +31,20 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         appBar: AppBar(
           title: const Text("Animation-示例"),
         ),
-        body: ListView(
-          children: [
-            buildAnimatedAlign(),
-          ],
+        body: Container(
+          color: Colors.grey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildAnimatedAlign(),
+              buildAnimatedPositioned(),
+            ],
+          ),
         ));
   }
 
+  /// 1. AnimatedAlign
   Widget buildAnimatedAlign() {
     return Consumer<_MyValuesNotifier>(builder: (context, notifier, child) {
       return AnimatedAlign(
@@ -61,13 +59,50 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
       );
     });
   }
+
+  /// 2. buildAnimatedPositioned
+  Widget buildAnimatedPositioned() {
+    return Container(
+      height: 200,
+      margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+      color: Colors.purple,
+      child: Stack(
+        children: [
+          /// 1. 注意如果Positioned视图越界会抛异常，异常log难定位??
+          Consumer<_MyValuesNotifier>(builder: (context, notifier, child) {
+            return AnimatedPositioned(
+              left: notifier.positionLeft,
+              top: 10,
+              width: 50,
+              height: 50,
+              duration: const Duration(milliseconds: 250),
+              child: Container(
+                color: Colors.blue,
+                child: MaterialButton(
+                  onPressed: () => notifier.playAnimatedPositionedAnim(),
+                  color: Colors.blue,
+                  child: const Text("play-AnimatedPositioned-动画"),
+                ),
+              ),
+            );
+          }),
+        ],
+      ),
+    );
+  }
 }
 
 class _MyValuesNotifier extends ChangeNotifier {
   Alignment alignment = Alignment.topLeft;
+  double positionLeft = 10;
 
   void playAlignAim() {
     alignment = alignment == Alignment.topLeft ? Alignment.topRight : Alignment.topLeft;
+    notifyListeners();
+  }
+
+  void playAnimatedPositionedAnim() {
+    positionLeft = positionLeft == 10 ? 220 : 10;
     notifyListeners();
   }
 }

@@ -52,6 +52,7 @@ class Page1State extends State {
               RouterButton(params: ["/GridViewSamplePage", "去-GridViewSamplePage-页面"]),
               RouterButton(params: ["/RefreshSamplePage", "去-RefreshSamplePage-页面"]),
               RouterButton(params: ["/SmartRefreshSamplePage", "去-SmartRefreshSamplePage-页面"]),
+              RouterButton(params: ["/AnimationSamplePage", "去-AnimationSamplePage-页面"]),
               RouterButton(params: ["/page999", "去404页面"]),
             ],
           )),

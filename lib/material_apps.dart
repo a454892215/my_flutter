@@ -25,6 +25,7 @@ import 'flutter_learn/note02_provider_sample.dart';
 import 'flutter_learn/note01_scaffold_sample.dart';
 import 'flutter_learn/note05_text_field_sample.dart';
 import 'flutter_learn/note04_text_sample.dart';
+import 'flutter_learn/note20_animate_sample.dart';
 import 'navigator/observer.dart';
 
 //默认配置下： 只有此目录下文件名字为main的dart文件的main函数才能正常启动flutter material开发环境？
@@ -81,6 +82,7 @@ Widget getMaterialApp(var title) {
       '/GridViewSamplePage': (BuildContext context) => const GridViewSamplePage(),
       '/RefreshSamplePage': (BuildContext context) => const RefreshSamplePage(),
       '/SmartRefreshSamplePage': (BuildContext context) => const SmartRefreshSamplePage(),
+      '/AnimationSamplePage': (BuildContext context) => const AnimationSamplePage(),
 
     },
 

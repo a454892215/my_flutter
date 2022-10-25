@@ -34,7 +34,7 @@ class _MyState extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("StackAndWrap-示例"),
+        title: const Text("Image-示例"),
       ),
       body: ListView(
         children: [

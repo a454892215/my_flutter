@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'note202animate_sample.dart';
-import 'note203animate_sample.dart';
+import 'anim/note202animate_sample.dart';
+import 'anim/note203animate_sample.dart';
 
 String summary = ''' 
 1. AnimatedAlign

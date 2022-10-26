@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 
-import '../util/Log.dart';
-import '../util/toast_util.dart';
+main() {
+  runApp(const MaterialApp(
+    home: Scaffold(
+      body: SizeTransitionDemo(),
+    ),
+  ));
+}
 
-/// 1. SizeTransition
-class SizeTransitionSamplePage extends StatefulWidget {
-  const SizeTransitionSamplePage({Key? key}) : super(key: key);
+class SizeTransitionDemo extends StatefulWidget {
+  const SizeTransitionDemo({Key? key}) : super(key: key);
 
   @override
   State createState() => _SizeTransitionDemoState();
 }
 
-class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin {
+class _SizeTransitionDemoState extends State<SizeTransitionDemo> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     //
-    duration: const Duration(milliseconds: 1000),
+    duration: const Duration(milliseconds: 2000),
     reverseDuration: const Duration(milliseconds: 2000),
     animationBehavior: AnimationBehavior.preserve,
     vsync: this,
@@ -22,16 +26,18 @@ class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onTap: (){
-     setState(() {
-       _controller.forward(from: 0);
-     });
-    }, child: Center(
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          // 不传入0 动画不能重置只能执行一次,
+          _controller.forward(from: 0);
+        });
+      },
+      child: Center(
         child: Container(
           width: 100,
           height: 100,
           color: Colors.orange,
-          /// 和 SizeTransition的 配合控制动画播放效果
           alignment: Alignment.center,
           child: SizeTransition(
             sizeFactor: _controller,
@@ -49,9 +55,13 @@ class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin
             child: Container(
               width: 100,
               height: 100,
-              color: Colors.green,
+              color: Colors.blue,
+              alignment: Alignment.center,
+              child: const Text("播放动画"),
             ),
           ),
-        ),));
+        ),
+      ),
+    );
   }
 }

@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 
-main() {
-  runApp(const MaterialApp(
-    home: SizeTransitionDemo(),
-  ));
-}
+import '../../util/Log.dart';
+import '../../util/toast_util.dart';
 
-class SizeTransitionDemo extends StatefulWidget {
-  const SizeTransitionDemo({Key? key}) : super(key: key);
+/// 1. SizeTransition
+class SizeTransitionSamplePage extends StatefulWidget {
+  const SizeTransitionSamplePage({Key? key}) : super(key: key);
 
   @override
   State createState() => _SizeTransitionDemoState();
 }
 
-class _SizeTransitionDemoState extends State<SizeTransitionDemo> with SingleTickerProviderStateMixin {
+class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     //
-    duration: const Duration(milliseconds: 2000),
+    duration: const Duration(milliseconds: 1000),
     reverseDuration: const Duration(milliseconds: 2000),
     animationBehavior: AnimationBehavior.preserve,
     vsync: this,
@@ -24,21 +22,17 @@ class _SizeTransitionDemoState extends State<SizeTransitionDemo> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            // 不传入0 动画不能重置只能执行一次,
-            _controller.forward(from:0);
-          });
-        },
-      ),
-      body: Center(
+    return GestureDetector(onTap: (){
+     setState(() {
+       _controller.forward(from: 0);
+     });
+    }, child: Center(
         child: Container(
           width: 100,
           height: 100,
           color: Colors.orange,
-          alignment: Alignment.topLeft,
+          /// 和 SizeTransition的 配合控制动画播放效果
+          alignment: Alignment.center,
           child: SizeTransition(
             sizeFactor: _controller,
 
@@ -51,15 +45,13 @@ class _SizeTransitionDemoState extends State<SizeTransitionDemo> with SingleTick
             /// 如: 方向为水平，自身长度是100，axisAlignment=0.5， 则向左边移动25. 垂直方向同理.
             /// 如果要执行从中间开始向两边展开的动画，把View的初始位置设置在中心即.axisAlignment=0， 父窗体的alignment为center
             /// 如果要执行从左边进入的动画，把设置为和父控件相同大小，父控件的alignment为left,自己的axisAlignment设置为1
-            axisAlignment: 1,
+            axisAlignment: 0,
             child: Container(
               width: 100,
               height: 100,
-              color: Colors.blue,
+              color: Colors.green,
             ),
           ),
-        ),
-      ),
-    );
+        ),));
   }
 }

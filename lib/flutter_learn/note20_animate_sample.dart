@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'note20_2animate_sample.dart';
+import 'note202animate_sample.dart';
+import 'note203animate_sample.dart';
 
 String summary = ''' 
 1. AnimatedAlign
@@ -55,6 +56,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               buildAnimatedList(),
               // AnimatedContainer
               const AnimationSample2Page(),
+              const SizeTransitionSamplePage(),
             ],
           ),
         ));

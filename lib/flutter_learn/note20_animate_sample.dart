@@ -12,6 +12,7 @@ String summary = '''
 5. AnimatedDefaultTextStyle
 6. AnimatedList
 7. AnimatedContainer
+8. SizeTransition
 ''';
 
 class AnimationSamplePage extends StatefulWidget {

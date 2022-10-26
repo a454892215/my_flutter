@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../util/Log.dart';
-import '../util/toast_util.dart';
-
 main() {
   runApp(const MaterialApp(
     home: SizeTransitionDemo(),

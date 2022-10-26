@@ -132,8 +132,9 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   /// 4. AnimatedOpacity
   Widget buildAnimatedOpacity() {
     return Consumer<_MyValuesNotifier>(builder: (context, notifier, child) {
-      return Align(
+      return Container(
         alignment: Alignment.topLeft,
+        margin: const EdgeInsets.only(top: 10),
         child: AnimatedOpacity(
           opacity: notifier.opacity,
           curve: Curves.linear,

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'note20_2animate_sample.dart';
+
 String summary = ''' 
 1. AnimatedAlign
 2. AnimatedPositioned
 3. AnimatedPositionedDirectional
 4. AnimatedOpacity
 5. AnimatedDefaultTextStyle
+6. AnimatedList
+7. AnimatedContainer
 ''';
 
 class AnimationSamplePage extends StatefulWidget {
@@ -49,6 +53,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               buildAnimatedOpacity(),
               buildAnimatedDefaultTextStyle(),
               buildAnimatedList(),
+              // AnimatedContainer
+              const AnimationSample2Page(),
             ],
           ),
         ));

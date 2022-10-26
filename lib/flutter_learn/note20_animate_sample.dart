@@ -209,7 +209,12 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                 children: [
                   Expanded(
                       child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (notifier.selectedListIndex != null) {
+                        notifier.insertItemFromList(notifier.selectedListIndex! + 1);
+                        notifier.switchSelectedIndex(null);
+                      }
+                    },
                     child: const Text(
                       "add",
                       // 外层不要设置高度限制死，这里设置高度，撑出外层高度
@@ -274,6 +279,11 @@ class _MyValuesNotifier extends ChangeNotifier {
 
   void remoteItemFromList(int index) {
     _listKey.currentState?.removeItem(index, (context, animation) => buildListItem(animation, index, this));
+    notifyListeners();
+  }
+
+  void insertItemFromList(int index) {
+    _listKey.currentState?.insertItem(index);
     notifyListeners();
   }
 

@@ -48,6 +48,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               buildAnimatedPositionedDirectional(),
               buildAnimatedOpacity(),
               buildAnimatedDefaultTextStyle(),
+              buildAnimatedList(),
             ],
           ),
         ));
@@ -177,6 +178,61 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
       );
     });
   }
+
+  /// 6. AnimatedList
+  Widget buildAnimatedList() {
+    return Consumer<_MyValuesNotifier>(builder: (context, notifier, child) {
+      return Container(
+        alignment: Alignment.topLeft,
+        color: Colors.green,
+        margin: const EdgeInsets.only(top: 10),
+        child: Consumer<_MyValuesNotifier>(builder: (context, notifier, child) {
+          return Column(
+            children: [
+              Container(
+                color: Colors.white,
+                height: 120,
+                child: AnimatedList(
+                  key: notifier._listKey,
+                  initialItemCount: 12,
+                  itemBuilder: (BuildContext context, int index, Animation<double> animation) {
+                    return GestureDetector(
+                      onTap: () {
+                        notifier.switchSelectedIndex(index);
+                      },
+                      child: buildListItem(animation, index, notifier),
+                    );
+                  },
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      child: TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      "add",
+                      // 外层不要设置高度限制死，这里设置高度，撑出外层高度
+                      style: TextStyle(height: 3),
+                    ),
+                  )),
+                  Expanded(
+                      child: TextButton(
+                          onPressed: () {
+                            if (notifier.selectedListIndex != null) {
+                              notifier.remoteItemFromList(notifier.selectedListIndex!);
+                              notifier.switchSelectedIndex(null);
+                            }
+                          },
+                          child: const Text("del", style: TextStyle(height: 3)))),
+                ],
+              )
+            ],
+          );
+        }),
+      );
+    });
+  }
 }
 
 class _MyValuesNotifier extends ChangeNotifier {
@@ -184,6 +240,9 @@ class _MyValuesNotifier extends ChangeNotifier {
   double positionLeft = 10;
   double positionStart = 10;
   double opacity = 1;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  int? selectedListIndex;
+
   static TextStyle defTextStyle = const TextStyle(color: Colors.white, fontSize: 12);
   static TextStyle defTextStyle2 = const TextStyle(color: Colors.blue, fontSize: 13);
   TextStyle textStyle = defTextStyle;
@@ -212,4 +271,32 @@ class _MyValuesNotifier extends ChangeNotifier {
     textStyle = textStyle == defTextStyle ? defTextStyle2 : defTextStyle;
     notifyListeners();
   }
+
+  void remoteItemFromList(int index) {
+    _listKey.currentState?.removeItem(index, (context, animation) => buildListItem(animation, index, this));
+    notifyListeners();
+  }
+
+  void switchSelectedIndex(int? index) {
+    if (selectedListIndex == index || index == null) {
+      selectedListIndex = null; // 取消选中
+    } else {
+      selectedListIndex = index; // 选中
+    }
+    notifyListeners();
+  }
+}
+
+SizeTransition buildListItem(Animation<double> animation, int index, notifier) {
+  bool selected = index == notifier.selectedListIndex;
+  return SizeTransition(
+    sizeFactor: animation,
+    child: Container(
+      height: 30,
+      alignment: Alignment.centerRight,
+      margin: const EdgeInsets.only(top: 5),
+      color: Colors.primaries[(index) % Colors.primaries.length],
+      child: selected ? const Icon(Icons.check_circle_sharp) : null,
+    ),
+  );
 }

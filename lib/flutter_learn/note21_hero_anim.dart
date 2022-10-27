@@ -32,9 +32,9 @@ class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin
                   const Text("我是hero转场动画示例..."),
 
                   /// 1.如果把text也包裹进去 专场动画很奇怪，不能包裹Text?
-                  Material(
-                    child: Hero(
-                      tag: tag,
+                  Hero(
+                    tag: tag,
+                    child: Material(
                       child: Image.asset(
                         "images/js.jpeg",
                         height: 110,

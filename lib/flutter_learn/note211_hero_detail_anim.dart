@@ -28,13 +28,15 @@ class _State extends State<HeroDetailSample> with SingleTickerProviderStateMixin
           const Text("我是hero转场动画详情页面"),
           Container(
             color: Colors.grey,
-           // height: 200,
+            // height: 200,
             padding: const EdgeInsets.only(left: 12, right: 12),
+
             /// center隔离 使外层Container能设置size
             child: Center(
-              child: Material(
-                child: Hero(
-                  tag: widget.tag,
+              /// hero风格的子组件要是Material风格的？
+              child: Hero(
+                tag: widget.tag,
+                child: Material(
                   child: Image.asset(
                     "images/js.jpeg",
                   ),

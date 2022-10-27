@@ -21,17 +21,19 @@ class LoadingWidget extends StatefulWidget {
   }
 }
 
+bool _enable = true;
+
 class _State extends State {
   @override
   Widget build(BuildContext context) {
-    return buildContainer();
+    return _enable ? buildContainer() : const SizedBox(width: 0, height: 0);
   }
 
   Widget buildContainer() {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      color: const Color(0x22000000),
+      color: const Color(0x44000000),
       alignment: Alignment.center,
       child: Row(
         mainAxisSize: MainAxisSize.min,

@@ -32,9 +32,12 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               duration: const Duration(milliseconds: 250),
               width: notifier.curBox.width,
               height: notifier.curBox.height,
-              padding: notifier.curBox.padding,
-              alignment: notifier.curBox.alignment,
+              alignment: Alignment.center,
               decoration: notifier.curBox.decoration,
+              child: const Text(
+                "AnimatedContainer",
+                style: TextStyle(fontSize: 6, color: Colors.white),
+              ),
             ),
             Row(
               children: [
@@ -59,7 +62,7 @@ class _MyBox {
   double? height = 20;
   EdgeInsets? padding = const EdgeInsets.only(left: 0);
   Color? color = Colors.black;
-  Alignment? alignment = Alignment.topLeft;
+  Alignment? alignment = Alignment.center;
   BoxDecoration? decoration;
 
   _MyBox({this.width, this.height, this.padding, this.color, this.alignment, this.decoration});
@@ -71,7 +74,7 @@ class _MyValuesNotifier extends ChangeNotifier {
     height: 90,
     padding: const EdgeInsets.only(left: 0),
     color: Colors.orange,
-    alignment: Alignment.topLeft,
+    alignment: Alignment.center,
     decoration: BoxDecoration(
         color: Colors.orange,
         border: Border.all(width: 0, color: Colors.transparent),
@@ -81,7 +84,7 @@ class _MyValuesNotifier extends ChangeNotifier {
   static _MyBox box_2 = _MyBox(
     width: 200,
     height: 100,
-    padding: const EdgeInsets.only(left: 10),
+    padding: const EdgeInsets.only(left: 0),
     color: Colors.blue,
     alignment: Alignment.center,
     decoration: BoxDecoration(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'anim/ani_test02_rotation_transition.dart';
-import 'anim/ani_test03_scale_transition.dart';
-import 'anim/note202animate_sample.dart';
-import 'anim/note203animate_sample.dart';
+import 'anim/note204_rotation_transition.dart';
+import 'anim/note205_scale_transition.dart';
+import 'anim/note202_AnimatedContainerSample.dart';
+import 'anim/note203_SizeTransitionSamplePage.dart';
 
 String summary = ''' 
 1. AnimatedAlign

@@ -32,21 +32,24 @@ class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin
                   const Text("我是hero转场动画示例..."),
 
                   /// 1.如果把text也包裹进去 专场动画很奇怪，不能包裹Text?
-                  Hero(
-                    tag: tag,
-                    child: Material(
-                      child: Image.asset(
-                        "images/js.jpeg",
-                        height: 110,
+                  HeroMode(
+                    ///是否启用 hero动画
+                    enabled: false,
+                    child: Hero(
+                      tag: tag,
+                      child: Material(
+                        child: Image.asset(
+                          "images/js.jpeg",
+                          height: 110,
+                        ),
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
               onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
-                  return HeroDetailSample(tag: tag);
-                }));
+                // switchPage1(context, tag);
+                switchPage2(context, tag);
               },
             );
           },
@@ -61,5 +64,32 @@ class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin
           },
           itemCount: 30),
     );
+  }
+
+  ///1. 简单方式切换转场页面
+  void switchPage1(BuildContext context, String tag) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) {
+      return HeroDetailSample(tag: tag);
+    }));
+  }
+
+  ///2. 自定义时间 动画方式切换转场动画
+  void switchPage2(BuildContext context, String tag) {
+    Navigator.of(context).push(PageRouteBuilder(
+      pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+        return HeroDetailSample(tag: tag);
+      },
+      transitionDuration: const Duration(milliseconds: 500),
+      reverseTransitionDuration: const Duration(milliseconds: 500),
+      transitionsBuilder:
+          (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+        return FadeTransition(
+          ///1. 定义动画速率变化和 透明度变化
+          opacity: Tween<double>(begin: 0.0, end: 1.0)
+              .animate(CurvedAnimation(parent: animation, curve: Curves.linearToEaseOut)),
+          child: child,
+        );
+      },
+    ));
   }
 }

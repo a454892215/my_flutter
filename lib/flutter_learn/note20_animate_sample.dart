@@ -6,6 +6,7 @@ import 'anim/note205_scale_transition.dart';
 import 'anim/note202_AnimatedContainerSample.dart';
 import 'anim/note203_SizeTransitionSamplePage.dart';
 import 'anim/note206_slide_transition.dart';
+import 'anim/note207_color_tween.dart';
 
 String summary = ''' 
 1. AnimatedAlign
@@ -68,6 +69,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               const ScaleTransitionSample(),
               const Padding(padding: EdgeInsets.only(top: 10)),
               const SlideTransitionSample(),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              const ColorTweenSample(),
             ],
           ),
         ));

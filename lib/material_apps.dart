@@ -6,6 +6,7 @@ import 'package:my_flutter_lib_3/pages/page1.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
+import 'flutter_learn/anim/note211_will_pos_scope.dart';
 import 'flutter_learn/note06_chexobx_radio_sample.dart';
 import 'flutter_learn/note07_form_sample.dart';
 import 'flutter_learn/note08_stack_wrap_sample_page.dart';
@@ -32,24 +33,16 @@ import 'navigator/observer.dart';
 
 //默认配置下： 只有此目录下文件名字为main的dart文件的main函数才能正常启动flutter material开发环境？
 void main() {
-  runApp(getMaterialApp("MaterialApp2"));
+  runApp(getMaterialApp());
 }
 
-class MyMaterialApp extends StatelessWidget {
-  const MyMaterialApp({Key? key, required this.title}) : super(key: key);
-  final String title;
 
-  @override
-  Widget build(BuildContext context) {
-    return getMaterialApp(title);
-  }
-}
 
-Widget getMaterialApp(var title) {
+Widget getMaterialApp() {
   return MaterialApp(
     debugShowCheckedModeBanner: false,
     /// title 只对Android生效，ios种，任务视图名称取的是 Info.pList 文件中的CFBundleDisplayName或CFBundleName
-    title: title,
+    title: "app标题",
 
     /// 1. 定制一个页面的主题样式：可以定制一个主题中每个控件的颜色
     /// 2. ThemeData 是 MaterialDesign Widget种的主题数据， Material种的Widget需要遵循相应的设计规范
@@ -87,6 +80,7 @@ Widget getMaterialApp(var title) {
       '/AnimationSamplePage': (BuildContext context) => const AnimationSamplePage(),
       '/HeroSample': (BuildContext context) => const HeroSample(),
       '/BackdropFilterPage': (BuildContext context) => const BackdropFilterPage(),
+      '/WillPopScopeSamplePage': (BuildContext context) => const WillPopScopeSamplePage(),
 
     },
 

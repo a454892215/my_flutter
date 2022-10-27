@@ -37,11 +37,20 @@ class _State extends State {
         child: Ink(
           width: 120,
           height: 40,
-          decoration: const BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.all(Radius.circular(12))),
+          decoration: BoxDecoration(color: Colors.blue[500], borderRadius: const BorderRadius.all(Radius.circular(12))),
           child: InkWell(
               onTap: () {
                 Toast.show("你好啊啊啊啊啊");
               },
+              splashColor: Colors.blue[700],
+              /// 水波纹颜色
+             // splashColor: Colors.transparent,
+
+              /// 按下的颜色
+              // highlightColor: Colors.blue[700],
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              /// 设置水波纹扩散大小， 此大小一般应该大于2倍按钮长度，否则波纹不能完全扩散到按钮上
+              radius: 120,
               child: const Center(
                   child: Text(
                 "Ink按钮一号",

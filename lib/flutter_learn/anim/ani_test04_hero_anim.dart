@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_lib_3/util/toast_util.dart';
 
 main() {
   runApp(const MaterialApp(
     home: Scaffold(
-      body: RotationTransitionSample(),
+      body: ScaleTransitionSample(),
     ),
   ));
 }
 
 ///1. RotationTransition
-class RotationTransitionSample extends StatefulWidget {
-  const RotationTransitionSample({Key? key}) : super(key: key);
+class ScaleTransitionSample extends StatefulWidget {
+  const ScaleTransitionSample({Key? key}) : super(key: key);
 
   @override
   State createState() => _SizeTransitionDemoState();
@@ -24,16 +25,13 @@ class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin
     vsync: this,
   )..reset();
 
-  /// 1. 0.5表示旋转180度：即360 * 0.5 = 180
-  late final Animation<double> _animation = Tween<double>(begin: 0, end: 0.5).animate(_controller);
+  late final Animation<double> _animation = Tween<double>(begin: 0.3, end: 1).animate(_controller);
 
   @override
   void initState() {
     _controller.addListener(() {
       if (_controller.isCompleted) {
-        _controller.reset();
-
-        /// 重置
+        // _controller.reset();
       }
     });
     super.initState();
@@ -41,35 +39,29 @@ class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return GestureDetector(onTap: (){
+      // 不传入0 动画不能重置只能执行一次,
+      _controller.forward(from: 0);
+      Toast.show("播放缩放动画");
+    },child: Center(
       child: Container(
         width: 200,
         height: 100,
         color: Colors.orange,
         alignment: Alignment.topLeft,
-        child: RotationTransition(
-          /// 设置旋转中心
+        child: ScaleTransition(
+          /// 设置缩放中心
           alignment: Alignment.center,
-          turns: _animation,
+          scale: _animation,
           child: Container(
             width: 200,
             height: 100,
             color: Colors.blue,
-            child: TextButton(
-              onPressed: () {
-                setState(() {
-                  // 不传入0 动画不能重置只能执行一次,
-                  _controller.forward(from: 0);
-                });
-              },
-              child: const Text(
-                "播放旋转动画",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
+            alignment: Alignment.center,
+            child: const Text("播放缩放动画", style: TextStyle(color: Colors.white),),
           ),
         ),
       ),
-    );
+    ),);
   }
 }

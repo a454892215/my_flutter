@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'anim/ani_test02_rotation_transition.dart';
+import 'anim/ani_test03_scale_transition.dart';
 import 'anim/note202animate_sample.dart';
 import 'anim/note203animate_sample.dart';
 
@@ -55,9 +57,14 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               buildAnimatedOpacity(),
               buildAnimatedDefaultTextStyle(),
               buildAnimatedList(),
-              // AnimatedContainer
-              const AnimationSample2Page(),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              const AnimatedContainerSample(),
+              const Padding(padding: EdgeInsets.only(top: 10)),
               const SizeTransitionSamplePage(),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              const RotationTransitionSample(),
+              const Padding(padding: EdgeInsets.only(top: 10)),
+              const ScaleTransitionSample(),
             ],
           ),
         ));

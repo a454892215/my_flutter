@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 main() {
   runApp(const MaterialApp(
     home: Scaffold(
-      body: SizeTransitionDemo(),
+      body: SizeTransitionSample(),
     ),
   ));
 }
 
-class SizeTransitionDemo extends StatefulWidget {
-  const SizeTransitionDemo({Key? key}) : super(key: key);
+class SizeTransitionSample extends StatefulWidget {
+  const SizeTransitionSample({Key? key}) : super(key: key);
 
   @override
   State createState() => _SizeTransitionDemoState();
 }
 
-class _SizeTransitionDemoState extends State<SizeTransitionDemo> with SingleTickerProviderStateMixin {
+class _SizeTransitionDemoState extends State with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     //
     duration: const Duration(milliseconds: 2000),

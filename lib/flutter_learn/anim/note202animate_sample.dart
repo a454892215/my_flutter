@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// AnimatedContainer 示例
-class AnimationSample2Page extends StatefulWidget {
-  const AnimationSample2Page({super.key});
+class AnimatedContainerSample extends StatefulWidget {
+  const AnimatedContainerSample({super.key});
 
   @override
   State<StatefulWidget> createState() {

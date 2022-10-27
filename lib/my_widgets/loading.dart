@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(
+  runApp(MaterialApp(
     home: Scaffold(
-      body: LoadingWidget(),
+      appBar: AppBar(
+        title: const Text("LoadingWidget"),
+      ),
+      body: const LoadingWidget(),
     ),
   ));
 }
@@ -20,6 +24,23 @@ class LoadingWidget extends StatefulWidget {
 class _State extends State {
   @override
   Widget build(BuildContext context) {
-    return Center();
+    return buildContainer();
+  }
+
+  Widget buildContainer() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: const Color(0x22000000),
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          CupertinoActivityIndicator(),
+          SizedBox(width: 12),
+          Text("Loading..."),
+        ],
+      ),
+    );
   }
 }

@@ -9,6 +9,7 @@ String summary = '''
 
 void main() {
   runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
     /// 国际化配置=== start=====
     locale: Locale("zh", "CH"),
     supportedLocales: [Locale("zh", "CH")],
@@ -62,15 +63,20 @@ class _State extends State {
     DateTime now = DateTime.now();
     var start = DateTime(2020, 10);
     var end = DateTime(now.year, now.month);
-    var ret = await showDateRangePicker(
+    DateTimeRange? selected = await showDateRangePicker(
       //    locale: const Locale("zh", "CH"),
       context: context,
       firstDate: DateTime(2020, 1),
       lastDate: DateTime(now.year, now.month),
       // 设置默认选中是时间范围
       initialDateRange: DateTimeRange(start: start, end: end),
+      saveText: "保存",
+      cancelText: "取消",
     );
-    Toast.show("$ret");
-    Log.d("ret:$ret");
+    if (selected != null) {
+      var selectedStart = selected.start;
+      var selectedEnd = selected.end;
+      Log.d("selectedStart:$selectedStart  selectedEnd:$selectedEnd");
+    }
   }
 }

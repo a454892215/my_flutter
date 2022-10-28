@@ -12,10 +12,7 @@ void main() {
     /// 国际化配置=== start=====
     locale: Locale("zh", "CH"),
     supportedLocales: [Locale("zh", "CH")],
-    localizationsDelegates: [
-      GlobalMaterialLocalizations.delegate,
-      GlobalWidgetsLocalizations.delegate,
-    ],
+    localizationsDelegates: GlobalMaterialLocalizations.delegates,
 
     /// 国际化配置=== end=====
     title: "MaterialApp",
@@ -62,11 +59,16 @@ class _State extends State {
 
   /// 异步函数，不确定什么时候返回，而且不能阻止线程...
   void showDateTimeSelect() async {
+    DateTime now = DateTime.now();
+    var start = DateTime(2020, 10);
+    var end = DateTime(now.year, now.month);
     var ret = await showDateRangePicker(
-      locale: const Locale("zh", "CH"),
+      //    locale: const Locale("zh", "CH"),
       context: context,
       firstDate: DateTime(2020, 1),
-      lastDate: DateTime(2022, 1),
+      lastDate: DateTime(now.year, now.month),
+      // 设置默认选中是时间范围
+      initialDateRange: DateTimeRange(start: start, end: end),
     );
     Toast.show("$ret");
     Log.d("ret:$ret");

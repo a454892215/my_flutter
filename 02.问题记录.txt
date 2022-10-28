@@ -49,5 +49,13 @@
 12. Cannot hit test a render box that has never been laid out.
      Stack 内部 Positioned 报次错误...
 
+13. ======== Exception caught by widgets ===============================================================
+    The following message was thrown:
+    Warning: This application's locale, zh_CH, is not supported by all of its localization delegates.
+    • A CupertinoLocalizations delegate that supports the zh_CH locale was not found.
+    If the application is built using GlobalMaterialLocalizations.delegate, consider using GlobalMaterialLocalizations.delegates (plural) instead, as that will automatically declare the appropriate Cupertino localizations.
+    解决： flutter3, 语言国际化报此错，根据log提示，使用 GlobalMaterialLocalizations.delegates 替换项目配置后，不再报此异常
+
+
 
 

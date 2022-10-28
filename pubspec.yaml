@@ -37,6 +37,9 @@ dependencies:
   pull_to_refresh: ^2.0.0
   # 网络图片加载缓存组件
   cached_network_image: ^3.2.2
+  # 语言国际化包配置
+  flutter_localizations:
+    sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.

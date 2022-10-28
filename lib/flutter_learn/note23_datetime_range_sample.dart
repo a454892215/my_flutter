@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:my_flutter_lib_3/util/toast_util.dart';
 
-import '../../util/Log.dart';
+import '../util/Log.dart';
 
 String summary = '''
 ''';
@@ -17,12 +17,12 @@ void main() {
 
     /// 国际化配置=== end=====
     title: "MaterialApp",
-    home: _Page(),
+    home: DateRangePickerPage(),
   ));
 }
 
-class _Page extends StatefulWidget {
-  const _Page();
+class DateRangePickerPage extends StatefulWidget {
+  const DateRangePickerPage({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -35,7 +35,7 @@ class _State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Sample"),
+        title: const Text("DateRangePickerPage"),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

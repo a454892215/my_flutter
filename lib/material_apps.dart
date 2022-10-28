@@ -6,6 +6,7 @@ import 'package:my_flutter_lib_3/pages/page1.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
+import 'flutter_learn/note23_datetime_range_sample.dart';
 import 'flutter_learn/other/note211_will_pos_scope.dart';
 import 'flutter_learn/note06_chexobx_radio_sample.dart';
 import 'flutter_learn/note07_form_sample.dart';
@@ -81,6 +82,7 @@ Widget getMaterialApp() {
       '/HeroSample': (BuildContext context) => const HeroSample(),
       '/BackdropFilterPage': (BuildContext context) => const BackdropFilterPage(),
       '/WillPopScopeSamplePage': (BuildContext context) => const WillPopScopeSamplePage(),
+      '/DateRangePickerPage': (BuildContext context) => const DateRangePickerPage(),
 
     },
 

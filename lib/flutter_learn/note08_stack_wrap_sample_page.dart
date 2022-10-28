@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+main() {
+  runApp(const MaterialApp(
+    home: StackAndWrapSamplePage(),
+  ));
+}
+
 class StackAndWrapSamplePage extends StatefulWidget {
   const StackAndWrapSamplePage({super.key});
 
@@ -36,6 +42,7 @@ class _MyState extends State {
       child: Stack(
         //  StackFit.expand 没有Positioned定位的子空间填充满窗口
         // fit: StackFit.expand,
+        alignment: Alignment.center,
         children: [
           Positioned(
             width: itemWidth,
@@ -52,13 +59,19 @@ class _MyState extends State {
             child: Container(color: Colors.grey),
           ),
 
-          /// 怎么居中？？？
           Positioned(
             width: 100,
             height: itemWidth,
             left: 10,
             bottom: 10,
             child: Container(color: Colors.blue),
+          ),
+
+          /// 居中 未定位子控件根据stack的alignment定位
+          Container(
+            width: 50,
+            height: 50,
+            color: Colors.red,
           ),
         ],
       ),

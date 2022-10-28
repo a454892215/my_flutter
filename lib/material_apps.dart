@@ -6,7 +6,7 @@ import 'package:my_flutter_lib_3/pages/page1.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
-import 'flutter_learn/anim/note211_will_pos_scope.dart';
+import 'flutter_learn/other/note211_will_pos_scope.dart';
 import 'flutter_learn/note06_chexobx_radio_sample.dart';
 import 'flutter_learn/note07_form_sample.dart';
 import 'flutter_learn/note08_stack_wrap_sample_page.dart';

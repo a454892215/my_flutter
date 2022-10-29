@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 import '../../util/Log.dart';
+import '../../util/math_util.dart';
 
 class DioTest {
   /// 使用 "https://localhost" 访问本地https服务器  https正常校验通过，因为自签名证书绑定了 localhost
@@ -27,12 +28,13 @@ class DioTest {
       Log.d(e);
     }
   }
+
   /// 2. 测试 post 带参数请求
   static void testPostRequest() async {
     try {
       Map<String, dynamic> map = {"age": 12, "name": "sandy"};
       // file 键值不能改
-      map['file'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg') ;
+      map['file'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg');
       FormData formData = FormData.fromMap(map);
       var response = await Dio().post(baseUrl + apiTestPost, data: formData);
       Log.d("post请求返回：$response");
@@ -45,9 +47,13 @@ class DioTest {
   static void testFormDataSendFile() async {
     try {
       Map<String, dynamic> map = {"age": 12, "name": "sandy"};
-      map['file2'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg') ;
+      map['file2'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg');
       FormData formData = FormData.fromMap(map);
-      var response = await Dio().post(baseUrl + apiTestSendFile, data: formData);
+      var response =
+          await Dio().post(baseUrl + apiTestSendFile, data: formData, onSendProgress: (int count, int total) {
+       // double progress = count / total.toDouble();
+       // Log.d("上传进度：${MathU.to2D(progress)}");
+      });
       Log.d("FormDataSendFile 请求返回：$response");
     } catch (e) {
       Log.d(e);

@@ -45,8 +45,7 @@ class DioTest {
   static void testFormDataSendFile() async {
     try {
       Map<String, dynamic> map = {"age": 12, "name": "sandy"};
-      // file 键值不能改
-      map['file'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg') ;
+      map['file2'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg') ;
       FormData formData = FormData.fromMap(map);
       var response = await Dio().post(baseUrl + apiTestSendFile, data: formData);
       Log.d("FormDataSendFile 请求返回：$response");

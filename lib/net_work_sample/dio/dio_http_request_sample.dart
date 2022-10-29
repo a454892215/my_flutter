@@ -15,7 +15,9 @@ class DioTest {
   // https://127.0.0.1/test4
   static const String apiTestGet = "/testGet";
   static const String apiTestPost = "/testPost";
+  static const String apiTestSendFile = "/testSendFile";
 
+  /// 1. 测试 get 带参数请求
   static void testGetRequest() async {
     try {
       var response = await Dio().get(baseUrl + apiTestGet, queryParameters: {"age": 12, "name": "sandy"});
@@ -25,11 +27,29 @@ class DioTest {
       Log.d(e);
     }
   }
-
+  /// 2. 测试 post 带参数请求
   static void testPostRequest() async {
     try {
-      var response = await Dio().post(baseUrl + apiTestPost, data: {"id": 12, "name": "sandy"});
+      Map<String, dynamic> map = {"age": 12, "name": "sandy"};
+      // file 键值不能改
+      map['file'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg') ;
+      FormData formData = FormData.fromMap(map);
+      var response = await Dio().post(baseUrl + apiTestPost, data: formData);
       Log.d("post请求返回：$response");
+    } catch (e) {
+      Log.d(e);
+    }
+  }
+
+  /// 3. 测试 post 带参数和文件上传请求
+  static void testFormDataSendFile() async {
+    try {
+      Map<String, dynamic> map = {"age": 12, "name": "sandy"};
+      // file 键值不能改
+      map['file'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg') ;
+      FormData formData = FormData.fromMap(map);
+      var response = await Dio().post(baseUrl + apiTestSendFile, data: formData);
+      Log.d("FormDataSendFile 请求返回：$response");
     } catch (e) {
       Log.d(e);
     }
@@ -39,4 +59,5 @@ class DioTest {
 main() {
   DioTest.testGetRequest();
   DioTest.testPostRequest();
+  DioTest.testFormDataSendFile();
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'dio_http_request_sample.dart';
+import 'dio/dio_http_request_sample.dart';
 
 String summary = '''
 ''';

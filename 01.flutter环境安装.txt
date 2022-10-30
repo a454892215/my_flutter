@@ -23,3 +23,4 @@ flutter config --android-sdk  D:\android-sdk    # 给flutter设置Android sdk位
 flutter doctor  查看所需的软件工具是否全部安装完成
 当 flutter doctor 命令 最终提示： • No issues found!  表示flutter相关软件工具全部安装完毕
 
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8999  设置flutter固定端口运行

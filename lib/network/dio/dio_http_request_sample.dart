@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:my_flutter_lib_3/util/file_dir_util.dart';
 
 import '../../util/Log.dart';
-import '../../util/math_util.dart';
 import '../http_inter.dart';
 import '../test_api.dart';
 import 'dio_http.dart';
@@ -54,7 +53,6 @@ class DioTest {
     try {
       String saveDir = await FileU.getWebLocalPath();
       String saveFullPath = "${saveDir}downloadFile.app";
-      Log.d('saveFullPath: $saveFullPath');
       var url = TestApi.baseUrl + TestApi.apiTestDownload;
       Response<ResponseBody> response = await http.download(url, null, saveFullPath, (int count, int total) {
         /*double progress = count / total.toDouble();
@@ -72,5 +70,5 @@ main() {
   dioTest.testGetRequest();
   dioTest.testPostRequest();
   dioTest.testFormDataSendFile();
-  DioTest().testDownloadFile();
+  dioTest.testDownloadFile();
 }

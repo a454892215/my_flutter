@@ -58,7 +58,10 @@
 
 14.  Not found: 'dart:ui'
      import 'dart:ui' as ui show SingletonFlutterWindow, Brightness, PlatformDispatcher, window;
+     解决：相关类库代码中引用了flutter运行环境的API，但是程序并不是flutter程序（不是以runApp(getMaterialApp())方式启动的程序）
 
 15. DioError [DioErrorType.response]: XMLHttpRequest error.
+    dio: ^4.0.6 网络请求框架，在Android studio中直接安装到浏览器，浏览器中存在跨域问题，目前无解...
+    如果是正式环境或可以通过后端代理解决...
 
 

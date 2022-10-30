@@ -56,6 +56,9 @@
     If the application is built using GlobalMaterialLocalizations.delegate, consider using GlobalMaterialLocalizations.delegates (plural) instead, as that will automatically declare the appropriate Cupertino localizations.
     解决： flutter3, 语言国际化报此错，根据log提示，使用 GlobalMaterialLocalizations.delegates 替换项目配置后，不再报此异常
 
+14.  Not found: 'dart:ui'
+     import 'dart:ui' as ui show SingletonFlutterWindow, Brightness, PlatformDispatcher, window;
 
+15. DioError [DioErrorType.response]: XMLHttpRequest error.
 
 

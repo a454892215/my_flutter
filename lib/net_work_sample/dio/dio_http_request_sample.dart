@@ -5,20 +5,10 @@ import 'package:my_flutter_lib_3/util/file_dir_util.dart';
 
 import '../../util/Log.dart';
 import '../../util/math_util.dart';
+import '../test_api.dart';
 
 class DioTest {
-  /// 使用 "https://localhost" 访问本地https服务器  https正常校验通过，因为自签名证书绑定了 localhost
-  /// 为什么使用 https://127.0.0.1 报异常 Hostname mismatch， 自签名证书创建的的时候，已经绑定了/127.0.0.1 地址
-  /// 而浏览器能正常访问ssl证书绑定的的域名和IP地址
-  static const String baseUrl = "https://localhost.com";
 
-  // static const String baseUrl = "https://127.0.0.1";
-
-  // https://127.0.0.1/test4
-  static const String apiTestGet = "/testGet";
-  static const String apiTestPost = "/testPost";
-  static const String apiTestSendFile = "/testSendFile";
-  static const String apiTestDownload = "/testDownload";
 
   /// 申明隐藏的构造函数
   DioTest._internal() {
@@ -48,7 +38,8 @@ class DioTest {
   /// 1. 测试 get 带参数请求
   void testGetRequest() async {
     try {
-      var response = await _dio.get(baseUrl + apiTestGet, queryParameters: {"age": 12, "name": "sandy"});
+      var response = await _dio.get(TestApi.baseUrl + TestApi.apiTestGet, queryParameters: {"age": 12, "name": "sandy"
+          ""});
       Map<dynamic, dynamic> data = json.decode(response.data); // 把json字符串转为map对象
       Log.d("get请求返回：${data.toString()}  name：${data['name']}");
     } catch (e) {
@@ -63,7 +54,7 @@ class DioTest {
       // file 键值不能改
       map['file'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg');
       FormData formData = FormData.fromMap(map);
-      var response = await _dio.post(baseUrl + apiTestPost, data: formData);
+      var response = await _dio.post(TestApi.baseUrl + TestApi.apiTestPost, data: formData);
       Log.d("post请求返回：$response");
     } catch (e) {
       Log.d(e);
@@ -76,7 +67,7 @@ class DioTest {
       Map<String, dynamic> map = {"age": 12, "name": "sandy"};
       map['file2'] = await MultipartFile.fromFile('images/fjt.jpeg', filename: 'fjt.jpeg');
       FormData formData = FormData.fromMap(map);
-      var url = baseUrl + apiTestSendFile;
+      var url = TestApi.baseUrl + TestApi.apiTestSendFile;
       var response = await _dio.post(url, data: formData, onSendProgress: (int count, int total) {
         // double progress = count / total.toDouble();
         // Log.d("上传进度：${MathU.to2D(progress)}");
@@ -92,7 +83,7 @@ class DioTest {
     try {
       var saveDir = await FileU.getApkSaveDirPath();
       String savePath = "$saveDir.app";
-      var url = baseUrl + apiTestDownload;
+      var url = TestApi.baseUrl + TestApi.apiTestDownload;
       var response = await _dio.download(url, savePath, onReceiveProgress: (int count, int total) {
         double progress = count / total.toDouble();
         Log.d("Download progress ：${MathU.to2D(progress)}");

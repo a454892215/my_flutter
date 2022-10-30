@@ -47,7 +47,7 @@
     3. 解决？ 暂无
 
 12. Cannot hit test a render box that has never been laid out.
-     Stack 内部 Positioned 报次错误...
+     Stack 内部 Positioned 错误...
 
 13. ======== Exception caught by widgets ===============================================================
     The following message was thrown:

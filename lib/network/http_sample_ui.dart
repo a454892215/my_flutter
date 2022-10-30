@@ -22,6 +22,7 @@ class _Page extends StatefulWidget {
 }
 
 class _State extends State {
+  DioTest dioTest = DioTest();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,22 +40,22 @@ class _State extends State {
           children: [
             TextButton(
                 onPressed: () {
-                  DioTest().testGetRequest();
+                  dioTest.testGetRequest();
                 },
                 child: const Text("Get 请求测试")),
             TextButton(
                 onPressed: () {
-                  DioTest().testPostRequest();
+                  dioTest.testPostRequest();
                 },
                 child: const Text("Post 请求测试")),
             TextButton(
                 onPressed: () {
-                  DioTest().testFormDataSendFile();
+                  dioTest.testFormDataSendFile();
                 },
                 child: const Text("MultiPart/FormData 格式数据请求上传文件测试")),
             TextButton(
                 onPressed: () {
-                  DioTest().testDownloadFile();
+                  dioTest.testDownloadFile();
                 },
                 child: const Text("下载文件测试")),
           ],

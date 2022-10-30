@@ -1,6 +1,6 @@
-import 'package:my_flutter_lib_3/net_work_sample/http_inter.dart';
 
 import 'dio/dio_http.dart';
+import 'http_inter.dart';
 
 class HttpUtil implements HttpInter {
   HttpUtil();

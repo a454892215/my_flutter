@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:my_flutter_lib_3/net_work_sample/http_inter.dart';
+
 
 import '../../util/Log.dart';
+import '../http_inter.dart';
 
 class DioHttp implements HttpInter {
   DioHttp() {

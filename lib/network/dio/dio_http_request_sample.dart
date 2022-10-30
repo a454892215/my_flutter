@@ -1,12 +1,11 @@
-
 import 'package:dio/dio.dart';
-import 'package:my_flutter_lib_3/net_work_sample/dio/dio_http.dart';
-import 'package:my_flutter_lib_3/net_work_sample/http_inter.dart';
 import 'package:my_flutter_lib_3/util/file_dir_util.dart';
 
 import '../../util/Log.dart';
 import '../../util/math_util.dart';
+import '../http_inter.dart';
 import '../test_api.dart';
+import 'dio_http.dart';
 
 class DioTest {
   final HttpInter http = DioHttp();
@@ -68,8 +67,9 @@ class DioTest {
 }
 
 main() {
-  DioTest().testGetRequest();
-  DioTest().testPostRequest();
-  DioTest().testFormDataSendFile();
-  DioTest().testDownloadFile();
+  DioTest dioTest = DioTest();
+  dioTest.testGetRequest();
+  dioTest.testPostRequest();
+  dioTest.testFormDataSendFile();
+  // DioTest().testDownloadFile();
 }

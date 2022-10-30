@@ -52,12 +52,13 @@ class DioTest {
   /// 4. 测试 下载文件
   void testDownloadFile() async {
     try {
-      var saveDir = await FileU.getWebLocalPath();
-      String saveFullPath = "$saveDir.app";
+      String saveDir = await FileU.getWebLocalPath();
+      String saveFullPath = "${saveDir}downloadFile.app";
+      Log.d('saveFullPath: $saveFullPath');
       var url = TestApi.baseUrl + TestApi.apiTestDownload;
       Response<ResponseBody> response = await http.download(url, null, saveFullPath, (int count, int total) {
-        double progress = count / total.toDouble();
-        Log.d("Download progress ：${MathU.to2D(progress)}");
+        /*double progress = count / total.toDouble();
+        Log.d("Download progress ：${MathU.to2D(progress)}");*/
       });
       Log.d("testDownloadFile 请求返回：${response.statusCode}");
     } catch (e) {

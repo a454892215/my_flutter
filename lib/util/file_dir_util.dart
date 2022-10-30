@@ -31,6 +31,6 @@ class FileU {
 
   /// 2. 获取web 本地下载目录
   static Future<String> getWebLocalPath() async {
-    return path.absolute("build");
+    return path.absolute("build${path.separator}");
   }
 }

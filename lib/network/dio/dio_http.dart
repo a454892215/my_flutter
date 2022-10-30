@@ -24,7 +24,7 @@ class DioHttp implements HttpInter {
     try {
       listener(int count, int total) => callback(count, total);
       var response = await _dio.download(url, savePath, data: param, onReceiveProgress: listener);
-      return json.decode(response.data); // 把json字符串转为对象
+      return response; // 把json字符串转为对象
     } catch (e) {
       Log.d(e);
     }

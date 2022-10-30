@@ -52,14 +52,14 @@ class DioTest {
   /// 4. 测试 下载文件
   void testDownloadFile() async {
     try {
-      var saveDir = await FileU.getApkSaveDirPath();
-      String savePath = "$saveDir.app";
+      var saveDir = await FileU.getWebLocalPath();
+      String saveFullPath = "$saveDir.app";
       var url = TestApi.baseUrl + TestApi.apiTestDownload;
-      var response = await http.download(url, null, savePath, (int count, int total) {
+      Response<ResponseBody> response = await http.download(url, null, saveFullPath, (int count, int total) {
         double progress = count / total.toDouble();
         Log.d("Download progress ：${MathU.to2D(progress)}");
       });
-      Log.d("testDownloadFile 请求返回：$response");
+      Log.d("testDownloadFile 请求返回：${response.statusCode}");
     } catch (e) {
       Log.d(e);
     }
@@ -67,9 +67,9 @@ class DioTest {
 }
 
 main() {
-  DioTest dioTest = DioTest();
+/*  DioTest dioTest = DioTest();
   dioTest.testGetRequest();
   dioTest.testPostRequest();
-  dioTest.testFormDataSendFile();
-  // DioTest().testDownloadFile();
+  dioTest.testFormDataSendFile();*/
+  DioTest().testDownloadFile();
 }

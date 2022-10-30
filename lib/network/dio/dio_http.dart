@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
-
 import '../../util/Log.dart';
 import '../http_inter.dart';
 
@@ -23,8 +22,7 @@ class DioHttp implements HttpInter {
   Future<dynamic> download(String url, param, String savePath, OnProgressChangedCallback callback) async {
     try {
       listener(int count, int total) => callback(count, total);
-      var response = await _dio.download(url, savePath, data: param, onReceiveProgress: listener);
-      return response; // 把json字符串转为对象
+      return await _dio.download(url, savePath, data: param, onReceiveProgress: listener);
     } catch (e) {
       Log.d(e);
     }

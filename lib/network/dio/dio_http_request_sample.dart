@@ -43,7 +43,7 @@ class DioTest {
       FormData formData = FormData.fromMap(map);
       var url = TestApi.baseUrl + TestApi.apiTestSendFile;
       var data = await http.upload(url, formData, (int count, int total) {});
-      Log.d("FormDataSendFile 请求返回：${data.toString()}");
+      Log.d("FormDataSendFile 上传文件成功 请求返回：${data.toString()}");
     } catch (e) {
       Log.d(e);
     }
@@ -60,7 +60,7 @@ class DioTest {
         /*double progress = count / total.toDouble();
         Log.d("Download progress ：${MathU.to2D(progress)}");*/
       });
-      Log.d("testDownloadFile 请求返回：${response.statusCode}");
+      Log.d("testDownloadFile 下载成功 statusCode：${response.statusCode} 文件路径：$saveFullPath");
     } catch (e) {
       Log.d(e);
     }
@@ -68,9 +68,9 @@ class DioTest {
 }
 
 main() {
-/*  DioTest dioTest = DioTest();
+  DioTest dioTest = DioTest();
   dioTest.testGetRequest();
   dioTest.testPostRequest();
-  dioTest.testFormDataSendFile();*/
+  dioTest.testFormDataSendFile();
   DioTest().testDownloadFile();
 }

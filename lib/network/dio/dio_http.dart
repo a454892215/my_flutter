@@ -15,7 +15,7 @@ class DioHttp implements HttpInter {
   void init() {
     BaseOptions options = _dio.options;
     options.headers['Access-Control-Allow-Origin'] = '*';
-   // Log.d("==DioHttp===init==${options.headers}");
+    // Log.d("==DioHttp===init==${options.headers}");
   }
 
   @override

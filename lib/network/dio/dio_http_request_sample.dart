@@ -17,7 +17,7 @@ class DioTest {
       var data = await http.get(path, param);
       Log.d("Get 请求返回：${data.toString()}");
     } catch (e) {
-      Log.d(e);
+      Log.e(e);
     }
   }
 
@@ -30,7 +30,7 @@ class DioTest {
       var data = await http.post(TestApi.baseUrl + TestApi.apiTestPost, formData);
       Log.d("Post 请求返回：${data.toString()}");
     } catch (e) {
-      Log.d(e);
+      Log.e(e);
     }
   }
 
@@ -44,7 +44,7 @@ class DioTest {
       var data = await http.upload(url, formData, (int count, int total) {});
       Log.d("FormDataSendFile 上传文件成功 请求返回：${data.toString()}");
     } catch (e) {
-      Log.d(e);
+      Log.e(e);
     }
   }
 
@@ -60,7 +60,7 @@ class DioTest {
       });
       Log.d("testDownloadFile 下载成功 statusCode：${response.statusCode} 文件路径：$saveFullPath");
     } catch (e) {
-      Log.d(e);
+      Log.e(e);
     }
   }
 }

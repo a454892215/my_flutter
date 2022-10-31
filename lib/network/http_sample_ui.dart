@@ -8,12 +8,12 @@ String summary = '''
 void main() {
   runApp(const MaterialApp(
     title: "MaterialApp",
-    home: _Page(),
+    home: DioHttpSamplePage(),
   ));
 }
 
-class _Page extends StatefulWidget {
-  const _Page();
+class DioHttpSamplePage extends StatefulWidget {
+  const DioHttpSamplePage({super.key});
 
   @override
   State<StatefulWidget> createState() {

@@ -15,7 +15,7 @@ class DioHttp implements HttpInter {
   void init() {
     BaseOptions options = _dio.options;
     options.headers['Access-Control-Allow-Origin'] = '*';
-    Log.d("==DioHttp===init==${options.headers}");
+   // Log.d("==DioHttp===init==${options.headers}");
   }
 
   @override
@@ -24,7 +24,7 @@ class DioHttp implements HttpInter {
       listener(int count, int total) => callback(count, total);
       return await _dio.download(url, savePath, data: param, onReceiveProgress: listener);
     } catch (e) {
-      Log.d(e);
+      Log.e("$url $param => $e");
     }
   }
 
@@ -34,7 +34,7 @@ class DioHttp implements HttpInter {
       var response = await _dio.get(url, queryParameters: param);
       return json.decode(response.data); // 把json字符串转为对象
     } catch (e) {
-      Log.d(e);
+      Log.e("$url $param => $e");
     }
   }
 
@@ -44,7 +44,7 @@ class DioHttp implements HttpInter {
       var response = await _dio.post(url, data: param);
       return json.decode(response.data); // 把json字符串转为对象
     } catch (e) {
-      Log.d(e);
+      Log.e("$url $param => $e");
     }
   }
 
@@ -55,7 +55,7 @@ class DioHttp implements HttpInter {
       var response = await _dio.post(url, data: param, onSendProgress: listener);
       return json.decode(response.data); // 把json字符串转为对象
     } catch (e) {
-      Log.d(e);
+      Log.e("$url $param => $e");
     }
   }
 }

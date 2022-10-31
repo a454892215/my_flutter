@@ -49,6 +49,10 @@ dependencies:
   path_provider: ^2.0.11
   # 本地跨域代理
   shelf_proxy: ^1.0.2
+  # 少量数据缓存
+  shared_preferences: ^2.0.15
+  # log
+  logger: ^1.1.0
 
 
   # The following adds the Cupertino Icons font to your application.

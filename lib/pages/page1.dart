@@ -57,6 +57,7 @@ class Page1State extends State {
               RouterButton(params: ["/BackdropFilterPage", "去-BackdropFilterPage-页面"]),
               RouterButton(params: ["/WillPopScopeSamplePage", "去-WillPopScopeSamplePage-页面"]),
               RouterButton(params: ["/DateRangePickerPage", "去-DateRangePickerPage-页面"]),
+              RouterButton(params: ["/DioHttpSamplePage", "去-DioHttpSamplePage-页面"]),
               RouterButton(params: ["/page999", "去404页面"]),
             ],
           )),

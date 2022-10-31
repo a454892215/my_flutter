@@ -31,6 +31,7 @@ import 'flutter_learn/note20_animate_sample.dart';
 import 'flutter_learn/note21_hero_anim.dart';
 import 'flutter_learn/note22_backdrop_filter.dart';
 import 'navigator/observer.dart';
+import 'network/http_sample_ui.dart';
 
 //默认配置下： 只有此目录下文件名字为main的dart文件的main函数才能正常启动flutter material开发环境？
 void main() {
@@ -83,6 +84,7 @@ Widget getMaterialApp() {
       '/BackdropFilterPage': (BuildContext context) => const BackdropFilterPage(),
       '/WillPopScopeSamplePage': (BuildContext context) => const WillPopScopeSamplePage(),
       '/DateRangePickerPage': (BuildContext context) => const DateRangePickerPage(),
+      '/DioHttpSamplePage': (BuildContext context) => const DioHttpSamplePage(),
 
     },
 

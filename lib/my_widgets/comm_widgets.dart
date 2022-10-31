@@ -7,6 +7,16 @@ class RouterButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(onPressed: () => Navigator.of(context).pushNamed(params[0]), child: Text(params[1]));
+    return Container(
+      color: Colors.grey,
+      padding: const EdgeInsets.only(top: 4),
+      child: MaterialButton(
+        onPressed: () => Navigator.of(context).pushNamed(params[0]),
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        color: Colors.green,
+        padding: const EdgeInsets.all(0),
+        child: Text(params[1]),
+      ),
+    );
   }
 }

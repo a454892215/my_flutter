@@ -39,8 +39,8 @@ class _State extends State {
         width: double.infinity,
         height: double.infinity,
         color: Colors.grey,
-        child: Stack(
-          alignment: Alignment.center,
+        child: Column(
+        //  alignment: Alignment.center,
           children: [
             TextButton(
                 onPressed: () async {

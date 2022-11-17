@@ -24,3 +24,14 @@ flutter doctor  查看所需的软件工具是否全部安装完成
 当 flutter doctor 命令 最终提示： • No issues found!  表示flutter相关软件工具全部安装完毕
 
 flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8999  设置flutter固定端口运行
+
+IOS 环境变量配置相关
+export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://mirrors.sjtug.sjtu.edu.cn/
+# flutter 环境变量配置
+export PATH=/Users/sam/dev/flutter/bin:$PATH
+# Android sdk 环境变量配置
+export ANDROID_HOME="/Users/sam/Library/Android/sdk"
+export PATH=${PATH}:${ANDROID_HOME}/tools
+export PATH=${PATH}:${ANDROID_HOME}/platform-tools
+

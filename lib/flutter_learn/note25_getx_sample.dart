@@ -66,6 +66,7 @@ class _State extends State {
             ElevatedButton(
               child: const Text('Next Route'),
               onPressed: () {
+                /// 2-05 使用 Get.to 导航页面
                 Get.to(_SecondPage());
               },
             ),
@@ -86,7 +87,7 @@ class Controller extends GetxController {
   }
 }
 
-/// 简单的 GetxController 示例 02
+/// 2-04 GetxController 跨页面获取共享数据显示示例
 class _SecondPage extends StatelessWidget {
   final Controller controller = Get.find();
 

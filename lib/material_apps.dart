@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:my_flutter_lib_3/flutter_learn/note16_custom_scroll_sample2.dart';
 import 'package:my_flutter_lib_3/flutter_learn/note03_button_sample_page.dart';
 import 'package:my_flutter_lib_3/pages/err_page.dart';
@@ -43,7 +44,8 @@ void main() {
 
 
 Widget getMaterialApp() {
-  return MaterialApp(
+  /// 使用 GetMaterialApp 取代MaterialApp 以方便使用Get.to(_SecondPage()) 导航页面
+  return GetMaterialApp(
     debugShowCheckedModeBanner: false,
     /// title 只对Android生效，ios种，任务视图名称取的是 Info.pList 文件中的CFBundleDisplayName或CFBundleName
     title: "app标题",

@@ -74,6 +74,8 @@
           If you need to update a parent widget and a child widget, wrap each one in an Obx/GetX.
     解决： var count = 0.obs; 没有 .obs初始化变量
 
+17. You are trying to use contextless navigation without a GetMaterialApp or Get.key.
+    解决： 更改 MaterialApp 为 GetMaterialApp .
 
 
 

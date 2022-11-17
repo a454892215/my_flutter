@@ -64,4 +64,16 @@
     dio: ^4.0.6 网络请求框架，在Android studio中直接安装到浏览器，浏览器中存在跨域问题，目前无解...
     如果是正式环境或可以通过后端代理解决...
 
+16. ======== Exception caught by widgets library =======================================================
+    The following message was thrown building Obx(has builder, dirty, state: _ObxState#0b077):
+          [Get] the improper use of a GetX has been detected.
+          You should only use GetX or Obx for the specific widget that will be updated.
+          If you are seeing this error, you probably did not insert any observable variables into GetX/Obx
+          or insert them outside the scope that GetX considers suitable for an update
+          (example: GetX => HeavyWidget => variableObservable).
+          If you need to update a parent widget and a child widget, wrap each one in an Obx/GetX.
+    解决： var count = 0.obs; 没有 .obs初始化变量
+
+
+
 

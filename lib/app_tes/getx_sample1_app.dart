@@ -1,7 +1,13 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-/// 1. 有名路由注册Bindings子类对象,  Bindings 子类注册多个 GetxController 示例
-/// 2. 无名路由绑定 Bindings 跳转页面 示例
+
+String summary = '''
+Getx 的 GetPage， Bindings， GetxController使用示例：               
+  1. 有名路由注册Bindings子类对象,  Bindings 子类注册多个 GetxController 示例
+  2. 无名路由绑定 Bindings 跳转页面 示例  
+''';
+
+
 void main() {
   runApp(GetMaterialApp(
     initialRoute: '/home',
@@ -18,7 +24,7 @@ class _First extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("First Page"),
+        title: const Text("Getx 的 Bindings 使用示例"),
       ),
       body: ListView(children: [
         MaterialButton(onPressed: () {

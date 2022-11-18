@@ -11,11 +11,13 @@ void main() {
   runApp(GetMaterialApp(
     initialRoute: '/home',
     getPages: [
+      /// 1. 注册 Bindings
       GetPage(name: '/home', page: () => const Home(), binding: HomeBinding()),
     ],
   ));
 }
 
+/// 2. 页面绑定GetxController子类， 注册其示例对象
 class Home extends GetView<HomeController> {
   const Home({super.key});
 
@@ -23,6 +25,7 @@ class Home extends GetView<HomeController> {
   Widget build(context) => Scaffold(
       appBar: AppBar(title: const Text("GetView 使用示例")),
       body: Center(
+        /// 3. 使用 controller 数据 更新UI 对象
         child: Obx(() => Text("${controller.counter}")),
       ),
       floatingActionButton: FloatingActionButton(
@@ -31,6 +34,7 @@ class Home extends GetView<HomeController> {
       ));
 }
 
+/// 2-01. 创建 Bindings类 子类
 class HomeBinding implements Bindings {
   @override
   void dependencies() {
@@ -38,6 +42,7 @@ class HomeBinding implements Bindings {
   }
 }
 
+/// 2-02. 创建 GetxController类 子类
 class HomeController extends GetxController {
   var counter = 0.obs;
 

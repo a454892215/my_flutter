@@ -45,6 +45,15 @@ Mac 电脑添加环境变量步骤：
 
 
 flutter 生成apk命令：
+flutter doctor                  //检测flutter运行环境
+flutter run                     //运行
+flutter build ios --release     //iOS打包 -lstdc++
+flutter build apk  --release //安卓打包
+flutter clean //清理工程
+flutter pub get //更新应用的库
+flutter build appbundle   //打google play上架的aab包
+flutter build apk --target-platform android-arm,android-arm64   //打制定 arm arm64的包
+
 1. flutter clean
 2. flutter build apk --release
 

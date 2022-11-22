@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-
 import '../../util/Log.dart';
+
 String summary = '''
 ''';
 
@@ -13,43 +13,37 @@ void main() {
   ));
 }
 
-class _Page extends StatefulWidget {
+class _Page extends StatelessWidget {
   const _Page();
 
-  @override
-  State<StatefulWidget> createState() {
-    return _State();
-  }
-}
-
-class _State extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Sample"),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Text("按钮"),
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.grey,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(
-              width: 200,
-              height: 200,
-              color: Colors.blue,
-              child: CustomPaint(
-                painter: MyPainter1(),
-              ),
+      body: buildContainer(),
+    );
+  }
+
+  Container buildContainer() {
+    Log.d("==========buildContainer===========");
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Colors.grey,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Container(
+            width: 200,
+            height: 200,
+            color: Colors.blue,
+            child: CustomPaint(
+              painter: MyPainter1(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -60,26 +54,31 @@ class MyPainter1 extends CustomPainter {
   final Paint _myPaint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 2.5;
+  int drawingCount = 0;
 
   @override
   void paint(Canvas canvas, Size size) {
     Log.d("size:$size");
+    canvas.drawColor(Colors.grey, BlendMode.color);
     canvas.drawRect(_rect, _myPaint);
     // 绘制文本
     drawTextSample(size, canvas);
+    canvas.translate(20, 20);
+   // canvas.drawColor(Colors.blue, BlendMode.color);
+    canvas.drawRect(_rect, _myPaint);
+    drawingCount++;
   }
 
   void drawTextSample(Size size, Canvas canvas) {
     // 绘制文本
     ParagraphBuilder paragraphBuilder = ParagraphBuilder(ParagraphStyle(fontSize: 16))..addText('Hello World');
     ParagraphConstraints paragraphConstraints = ParagraphConstraints(width: size.width);
-    Paragraph paragraph = paragraphBuilder.build() ..layout(paragraphConstraints);
+    Paragraph paragraph = paragraphBuilder.build()..layout(paragraphConstraints);
     canvas.drawParagraph(paragraph, const Offset(10, 10));
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+    return drawingCount == 0;
   }
-
 }

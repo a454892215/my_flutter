@@ -1,2 +1,9 @@
 格式化快捷键 : Option + Command + L
 全局搜索： shift + Command + R
+
+苹果系统：
+点击 Android Studio（左上角）
+单击首选项
+在搜索中键入代码样式
+单击代码样式
+'Hard wrap at'有申请权- 您可以输入您需要的符号

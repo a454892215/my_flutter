@@ -9,11 +9,16 @@ class Log {
     printer: MyLogPrinter(),
   );
 
-
   static void d(Object msg) {
     if (debug) {
-      var traceList = StackTrace.current.toString().split("\n");
-      logger.d("${traceList[1]} $tag$msg");
+      var traceList = StackTrace.current.toString().replaceAll(RegExp(r"(\s\s\s\s)+"), "    ").split("\n");
+      String pre = traceList[0];
+      for (int i = 1; i <= 4; i++) {
+        if (pre.contains("Log")) {
+          logger.d("${traceList[i]} $tag$msg");
+        }
+        pre = traceList[i];
+      }
     }
   }
 

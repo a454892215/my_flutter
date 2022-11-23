@@ -44,7 +44,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("NestedScrollView2-示例"),
+        title: const Text("NestedScrollViewSamplePage2-示例"),
         backgroundColor: Colors.pink,
       ),
 

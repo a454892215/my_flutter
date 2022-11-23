@@ -21,7 +21,7 @@ class _SamplePageState extends State {
     //  return const SnapAppBar();
     return Scaffold(
       appBar: AppBar(
-        title: const Text("NestedScroll-示例"),
+        title: const Text("NestedScrollViewSamplePage2-示例"),
       ),
       /// 1. NestedScrollView 包裹内容， 设置 headerSliverBuilder 和 body
       body: NestedScrollView(

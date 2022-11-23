@@ -29,7 +29,7 @@ class _SamplePageState extends State {
 
   Scaffold buildScaffold() {
     return Scaffold(
-      appBar: AppBar(title: const Text("SingleChildScrollView-示例")),
+      appBar: AppBar(title: const Text("SingleChildScrollViewSamplePage-示例")),
       // FractionallySizedBox 的 widthFactor 生效
       body: Container(
         color: const Color.fromARGB(222, 213, 213, 213),

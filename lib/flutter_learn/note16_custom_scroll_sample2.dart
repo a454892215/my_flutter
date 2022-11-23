@@ -34,7 +34,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          UIUtil.buildSliverAppBar(const Text("CustomScrollView2-示例"), buildFlexibleSpace(180)),
+          UIUtil.buildSliverAppBar(const Text("CustomScrollViewSample2Page-示例"), buildFlexibleSpace(180)),
           const SliverPadding(padding: EdgeInsets.only(top: 10)),
           /// 只有下面的List可以滑动了，头部才能滑动隐藏
           UIUtil.buildSliverList((context, index) => UIUtil.buildContainer(index), 20),

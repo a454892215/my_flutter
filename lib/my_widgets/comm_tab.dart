@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:my_flutter_lib_3/util/toast_util.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import '../../util/Log.dart';
-import '../../util/math_util.dart';
+import '../util/Log.dart';
+import '../util/math_util.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -100,6 +100,7 @@ class MyState extends State<CommonTab> with SingleTickerProviderStateMixin {
         child: Consumer<OnRepaintNotifier>(builder: (context, OnRepaintNotifier notifier, child) {
           return GestureDetector(
             onTapUp: notifier.onTapUp,
+            onTapDown: notifier.onTapDown,
             onHorizontalDragUpdate: notifier.onHorizontalDragUpdate,
             onHorizontalDragEnd: notifier.onHorizontalDragEnd,
             child: CustomPaint(
@@ -120,6 +121,7 @@ class OnRepaintNotifier extends ChangeNotifier {
   final List<dynamic> tabList;
   final MyState commonTabState;
   late double maxCanScrollDx;
+  Color pressColor = const Color(0x33000000);
 
   OnRepaintNotifier(this.commonTab, this.tabList, this.commonTabState) {
     tabWidth = commonTab.tabWidth;
@@ -127,9 +129,20 @@ class OnRepaintNotifier extends ChangeNotifier {
   }
 
   void onTapUp(TapUpDetails details) {
+    int curTimestamp = DateTime.now().millisecondsSinceEpoch;
+    int dTime = curTimestamp - pressTimestamp;
+    if (dTime > 500) {
+      return;
+    }
     double realClickLocationX = details.localPosition.dx + scrolledX.abs();
     int index = realClickLocationX ~/ tabWidth;
     Toast.show("index: $index");
+  }
+
+  late int pressTimestamp;
+
+  void onTapDown(TapDownDetails details) {
+    pressTimestamp = DateTime.now().millisecondsSinceEpoch;
   }
 
   void onHorizontalDragUpdate(DragUpdateDetails details) {

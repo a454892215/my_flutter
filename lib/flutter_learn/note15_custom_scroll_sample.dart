@@ -35,7 +35,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("CustomScroll-示例"),
+        title: const Text("CustomScrollViewSamplePage-示例"),
       ),
       body: CustomScrollView(
         slivers: [

@@ -130,7 +130,7 @@ class OnRepaintNotifier extends ChangeNotifier {
   final CommonTab commonTab;
   final List<dynamic> tabList;
   final MyState commonTabState;
-  late double maxCanScrollDx;
+  late double maxCanScrollDx = 0;
   Color pressColor = const Color(0x33000000);
   late Rect pressedArea = const Rect.fromLTWH(0, 0, 0, 0);
   late int curPressedIndex;
@@ -159,14 +159,14 @@ class OnRepaintNotifier extends ChangeNotifier {
     // Toast.show("dxToCenterOfSelectedItem: $dxTabLeftToCenterOfSelectedItem");
     jumpController.stop();
     jumpController.removeListener(onScroll);
-    flingAnim = Tween<double>(begin: 0, end: 0.0).animate(jumpController);
+    jumpAnim = Tween<double>(begin: scrolledX, end:scrolledX + tabWidth).animate(jumpController);
     jumpController.addListener(onScroll);
     jumpController.forward(from: 0);
     notifyListeners();
   }
 
   void onScroll(){
-
+     scrollTo(jumpAnim.value);
   }
 
   late int pressTimestamp;
@@ -183,12 +183,12 @@ class OnRepaintNotifier extends ChangeNotifier {
 
   void onHorizontalDragUpdate(DragUpdateDetails details) {
     scrolledX += details.delta.dx;
-    maxCanScrollDx = -(tabWidth * tabCount - commonTab.width);
-    limitMaxScrollX(maxCanScrollDx);
+    limitMaxScrollX();
     notifyListeners();
   }
 
-  void limitMaxScrollX(double maxCanScrollDx) {
+  void limitMaxScrollX() {
+    maxCanScrollDx = -(tabWidth * tabCount - commonTab.width);
     scrolledX = scrolledX > 0 ? 0 : scrolledX;
     scrolledX = scrolledX < maxCanScrollDx ? maxCanScrollDx : scrolledX;
   }
@@ -198,13 +198,13 @@ class OnRepaintNotifier extends ChangeNotifier {
 
   void onFling() {
     scrolledX += flingAnim.value;
-    limitMaxScrollX(maxCanScrollDx);
+    limitMaxScrollX();
     notifyListeners();
   }
 
-  void scrollTo(double x) {
-    scrolledX = x;
-    limitMaxScrollX(maxCanScrollDx);
+  void scrollTo(double tarX) {
+    scrolledX = tarX;
+    limitMaxScrollX();
     notifyListeners();
   }
 

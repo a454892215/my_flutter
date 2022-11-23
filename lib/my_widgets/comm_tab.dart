@@ -216,13 +216,16 @@ class TabPainter extends CustomPainter {
     canvas.drawRect(notifier.pressedArea, _paint);
     for (int i = 0; i < notifier.tabList.length; i++) {
       drawText(size, canvas, notifier.tabList[i].toString(), i);
-      _paint.color = i % 2 == 0 ? Colors.red : Colors.blue;
-      double widthInBorder = -notifier.stroke;
-      canvas.drawRect(
-          Rect.fromLTWH(i * notifier.tabWidth + notifier.stroke / 2.0, notifier.stroke / 2.0,
-              notifier.tabWidth - notifier.stroke, size.height - notifier.stroke),
-          _paint);
+      drawStrokeBorder(i, size, canvas);
     }
+  }
+
+  void drawStrokeBorder(int i, Size size, Canvas canvas) {
+    _paint.color = i % 2 == 0 ? Colors.red : Colors.blue;
+    double left = i * notifier.tabWidth + notifier.stroke / 2.0;
+    double width = notifier.tabWidth - notifier.stroke;
+    double height = size.height - notifier.stroke;
+    canvas.drawRect(Rect.fromLTWH(left, notifier.stroke / 2.0, width, height), _paint);
   }
 
   void drawText(Size size, Canvas canvas, String text, int index) {

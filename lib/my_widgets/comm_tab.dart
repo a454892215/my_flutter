@@ -131,7 +131,7 @@ class OnRepaintNotifier extends ChangeNotifier {
   Color pressColor = const Color(0x33000000);
   late Rect pressedArea = const Rect.fromLTWH(0, 0, 0, 0);
   late int curPressedIndex;
-  double stroke = 1;
+  double stroke = 5;
 
   OnRepaintNotifier(this.commonTab, this.tabList, this.commonTabState) {
     tabWidth = commonTab.tabWidth;
@@ -196,14 +196,14 @@ class OnRepaintNotifier extends ChangeNotifier {
 class TabPainter extends CustomPainter {
   late Paint _paint;
 
-
   final BuildContext context;
 
   Color bgColor = Colors.grey;
   final OnRepaintNotifier notifier;
 
-  TabPainter(this.context, this.notifier) : super(repaint: notifier){
+  TabPainter(this.context, this.notifier) : super(repaint: notifier) {
     _paint = Paint();
+    _paint.style = PaintingStyle.stroke;
     _paint.strokeWidth = notifier.stroke;
   }
 
@@ -217,8 +217,11 @@ class TabPainter extends CustomPainter {
     for (int i = 0; i < notifier.tabList.length; i++) {
       drawText(size, canvas, notifier.tabList[i].toString(), i);
       _paint.color = i % 2 == 0 ? Colors.red : Colors.blue;
-      double widthInBorder = notifier.tabWidth - notifier.stroke;
-      canvas.drawRect(Rect.fromLTWH(i * notifier.tabWidth, 0, widthInBorder, size.height), _paint);
+      double widthInBorder = -notifier.stroke;
+      canvas.drawRect(
+          Rect.fromLTWH(i * notifier.tabWidth + notifier.stroke / 2.0, notifier.stroke / 2.0,
+              notifier.tabWidth - notifier.stroke, size.height - notifier.stroke),
+          _paint);
     }
   }
 
@@ -226,7 +229,8 @@ class TabPainter extends CustomPainter {
     Size textSize = measureTextSize(context, text, TextStyle(fontSize: notifier.commonTab.fontSize));
     double topOfTabVerticalCenter = (size.height - textSize.height) / 2;
     double leftOfTab = (notifier.tabWidth - textSize.width) / 2 + index * notifier.tabWidth;
-    ParagraphBuilder paragraphBuilder = ParagraphBuilder(ParagraphStyle(fontSize: notifier.commonTab.fontSize))..addText(text);
+    ParagraphBuilder paragraphBuilder = ParagraphBuilder(ParagraphStyle(fontSize: notifier.commonTab.fontSize))
+      ..addText(text);
     ParagraphConstraints paragraphConstraints = ParagraphConstraints(width: size.width);
     Paragraph paragraph = paragraphBuilder.build()..layout(paragraphConstraints);
     canvas.drawParagraph(paragraph, Offset(leftOfTab, topOfTabVerticalCenter));

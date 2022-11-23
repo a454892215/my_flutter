@@ -142,6 +142,10 @@ class OnRepaintNotifier extends ChangeNotifier {
     tabCount = tabList.length;
   }
 
+  late AnimationController jumpController =
+      AnimationController(duration: const Duration(milliseconds: 300), vsync: commonTabState);
+  late Animation<double> jumpAnim = Tween<double>(begin: 0.0, end: 0.0).animate(jumpController);
+
   void onTapUp(TapUpDetails details) {
     int curTimestamp = DateTime.now().millisecondsSinceEpoch;
     int dTime = curTimestamp - pressTimestamp;
@@ -150,7 +154,19 @@ class OnRepaintNotifier extends ChangeNotifier {
     }
     double realClickLocationX = details.localPosition.dx + scrolledX.abs();
     curSelectedIndex = realClickLocationX ~/ tabWidth;
+    double x = curSelectedIndex * tabWidth + scrolledX;
+    double dxTabLeftToCenterOfSelectedItem = commonTab.width / 2.0 - x - tabWidth / 2.0;
+    // Toast.show("dxToCenterOfSelectedItem: $dxTabLeftToCenterOfSelectedItem");
+    jumpController.stop();
+    jumpController.removeListener(onScroll);
+    flingAnim = Tween<double>(begin: 0, end: 0.0).animate(jumpController);
+    jumpController.addListener(onScroll);
+    jumpController.forward(from: 0);
     notifyListeners();
+  }
+
+  void onScroll(){
+
   }
 
   late int pressTimestamp;
@@ -160,7 +176,7 @@ class OnRepaintNotifier extends ChangeNotifier {
     double realClickLocationX = details.localPosition.dx + scrolledX.abs();
     curPressedIndex = realClickLocationX ~/ tabWidth;
     pressedArea = Rect.fromLTWH(curPressedIndex * tabWidth, 0, tabWidth, commonTab.height);
-    Toast.show("index: $curPressedIndex ");
+    //Toast.show("index: $curPressedIndex ");
   }
 
   void onPanDown(DragDownDetails details) {}
@@ -178,10 +194,16 @@ class OnRepaintNotifier extends ChangeNotifier {
   }
 
   late AnimationController flingController = AnimationController(vsync: commonTabState);
-  late Animation<double> animation = Tween<double>(begin: 0.0, end: 0.0).animate(flingController);
+  late Animation<double> flingAnim = Tween<double>(begin: 0.0, end: 0.0).animate(flingController);
 
   void onFling() {
-    scrolledX += animation.value;
+    scrolledX += flingAnim.value;
+    limitMaxScrollX(maxCanScrollDx);
+    notifyListeners();
+  }
+
+  void scrollTo(double x) {
+    scrolledX = x;
     limitMaxScrollX(maxCanScrollDx);
     notifyListeners();
   }
@@ -193,7 +215,7 @@ class OnRepaintNotifier extends ChangeNotifier {
     int during = MathU.clamp(xSpeed.abs() * 30, 200.0, 2000.0).toInt();
     flingController.duration = Duration(milliseconds: during);
     // Log.d("during: $during   xSpeed: $xSpeed");
-    animation = Tween<double>(begin: xSpeed, end: 0.0).animate(flingController);
+    flingAnim = Tween<double>(begin: xSpeed, end: 0.0).animate(flingController);
     flingController.addListener(onFling);
     flingController.forward(from: 0);
   }
@@ -204,7 +226,6 @@ class TabPainter extends CustomPainter {
 
   final BuildContext context;
 
-  Color bgColor = Colors.grey;
   final OnRepaintNotifier notifier;
 
   TabPainter(this.context, this.notifier) : super(repaint: notifier) {
@@ -218,11 +239,10 @@ class TabPainter extends CustomPainter {
     // Log.d("canvas size:${size.width}  ${size.height}");
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height)); // 裁剪越界绘制
     canvas.translate(notifier.scrolledX, 0);
-    canvas.drawColor(bgColor, BlendMode.color);
-   // canvas.drawRect(notifier.pressedArea, _paint);
+    // canvas.drawRect(notifier.pressedArea, _paint);
     for (int i = 0; i < notifier.tabList.length; i++) {
       drawText(size, canvas, notifier.tabList[i].toString(), i);
-     // drawStrokeBorder(i, size, canvas);
+      // drawStrokeBorder(i, size, canvas);
     }
   }
 

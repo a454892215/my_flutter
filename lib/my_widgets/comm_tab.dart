@@ -50,7 +50,11 @@ class _Page extends StatelessWidget {
     for (int i = 0; i < 12; i++) {
       tabList.add("Tab-$i");
     }
-    return CommonTab(tabList: tabList, width: 300);
+    return CommonTab(
+      tabList: tabList,
+      width: 300,
+      height: 50,
+    );
   }
 }
 
@@ -67,6 +71,7 @@ class CommonTab extends StatefulWidget {
     this.tabWidth = 60,
     required this.tabList,
     required this.width,
+    required this.height,
   });
 
   final double fontSize;
@@ -82,6 +87,7 @@ class CommonTab extends StatefulWidget {
   final double tabWidth;
   final List<dynamic> tabList;
   final double width;
+  final double height;
 
   @override
   State<StatefulWidget> createState() {
@@ -101,6 +107,7 @@ class MyState extends State<CommonTab> with SingleTickerProviderStateMixin {
           return GestureDetector(
             onTapUp: notifier.onTapUp,
             onTapDown: notifier.onTapDown,
+            onPanDown: notifier.onPanDown,
             onHorizontalDragUpdate: notifier.onHorizontalDragUpdate,
             onHorizontalDragEnd: notifier.onHorizontalDragEnd,
             child: CustomPaint(
@@ -122,6 +129,9 @@ class OnRepaintNotifier extends ChangeNotifier {
   final MyState commonTabState;
   late double maxCanScrollDx;
   Color pressColor = const Color(0x33000000);
+  late Rect pressedArea = const Rect.fromLTWH(0, 0, 0, 0);
+  late int curPressedIndex;
+  double stroke = 1;
 
   OnRepaintNotifier(this.commonTab, this.tabList, this.commonTabState) {
     tabWidth = commonTab.tabWidth;
@@ -134,16 +144,20 @@ class OnRepaintNotifier extends ChangeNotifier {
     if (dTime > 500) {
       return;
     }
-    double realClickLocationX = details.localPosition.dx + scrolledX.abs();
-    int index = realClickLocationX ~/ tabWidth;
-    Toast.show("index: $index");
   }
 
   late int pressTimestamp;
 
   void onTapDown(TapDownDetails details) {
     pressTimestamp = DateTime.now().millisecondsSinceEpoch;
+    double realClickLocationX = details.localPosition.dx + scrolledX.abs();
+    curPressedIndex = realClickLocationX ~/ tabWidth;
+    double widthInBorder = tabWidth - stroke;
+    pressedArea = Rect.fromLTWH(curPressedIndex * tabWidth, 0, widthInBorder, commonTab.height);
+    Toast.show("index: $curPressedIndex ");
   }
+
+  void onPanDown(DragDownDetails details) {}
 
   void onHorizontalDragUpdate(DragUpdateDetails details) {
     scrolledX += details.delta.dx;
@@ -180,17 +194,18 @@ class OnRepaintNotifier extends ChangeNotifier {
 }
 
 class TabPainter extends CustomPainter {
-  final Paint _paint = Paint()
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = stroke;
+  late Paint _paint;
 
-  static const double stroke = 1;
+
   final BuildContext context;
 
   Color bgColor = Colors.grey;
   final OnRepaintNotifier notifier;
 
-  TabPainter(this.context, this.notifier) : super(repaint: notifier);
+  TabPainter(this.context, this.notifier) : super(repaint: notifier){
+    _paint = Paint();
+    _paint.strokeWidth = notifier.stroke;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -198,10 +213,11 @@ class TabPainter extends CustomPainter {
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height)); // 裁剪越界绘制
     canvas.translate(notifier.scrolledX, 0);
     canvas.drawColor(bgColor, BlendMode.color);
+    canvas.drawRect(notifier.pressedArea, _paint);
     for (int i = 0; i < notifier.tabList.length; i++) {
       drawText(size, canvas, notifier.tabList[i].toString(), i);
       _paint.color = i % 2 == 0 ? Colors.red : Colors.blue;
-      double widthInBorder = notifier.tabWidth - stroke;
+      double widthInBorder = notifier.tabWidth - notifier.stroke;
       canvas.drawRect(Rect.fromLTWH(i * notifier.tabWidth, 0, widthInBorder, size.height), _paint);
     }
   }

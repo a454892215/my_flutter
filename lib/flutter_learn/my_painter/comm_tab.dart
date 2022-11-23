@@ -1,7 +1,9 @@
 import 'dart:ui';
+import 'package:my_flutter_lib_3/util/toast_util.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../../util/Log.dart';
+import '../../util/math_util.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -52,7 +54,7 @@ class _Page extends StatelessWidget {
   }
 }
 
-class CommonTab extends StatelessWidget {
+class CommonTab extends StatefulWidget {
   const CommonTab({
     super.key,
     this.fontSize = 12,
@@ -82,16 +84,24 @@ class CommonTab extends StatelessWidget {
   final double width;
 
   @override
+  State<StatefulWidget> createState() {
+    return MyState();
+  }
+}
+
+class MyState extends State<CommonTab> with SingleTickerProviderStateMixin {
+  @override
   Widget build(BuildContext context) {
     return Builder(builder: (BuildContext context) {
       return MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => OnRepaintNotifier(this, tabList)),
+          ChangeNotifierProvider(create: (context) => OnRepaintNotifier(widget, widget.tabList, this)),
         ],
         child: Consumer<OnRepaintNotifier>(builder: (context, OnRepaintNotifier notifier, child) {
           return GestureDetector(
-            onTap: notifier.onTap,
+            onTapUp: notifier.onTapUp,
             onHorizontalDragUpdate: notifier.onHorizontalDragUpdate,
+            onHorizontalDragEnd: notifier.onHorizontalDragEnd,
             child: CustomPaint(
               painter: TabPainter(context, notifier),
             ),
@@ -104,28 +114,55 @@ class CommonTab extends StatelessWidget {
 
 class OnRepaintNotifier extends ChangeNotifier {
   double scrolledX = 0;
-  double fontSize = 12.0;
   late double tabWidth;
   late int tabCount;
   final CommonTab commonTab;
   final List<dynamic> tabList;
+  final MyState commonTabState;
+  late double maxCanScrollDx;
 
-  OnRepaintNotifier(this.commonTab, this.tabList) {
+  OnRepaintNotifier(this.commonTab, this.tabList, this.commonTabState) {
     tabWidth = commonTab.tabWidth;
     tabCount = tabList.length;
   }
 
-  void onTap() {
-    Log.d("======onTap=========");
+  void onTapUp(TapUpDetails details) {
+    double realClickLocationX = details.localPosition.dx + scrolledX.abs();
+    int index = realClickLocationX ~/ tabWidth;
+    Toast.show("index: $index");
   }
 
   void onHorizontalDragUpdate(DragUpdateDetails details) {
     scrolledX += details.delta.dx;
-    double maxCanScrollDx = -(tabWidth * tabCount - commonTab.width);
+    maxCanScrollDx = -(tabWidth * tabCount - commonTab.width);
+    limitMaxScrollX(maxCanScrollDx);
+    notifyListeners();
+  }
+
+  void limitMaxScrollX(double maxCanScrollDx) {
     scrolledX = scrolledX > 0 ? 0 : scrolledX;
     scrolledX = scrolledX < maxCanScrollDx ? maxCanScrollDx : scrolledX;
+  }
+
+  late AnimationController flingController = AnimationController(vsync: commonTabState);
+  late Animation<double> animation = Tween<double>(begin: 0.0, end: 0.0).animate(flingController);
+
+  void onFling() {
+    scrolledX += animation.value;
+    limitMaxScrollX(maxCanScrollDx);
     notifyListeners();
-    Log.d("======onHorizontalDragUpdate=========dx: $scrolledX");
+  }
+
+  void onHorizontalDragEnd(DragEndDetails details) {
+    flingController.stop();
+    flingController.removeListener(onFling);
+    double xSpeed = details.velocity.pixelsPerSecond.dx / 60;
+    int during = MathU.clamp(xSpeed.abs() * 30, 200.0, 2000.0).toInt();
+    flingController.duration = Duration(milliseconds: during);
+    // Log.d("during: $during   xSpeed: $xSpeed");
+    animation = Tween<double>(begin: xSpeed, end: 0.0).animate(flingController);
+    flingController.addListener(onFling);
+    flingController.forward(from: 0);
   }
 }
 
@@ -157,10 +194,10 @@ class TabPainter extends CustomPainter {
   }
 
   void drawText(Size size, Canvas canvas, String text, int index) {
-    Size textSize = measureTextSize(context, text, TextStyle(fontSize: notifier.fontSize));
+    Size textSize = measureTextSize(context, text, TextStyle(fontSize: notifier.commonTab.fontSize));
     double topOfTabVerticalCenter = (size.height - textSize.height) / 2;
     double leftOfTab = (notifier.tabWidth - textSize.width) / 2 + index * notifier.tabWidth;
-    ParagraphBuilder paragraphBuilder = ParagraphBuilder(ParagraphStyle(fontSize: notifier.fontSize))..addText(text);
+    ParagraphBuilder paragraphBuilder = ParagraphBuilder(ParagraphStyle(fontSize: notifier.commonTab.fontSize))..addText(text);
     ParagraphConstraints paragraphConstraints = ParagraphConstraints(width: size.width);
     Paragraph paragraph = paragraphBuilder.build()..layout(paragraphConstraints);
     canvas.drawParagraph(paragraph, Offset(leftOfTab, topOfTabVerticalCenter));

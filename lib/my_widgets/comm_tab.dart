@@ -98,7 +98,7 @@ class CommonTab extends StatefulWidget {
   }
 }
 
-class MyState extends State<CommonTab> with SingleTickerProviderStateMixin {
+class MyState extends State<CommonTab> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (BuildContext context) {

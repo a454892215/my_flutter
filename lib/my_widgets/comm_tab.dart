@@ -143,7 +143,7 @@ class OnRepaintNotifier extends ChangeNotifier {
   }
 
   late AnimationController jumpController =
-      AnimationController(duration: const Duration(milliseconds: 300), vsync: commonTabState);
+      AnimationController(duration: const Duration(milliseconds: 200), vsync: commonTabState);
   late Animation<double> jumpAnim = Tween<double>(begin: 0.0, end: 0.0).animate(jumpController);
 
   void onTapUp(TapUpDetails details) {
@@ -156,13 +156,13 @@ class OnRepaintNotifier extends ChangeNotifier {
     curSelectedIndex = realClickLocationX ~/ tabWidth;
     double x = curSelectedIndex * tabWidth + scrolledX;
     double dxTabLeftToCenterOfSelectedItem = commonTab.width / 2.0 - x - tabWidth / 2.0;
-    Toast.show("dxToCenterOfSelectedItem: $dxTabLeftToCenterOfSelectedItem");
+    // Toast.show("dxToCenterOfSelectedItem: $dxTabLeftToCenterOfSelectedItem");
     jumpController.stop();
     jumpController.removeListener(onScroll);
     jumpAnim = Tween<double>(begin: scrolledX, end:scrolledX + dxTabLeftToCenterOfSelectedItem).animate(jumpController);
     jumpController.addListener(onScroll);
     jumpController.forward(from: 0);
-    notifyListeners();
+    // notifyListeners();
   }
 
   void onScroll(){

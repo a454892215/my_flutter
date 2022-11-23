@@ -1,4 +1,7 @@
-import 'dart:ui';
+//import 'dart:ui';
+
+import 'dart:ui' as ui;
+
 import 'package:my_flutter_lib_3/util/toast_util.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -131,6 +134,7 @@ class OnRepaintNotifier extends ChangeNotifier {
   Color pressColor = const Color(0x33000000);
   late Rect pressedArea = const Rect.fromLTWH(0, 0, 0, 0);
   late int curPressedIndex;
+  late int curSelectedIndex = 0;
   double stroke = 5;
 
   OnRepaintNotifier(this.commonTab, this.tabList, this.commonTabState) {
@@ -144,6 +148,9 @@ class OnRepaintNotifier extends ChangeNotifier {
     if (dTime > 500) {
       return;
     }
+    double realClickLocationX = details.localPosition.dx + scrolledX.abs();
+    curSelectedIndex = realClickLocationX ~/ tabWidth;
+    notifyListeners();
   }
 
   late int pressTimestamp;
@@ -152,8 +159,7 @@ class OnRepaintNotifier extends ChangeNotifier {
     pressTimestamp = DateTime.now().millisecondsSinceEpoch;
     double realClickLocationX = details.localPosition.dx + scrolledX.abs();
     curPressedIndex = realClickLocationX ~/ tabWidth;
-    double widthInBorder = tabWidth - stroke;
-    pressedArea = Rect.fromLTWH(curPressedIndex * tabWidth, 0, widthInBorder, commonTab.height);
+    pressedArea = Rect.fromLTWH(curPressedIndex * tabWidth, 0, tabWidth, commonTab.height);
     Toast.show("index: $curPressedIndex ");
   }
 
@@ -229,13 +235,20 @@ class TabPainter extends CustomPainter {
   }
 
   void drawText(Size size, Canvas canvas, String text, int index) {
-    Size textSize = measureTextSize(context, text, TextStyle(fontSize: notifier.commonTab.fontSize));
+    var fontColor = notifier.commonTab.fontColor;
+    var fontSize = notifier.commonTab.fontSize;
+    if (notifier.curSelectedIndex == index) {
+      fontColor = notifier.commonTab.selectedFontColor;
+      fontSize = notifier.commonTab.selectedFontSize;
+    }
+    Size textSize = measureTextSize(context, text, TextStyle(fontSize: fontSize));
     double topOfTabVerticalCenter = (size.height - textSize.height) / 2;
     double leftOfTab = (notifier.tabWidth - textSize.width) / 2 + index * notifier.tabWidth;
-    ParagraphBuilder paragraphBuilder = ParagraphBuilder(ParagraphStyle(fontSize: notifier.commonTab.fontSize))
+    ui.ParagraphBuilder paragraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle())
+      ..pushStyle(ui.TextStyle(fontSize: fontSize, color: fontColor))
       ..addText(text);
-    ParagraphConstraints paragraphConstraints = ParagraphConstraints(width: size.width);
-    Paragraph paragraph = paragraphBuilder.build()..layout(paragraphConstraints);
+    ui.ParagraphConstraints paragraphConstraints = ui.ParagraphConstraints(width: size.width);
+    ui.Paragraph paragraph = paragraphBuilder.build()..layout(paragraphConstraints);
     canvas.drawParagraph(paragraph, Offset(leftOfTab, topOfTabVerticalCenter));
   }
 

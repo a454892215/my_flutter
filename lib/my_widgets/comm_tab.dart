@@ -156,10 +156,10 @@ class OnRepaintNotifier extends ChangeNotifier {
     curSelectedIndex = realClickLocationX ~/ tabWidth;
     double x = curSelectedIndex * tabWidth + scrolledX;
     double dxTabLeftToCenterOfSelectedItem = commonTab.width / 2.0 - x - tabWidth / 2.0;
-    // Toast.show("dxToCenterOfSelectedItem: $dxTabLeftToCenterOfSelectedItem");
+    Toast.show("dxToCenterOfSelectedItem: $dxTabLeftToCenterOfSelectedItem");
     jumpController.stop();
     jumpController.removeListener(onScroll);
-    jumpAnim = Tween<double>(begin: scrolledX, end:scrolledX + tabWidth).animate(jumpController);
+    jumpAnim = Tween<double>(begin: scrolledX, end:scrolledX + dxTabLeftToCenterOfSelectedItem).animate(jumpController);
     jumpController.addListener(onScroll);
     jumpController.forward(from: 0);
     notifyListeners();

@@ -14,15 +14,15 @@
         5) c 清空屏幕，但其实只是跳到底部 让你看不到上面的内容而已
         6) q 退出程序以及终端
 
-4. flutter devices 查看设备列表
-5. flutter run -d 设备名称/设备ID
-6. flutter install 将程序安装到连接中的设备上
-7. flutter doctor 查看当前配置粗略情况
-8. flutter upgrade 升级flutter
-9. flutter build apk/ios 打包项目，生成可安装文件
+4.  flutter devices 查看设备列表
+5.  flutter run -d 设备名称/设备ID
+6.  flutter install 将程序安装到连接中的设备上
+7.  flutter doctor 查看当前配置粗略情况
+8.  flutter upgrade 升级flutter
+9.  flutter build apk/ios 打包项目，生成可安装文件
 10. flutter emulators 查看模拟器列表
-11.flutter packages get/upgrade 获取或升级依赖
-12.flutter packages get/upgrade 获取或升级依赖
+11. flutter packages get/upgrade 获取或升级依赖
+12. flutter packages get/upgrade 获取或升级依赖
 13. flutter analyze 使用分析器检查代码是否存在问题
     默认情况只检查一次 –-watch 一直运行检查
     默认情况下会每次分析都会执行pub get –-no-pub
@@ -31,10 +31,10 @@
         exclude:
             - flutter/**
 14. flutter clean 清空缓存
-15.flutter version 查看flutter版本 加上版本名称 则进行切换
-16.flutter format . 按照dart代码规范格式项目所有代码文件
+15. flutter version 查看flutter版本 加上版本名称 则进行切换
+16. flutter format . 按照dart代码规范格式项目所有代码文件
 17. flutter attach 和flutter run类似，不同之处在很多执行都是自己手动,比如热重载
 18. flutter channel 输出flutter分支信息 默认是在stable分支下
 19. flutter channel 分支名 切换到指定分支
-20.flutter screenshot 截屏 默认是在home目录下 -o 指定目录
-21.flutter test –start-paused 运行flutter单元测试 并会等待调试器的连接
+20. flutter screenshot 截屏 默认是在home目录下 -o 指定目录
+21. flutter test –start-paused 运行flutter单元测试 并会等待调试器的连接

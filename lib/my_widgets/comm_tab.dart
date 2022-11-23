@@ -219,10 +219,10 @@ class TabPainter extends CustomPainter {
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height)); // 裁剪越界绘制
     canvas.translate(notifier.scrolledX, 0);
     canvas.drawColor(bgColor, BlendMode.color);
-    canvas.drawRect(notifier.pressedArea, _paint);
+   // canvas.drawRect(notifier.pressedArea, _paint);
     for (int i = 0; i < notifier.tabList.length; i++) {
       drawText(size, canvas, notifier.tabList[i].toString(), i);
-      drawStrokeBorder(i, size, canvas);
+     // drawStrokeBorder(i, size, canvas);
     }
   }
 

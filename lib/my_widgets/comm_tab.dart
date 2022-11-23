@@ -1,8 +1,6 @@
 //import 'dart:ui';
 
 import 'dart:ui' as ui;
-
-import 'package:my_flutter_lib_3/util/toast_util.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../util/Log.dart';
@@ -110,7 +108,6 @@ class MyState extends State<CommonTab> with TickerProviderStateMixin {
           return GestureDetector(
             onTapUp: notifier.onTapUp,
             onTapDown: notifier.onTapDown,
-            onPanDown: notifier.onPanDown,
             onHorizontalDragUpdate: notifier.onHorizontalDragUpdate,
             onHorizontalDragEnd: notifier.onHorizontalDragEnd,
             child: CustomPaint(
@@ -159,14 +156,15 @@ class OnRepaintNotifier extends ChangeNotifier {
     // Toast.show("dxToCenterOfSelectedItem: $dxTabLeftToCenterOfSelectedItem");
     jumpController.stop();
     jumpController.removeListener(onScroll);
-    jumpAnim = Tween<double>(begin: scrolledX, end:scrolledX + dxTabLeftToCenterOfSelectedItem).animate(jumpController);
+    jumpAnim =
+        Tween<double>(begin: scrolledX, end: scrolledX + dxTabLeftToCenterOfSelectedItem).animate(jumpController);
     jumpController.addListener(onScroll);
     jumpController.forward(from: 0);
     // notifyListeners();
   }
 
-  void onScroll(){
-     scrollTo(jumpAnim.value);
+  void onScroll() {
+    scrollTo(jumpAnim.value);
   }
 
   late int pressTimestamp;
@@ -178,8 +176,6 @@ class OnRepaintNotifier extends ChangeNotifier {
     pressedArea = Rect.fromLTWH(curPressedIndex * tabWidth, 0, tabWidth, commonTab.height);
     //Toast.show("index: $curPressedIndex ");
   }
-
-  void onPanDown(DragDownDetails details) {}
 
   void onHorizontalDragUpdate(DragUpdateDetails details) {
     scrolledX += details.delta.dx;
@@ -264,12 +260,17 @@ class TabPainter extends CustomPainter {
     Size textSize = measureTextSize(context, text, TextStyle(fontSize: fontSize));
     double topOfTabVerticalCenter = (size.height - textSize.height) / 2;
     double leftOfTab = (notifier.tabWidth - textSize.width) / 2 + index * notifier.tabWidth;
-    ui.ParagraphBuilder paragraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle())
+    ui.Paragraph paragraph = getParagraph(fontSize, fontColor, text, size);
+    canvas.drawParagraph(paragraph, Offset(leftOfTab, topOfTabVerticalCenter));
+  }
+
+  ui.Paragraph getParagraph(double fontSize, ui.Color fontColor, String text, ui.Size size) {
+     ui.ParagraphBuilder paragraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle())
       ..pushStyle(ui.TextStyle(fontSize: fontSize, color: fontColor))
       ..addText(text);
     ui.ParagraphConstraints paragraphConstraints = ui.ParagraphConstraints(width: size.width);
     ui.Paragraph paragraph = paragraphBuilder.build()..layout(paragraphConstraints);
-    canvas.drawParagraph(paragraph, Offset(leftOfTab, topOfTabVerticalCenter));
+    return paragraph;
   }
 
   @override

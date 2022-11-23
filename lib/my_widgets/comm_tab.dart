@@ -66,9 +66,9 @@ class CommonTab extends StatefulWidget {
     this.selectedFontSize = 12,
     this.fontColor = Colors.black,
     this.selectedFontColor = Colors.white,
-    this.indicatorColor = Colors.blue,
-    this.indicatorWidth = 0,
-    this.indicatorHeight = 2,
+    this.indicatorColor = Colors.white,
+    this.indicatorWidth = 60,
+    this.indicatorHeight = 2.5,
     this.tabWidth = 60,
     required this.tabList,
     required this.width,
@@ -139,8 +139,7 @@ class OnRepaintNotifier extends ChangeNotifier {
     tabCount = tabList.length;
   }
 
-  late AnimationController jumpController =
-      AnimationController(duration: const Duration(milliseconds: 200), vsync: commonTabState);
+  late AnimationController jumpController = AnimationController(duration: const Duration(milliseconds: 200), vsync: commonTabState);
   late Animation<double> jumpAnim = Tween<double>(begin: 0.0, end: 0.0).animate(jumpController);
 
   void onTapUp(TapUpDetails details) {
@@ -156,8 +155,7 @@ class OnRepaintNotifier extends ChangeNotifier {
     // Toast.show("dxToCenterOfSelectedItem: $dxTabLeftToCenterOfSelectedItem");
     jumpController.stop();
     jumpController.removeListener(onScroll);
-    jumpAnim =
-        Tween<double>(begin: scrolledX, end: scrolledX + dxTabLeftToCenterOfSelectedItem).animate(jumpController);
+    jumpAnim = Tween<double>(begin: scrolledX, end: scrolledX + dxTabLeftToCenterOfSelectedItem).animate(jumpController);
     jumpController.addListener(onScroll);
     jumpController.forward(from: 0);
     // notifyListeners();
@@ -240,6 +238,20 @@ class TabPainter extends CustomPainter {
       drawText(size, canvas, notifier.tabList[i].toString(), i);
       // drawStrokeBorder(i, size, canvas);
     }
+    // draw bottom indicator
+    drawBottomIndicator(size, canvas);
+  }
+
+  void drawBottomIndicator(ui.Size size, ui.Canvas canvas) {
+    if (notifier.commonTab.indicatorWidth > 0) {
+      _paint.color = notifier.commonTab.indicatorColor;
+      _paint.style = PaintingStyle.fill;
+      var top = size.height - notifier.commonTab.indicatorHeight;
+      var bottom = top + notifier.commonTab.indicatorHeight;
+      var left = notifier.curSelectedIndex * notifier.tabWidth + (notifier.tabWidth - notifier.commonTab.indicatorWidth) / 2.0;
+      var right = left + notifier.commonTab.indicatorWidth;
+      canvas.drawRRect(RRect.fromLTRBR(left, top, right, bottom, Radius.zero), _paint);
+    }
   }
 
   void drawStrokeBorder(int i, Size size, Canvas canvas) {
@@ -265,7 +277,7 @@ class TabPainter extends CustomPainter {
   }
 
   ui.Paragraph getParagraph(double fontSize, ui.Color fontColor, String text, ui.Size size) {
-     ui.ParagraphBuilder paragraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle())
+    ui.ParagraphBuilder paragraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle())
       ..pushStyle(ui.TextStyle(fontSize: fontSize, color: fontColor))
       ..addText(text);
     ui.ParagraphConstraints paragraphConstraints = ui.ParagraphConstraints(width: size.width);

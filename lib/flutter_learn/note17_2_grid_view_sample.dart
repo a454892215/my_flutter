@@ -36,7 +36,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
       ),
       body: Container(
         color: Colors.grey[200],
-        child: Column(
+        child: ListView(
           children: [
             Container(
               height: 200,
@@ -71,7 +71,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   /// 4. 按需加载： GridView.custom
   GridView buildGridView4() {
     return GridView.custom(
-      physics: const BouncingScrollPhysics(),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),//增加
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         mainAxisSpacing: 8,
@@ -87,8 +88,10 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   /// 3. 按需加载，当需要显示就返回指定index的Item Widget： GridView.builder
   GridView buildGridView3() {
     return GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),//增加
         itemCount: 100,
-        physics: const BouncingScrollPhysics(),
+       // physics: const BouncingScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
           mainAxisSpacing: 8,
@@ -116,7 +119,9 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
       childAspectRatio: 0.8,
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
-      physics: const BouncingScrollPhysics(),
+      shrinkWrap: true,
+      //physics: const NeverScrollableScrollPhysics(),//增加
+       physics: const BouncingScrollPhysics(),
       children: ListU.fillRange(0, 6)
           .map((e) => Container(
                 color: Colors.yellow,
@@ -132,11 +137,12 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     return GridView(
       // 内容不足的时候是否能够滑动？(不一定生效)
       primary: false,
-      shrinkWrap: false,
+      shrinkWrap: true,
       scrollDirection: Axis.vertical,
+      physics: const NeverScrollableScrollPhysics(),//增加
 
       /// 当内容没有超过父容器 并且 primary: false, Android测试也有滑动效果
-      physics: const AlwaysScrollableScrollPhysics(),
+      // physics: const AlwaysScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 5,
         mainAxisSpacing: 8,

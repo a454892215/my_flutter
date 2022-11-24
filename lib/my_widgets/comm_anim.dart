@@ -32,4 +32,8 @@ class CommonValueAnim {
     controller.addListener(_onUpdate);
     controller.forward(from: 0);
   }
+
+  void setDuring(int milliseconds) {
+    controller.duration = Duration(milliseconds: milliseconds);
+  }
 }

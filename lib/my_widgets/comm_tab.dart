@@ -126,11 +126,10 @@ class OnRepaintNotifier extends ChangeNotifier {
     scrolledX = scrolledX < maxCanScrollDx ? maxCanScrollDx : scrolledX;
   }
 
-  late AnimationController flingController = AnimationController(vsync: commonTabState);
-  late Animation<double> flingAnim = Tween<double>(begin: 0.0, end: 0.0).animate(flingController);
+  late CommonValueAnim flingAnim = CommonValueAnim(onFling, 200, commonTabState);
 
-  void onFling() {
-    scrolledX += flingAnim.value;
+  void onFling(double value) {
+    scrolledX += value;
     limitMaxScrollX();
     notifyListeners();
   }
@@ -142,15 +141,11 @@ class OnRepaintNotifier extends ChangeNotifier {
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {
-    flingController.stop();
-    flingController.removeListener(onFling);
+    flingAnim.stop();
     double xSpeed = details.velocity.pixelsPerSecond.dx / 60;
     int during = MathU.clamp(xSpeed.abs() * 30, 200.0, 2000.0).toInt();
-    flingController.duration = Duration(milliseconds: during);
-    // Log.d("during: $during   xSpeed: $xSpeed");
-    flingAnim = Tween<double>(begin: xSpeed, end: 0.0).animate(flingController);
-    flingController.addListener(onFling);
-    flingController.forward(from: 0);
+    flingAnim.setDuring(during);
+    flingAnim.start(xSpeed, 0.0);
   }
 }
 

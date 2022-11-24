@@ -1,18 +1,20 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ImageText extends StatefulWidget {
   const ImageText(
       {super.key,
-      required this.imageUri,
-      required this.imageWidth,
-      required this.text,
-      required this.fontSize,
-      required this.textColor,
-      required this.padding,
-      this.axis = Axis.horizontal,
-      this.bgColor});
+        this.imageUri,
+        required this.imageWidth,
+        required this.text,
+        required this.fontSize,
+        required this.textColor,
+        required this.onClick,
+        this.padding = 10,
+        this.borderRadius = BorderRadius.zero,
+        this.axis = Axis.horizontal,
+        this.bgColor});
 
-  final String imageUri;
+  final String? imageUri;
   final double imageWidth;
   final String text;
   final double fontSize;
@@ -20,6 +22,8 @@ class ImageText extends StatefulWidget {
   final double padding;
   final Color? bgColor;
   final Axis axis;
+  final BorderRadius borderRadius;
+  final VoidCallback onClick;
 
   @override
   State<StatefulWidget> createState() {
@@ -30,23 +34,24 @@ class ImageText extends StatefulWidget {
 class _State extends State<ImageText> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      color: widget.bgColor,
-      child: Flex(
-        mainAxisSize: MainAxisSize.min,
-        direction: widget.axis,
-        children: [
-          Image.asset(
-            widget.imageUri,
-            width: widget.imageWidth,
+    return ClipRRect(
+      borderRadius: widget.borderRadius,
+      child: Material(
+        color: widget.bgColor,
+        child: InkWell(
+          onTap: widget.onClick,
+          child: Center(
+            child: Flex(
+              mainAxisSize: MainAxisSize.min,
+              direction: widget.axis,
+              children: [
+                widget.imageUri == null ? const SizedBox(width: 0, height: 0) : Image.asset(widget.imageUri!, width: widget.imageWidth),
+                SizedBox(width: widget.padding, height: widget.padding),
+                Text(widget.text, style: TextStyle(fontSize: widget.fontSize, color: widget.textColor))
+              ],
+            ),
           ),
-          SizedBox(width: widget.padding, height: widget.padding),
-          Text(
-            widget.text,
-            style: TextStyle(fontSize: widget.fontSize, color: widget.textColor),
-          )
-        ],
+        ),
       ),
     );
   }

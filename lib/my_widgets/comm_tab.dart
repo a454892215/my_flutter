@@ -73,11 +73,11 @@ class OnRepaintNotifier extends ChangeNotifier {
   final List<dynamic> tabList;
   final MyState commonTabState;
   late double maxCanScrollDx = 0;
-  Color pressColor = const Color(0x33000000);
-  late Rect pressedArea = const Rect.fromLTWH(0, 0, 0, 0);
-  late int curPressedIndex;
+  late int curPressedIndex =  -1;
   late int curSelectedIndex = 0;
   double stroke = 5;
+  Color pressedColor = Colors.transparent;
+ // late Rect pressedArea = const Rect.fromLTWH(0, 0, 0, 0);
 
   OnRepaintNotifier(this.commonTab, this.tabList, this.commonTabState) {
     tabWidth = commonTab.tabWidth;
@@ -85,6 +85,12 @@ class OnRepaintNotifier extends ChangeNotifier {
   }
 
   late CommonValueAnim jumpAnim = CommonValueAnim(jumpAnimUpdate, 200, commonTabState);
+  late CommonColorAnim colorAnim = CommonColorAnim(onPressedColorUpdate, 250, Colors.transparent, const Color(0x33000000), commonTabState);
+
+  void onPressedColorUpdate(Color color) {
+    pressedColor = color;
+    notifyListeners();
+  }
 
   void onTapUp(TapUpDetails details) {
     int curTimestamp = DateTime.now().millisecondsSinceEpoch;
@@ -98,6 +104,7 @@ class OnRepaintNotifier extends ChangeNotifier {
     double dxTabLeftToCenterOfSelectedItem = commonTab.width / 2.0 - x - tabWidth / 2.0;
     jumpAnim.stop();
     jumpAnim.start(scrolledX, scrolledX + dxTabLeftToCenterOfSelectedItem);
+    colorAnim.reverseNow();
   }
 
   void jumpAnimUpdate(double value) {
@@ -110,7 +117,8 @@ class OnRepaintNotifier extends ChangeNotifier {
     pressTimestamp = DateTime.now().millisecondsSinceEpoch;
     double realClickLocationX = details.localPosition.dx + scrolledX.abs();
     curPressedIndex = realClickLocationX ~/ tabWidth;
-    pressedArea = Rect.fromLTWH(curPressedIndex * tabWidth, 0, tabWidth, commonTab.height);
+    colorAnim.stop();
+    colorAnim.start();
     //Toast.show("index: $curPressedIndex ");
   }
 
@@ -174,7 +182,15 @@ class TabPainter extends CustomPainter {
     }
     // draw bottom indicator
     drawBottomIndicator(size, canvas);
+    drawPressedEffect(canvas, size);
   }
+
+  void drawPressedEffect(ui.Canvas canvas, ui.Size size) {
+    _paint.style = PaintingStyle.fill;
+    _paint.color = notifier.pressedColor;
+    canvas.drawRect(Rect.fromLTWH(notifier.curPressedIndex * notifier.tabWidth, 0, notifier.tabWidth, size.height), _paint);
+  }
+
 
   void drawBottomIndicator(ui.Size size, ui.Canvas canvas) {
     if (notifier.commonTab.indicatorWidth > 0) {
@@ -189,6 +205,7 @@ class TabPainter extends CustomPainter {
   }
 
   void drawStrokeBorder(int i, Size size, Canvas canvas) {
+    _paint.style = PaintingStyle.stroke;
     _paint.color = i % 2 == 0 ? Colors.red : Colors.blue;
     double left = i * notifier.tabWidth + notifier.stroke / 2.0;
     double width = notifier.tabWidth - notifier.stroke;
@@ -209,7 +226,6 @@ class TabPainter extends CustomPainter {
     ui.Paragraph paragraph = getParagraph(fontSize, fontColor, text, size);
     canvas.drawParagraph(paragraph, Offset(leftOfTab, topOfTabVerticalCenter));
   }
-
   ui.Paragraph getParagraph(double fontSize, ui.Color fontColor, String text, ui.Size size) {
     ui.ParagraphBuilder paragraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle())
       ..pushStyle(ui.TextStyle(fontSize: fontSize, color: fontColor))

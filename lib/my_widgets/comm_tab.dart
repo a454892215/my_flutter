@@ -1,63 +1,7 @@
-//import 'dart:ui';
-
 import 'dart:ui' as ui;
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import '../util/Log.dart';
 import '../util/math_util.dart';
-
-void main() {
-  runApp(const MaterialApp(
-    title: "MaterialApp",
-    home: _Page(),
-  ));
-}
-
-class _Page extends StatelessWidget {
-  const _Page();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Comm-Tab"),
-      ),
-      body: buildContainer(),
-    );
-  }
-
-  Container buildContainer() {
-    Log.d("==========buildContainer===========");
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      color: Colors.grey,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Container(
-            width: 300,
-            height: 50,
-            color: Colors.blue,
-            child: _buildCommonTab(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  CommonTab _buildCommonTab() {
-    List<dynamic> tabList = [];
-    for (int i = 0; i < 12; i++) {
-      tabList.add("Tab-$i");
-    }
-    return CommonTab(
-      tabList: tabList,
-      width: 300,
-      height: 50,
-    );
-  }
-}
 
 class CommonTab extends StatefulWidget {
   const CommonTab({

@@ -4,14 +4,14 @@ typedef DoubleCallback = void Function(double d);
 
 class CommonValueAnim {
   CommonValueAnim(
-    this.doubleCallback,
+    this.listener,
     int milliseconds,
     TickerProvider vsync,
   ) {
     controller = AnimationController(duration: Duration(milliseconds: milliseconds), vsync: vsync);
   }
 
-  final DoubleCallback doubleCallback;
+  final DoubleCallback listener;
   late AnimationController controller;
   late Tween<double> tween = Tween<double>(begin: 0.0, end: 0.0);
   late Animation<double> animation;
@@ -22,7 +22,7 @@ class CommonValueAnim {
   }
 
   void _onUpdate() {
-    doubleCallback(animation.value);
+    listener(animation.value);
   }
 
   void start(double begin, double end) {

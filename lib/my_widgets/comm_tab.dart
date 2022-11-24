@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:my_flutter_lib_3/my_widgets/comm_anim.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../util/math_util.dart';
@@ -83,8 +84,7 @@ class OnRepaintNotifier extends ChangeNotifier {
     tabCount = tabList.length;
   }
 
-  late AnimationController jumpController = AnimationController(duration: const Duration(milliseconds: 200), vsync: commonTabState);
-  late Animation<double> jumpAnim = Tween<double>(begin: 0.0, end: 0.0).animate(jumpController);
+  late CommonValueAnim jumpAnim = CommonValueAnim(jumpAnimUpdate, 200, commonTabState);
 
   void onTapUp(TapUpDetails details) {
     int curTimestamp = DateTime.now().millisecondsSinceEpoch;
@@ -96,17 +96,12 @@ class OnRepaintNotifier extends ChangeNotifier {
     curSelectedIndex = realClickLocationX ~/ tabWidth;
     double x = curSelectedIndex * tabWidth + scrolledX;
     double dxTabLeftToCenterOfSelectedItem = commonTab.width / 2.0 - x - tabWidth / 2.0;
-    // Toast.show("dxToCenterOfSelectedItem: $dxTabLeftToCenterOfSelectedItem");
-    jumpController.stop();
-    jumpController.removeListener(onScroll);
-    jumpAnim = Tween<double>(begin: scrolledX, end: scrolledX + dxTabLeftToCenterOfSelectedItem).animate(jumpController);
-    jumpController.addListener(onScroll);
-    jumpController.forward(from: 0);
-    // notifyListeners();
+    jumpAnim.stop();
+    jumpAnim.start(scrolledX, scrolledX + dxTabLeftToCenterOfSelectedItem);
   }
 
-  void onScroll() {
-    scrollTo(jumpAnim.value);
+  void jumpAnimUpdate(double value) {
+    scrollTo(value);
   }
 
   late int pressTimestamp;

@@ -18,7 +18,7 @@ class ColorTweenSample2 extends StatefulWidget {
 }
 
 class _State extends State with TickerProviderStateMixin {
-  late CommonColorAnim colorAnim = CommonColorAnim(onColorUpdate, 250, const Color(0xffff0000), const Color(0xfff37777), this);
+  late CommonColorAnim colorAnim = CommonColorAnim(onColorUpdate, 250, const Color(0xffff0000), const Color(0x66ff0000), this);
 
   void onColorUpdate(Color color) {
     setState(() {});

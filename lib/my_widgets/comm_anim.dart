@@ -34,6 +34,11 @@ class CommonValueAnim {
     controller.forward(from: 0);
   }
 
+  void stopAndStart(double begin, double end){
+    stop();
+    start(begin, end);
+  }
+
   void setDuring(int milliseconds) {
     controller.duration = Duration(milliseconds: milliseconds);
   }

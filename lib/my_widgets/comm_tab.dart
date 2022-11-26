@@ -115,10 +115,8 @@ class OnRepaintNotifier extends ChangeNotifier {
     double tarIndicatorLeft = curSelectedIndex * tabWidth + (tabWidth - commonTab.indicatorWidth) / 2.0;
     double x = curSelectedIndex * tabWidth + scrolledX;
     double dxTabLeftToCenterOfSelectedItem = commonTab.width / 2.0 - x - tabWidth / 2.0;
-    jumpAnim.stop();
-    jumpAnim.start(scrolledX, scrolledX + dxTabLeftToCenterOfSelectedItem);
-    indicatorScrollAnim.stop();
-    indicatorScrollAnim.start(lastIndicatorLeft, tarIndicatorLeft);
+    jumpAnim.stopAndStart(scrolledX, scrolledX + dxTabLeftToCenterOfSelectedItem);
+    indicatorScrollAnim.stopAndStart(lastIndicatorLeft, tarIndicatorLeft);
     commonTab.onItemSelected(curSelectedIndex);
   }
 

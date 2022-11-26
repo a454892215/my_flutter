@@ -53,7 +53,7 @@ class _State extends State {
         child: CommonTab(
           tabList: tabList,
           width: commTabWidth,
-          height: commTabHeight,
+          height: commTabHeight, onItemSelected: (int pos) {  },
         ),
       ),
     );

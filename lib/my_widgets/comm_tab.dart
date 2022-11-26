@@ -1,8 +1,11 @@
 import 'dart:ui' as ui;
-import 'package:my_flutter_lib_3/my_widgets/comm_anim.dart';
+
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import '../util/math_util.dart';
+import 'comm_anim.dart';
+
+typedef OnItemClick = void Function(int pos);
 
 class CommonTab extends StatefulWidget {
   const CommonTab({
@@ -18,6 +21,7 @@ class CommonTab extends StatefulWidget {
     required this.tabList,
     required this.width,
     required this.height,
+    required this.onItemSelected,
   });
 
   final double fontSize;
@@ -34,6 +38,7 @@ class CommonTab extends StatefulWidget {
   final List<dynamic> tabList;
   final double width;
   final double height;
+  final OnItemClick onItemSelected;
 
   @override
   State<StatefulWidget> createState() {
@@ -55,8 +60,15 @@ class MyState extends State<CommonTab> with TickerProviderStateMixin {
             onTapDown: notifier.onTapDown,
             onHorizontalDragUpdate: notifier.onHorizontalDragUpdate,
             onHorizontalDragEnd: notifier.onHorizontalDragEnd,
-            child: CustomPaint(
-              painter: TabPainter(context, notifier),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: widget.width,
+                height: widget.height,
+                child: CustomPaint(
+                  painter: TabPainter(context, notifier),
+                ),
+              ),
             ),
           );
         }),
@@ -73,24 +85,22 @@ class OnRepaintNotifier extends ChangeNotifier {
   final List<dynamic> tabList;
   final MyState commonTabState;
   late double maxCanScrollDx = 0;
-  late int curPressedIndex =  -1;
+  Color pressColor = const Color(0x33000000);
+  late Rect pressedArea = const Rect.fromLTWH(0, 0, 0, 0);
+  late int curPressedIndex;
   late int curSelectedIndex = 0;
   double stroke = 5;
-  Color pressedColor = Colors.transparent;
- // late Rect pressedArea = const Rect.fromLTWH(0, 0, 0, 0);
+  double curIndicatorLeft = 0;
 
   OnRepaintNotifier(this.commonTab, this.tabList, this.commonTabState) {
     tabWidth = commonTab.tabWidth;
     tabCount = tabList.length;
+    curIndicatorLeft = curSelectedIndex * tabWidth + (tabWidth - commonTab.indicatorWidth) / 2.0;
+
   }
 
   late CommonValueAnim jumpAnim = CommonValueAnim(jumpAnimUpdate, 200, commonTabState);
-  late CommonColorAnim colorAnim = CommonColorAnim(onPressedColorUpdate, 250, Colors.transparent, const Color(0x33000000), commonTabState);
-
-  void onPressedColorUpdate(Color color) {
-    pressedColor = color;
-    notifyListeners();
-  }
+  late CommonValueAnim indicatorScrollAnim = CommonValueAnim(indicatorScrollAnimUpdate, 1, commonTabState);
 
   void onTapUp(TapUpDetails details) {
     int curTimestamp = DateTime.now().millisecondsSinceEpoch;
@@ -98,17 +108,27 @@ class OnRepaintNotifier extends ChangeNotifier {
     if (dTime > 500) {
       return;
     }
+    // when item selected
     double realClickLocationX = details.localPosition.dx + scrolledX.abs();
+    double lastIndicatorLeft = curSelectedIndex * tabWidth + (tabWidth - commonTab.indicatorWidth) / 2.0;
     curSelectedIndex = realClickLocationX ~/ tabWidth;
+    double tarIndicatorLeft = curSelectedIndex * tabWidth + (tabWidth - commonTab.indicatorWidth) / 2.0;
     double x = curSelectedIndex * tabWidth + scrolledX;
     double dxTabLeftToCenterOfSelectedItem = commonTab.width / 2.0 - x - tabWidth / 2.0;
     jumpAnim.stop();
     jumpAnim.start(scrolledX, scrolledX + dxTabLeftToCenterOfSelectedItem);
-    colorAnim.reverseNow();
+    indicatorScrollAnim.stop();
+    indicatorScrollAnim.start(lastIndicatorLeft, tarIndicatorLeft);
+    commonTab.onItemSelected(curSelectedIndex);
   }
 
   void jumpAnimUpdate(double value) {
     scrollTo(value);
+  }
+
+  void indicatorScrollAnimUpdate(double value) {
+    curIndicatorLeft = value;
+    notifyListeners();
   }
 
   late int pressTimestamp;
@@ -117,8 +137,7 @@ class OnRepaintNotifier extends ChangeNotifier {
     pressTimestamp = DateTime.now().millisecondsSinceEpoch;
     double realClickLocationX = details.localPosition.dx + scrolledX.abs();
     curPressedIndex = realClickLocationX ~/ tabWidth;
-    colorAnim.stop();
-    colorAnim.start();
+    pressedArea = Rect.fromLTWH(curPressedIndex * tabWidth, 0, tabWidth, commonTab.height);
     //Toast.show("index: $curPressedIndex ");
   }
 
@@ -182,15 +201,7 @@ class TabPainter extends CustomPainter {
     }
     // draw bottom indicator
     drawBottomIndicator(size, canvas);
-    drawPressedEffect(canvas, size);
   }
-
-  void drawPressedEffect(ui.Canvas canvas, ui.Size size) {
-    _paint.style = PaintingStyle.fill;
-    _paint.color = notifier.pressedColor;
-    canvas.drawRect(Rect.fromLTWH(notifier.curPressedIndex * notifier.tabWidth, 0, notifier.tabWidth, size.height), _paint);
-  }
-
 
   void drawBottomIndicator(ui.Size size, ui.Canvas canvas) {
     if (notifier.commonTab.indicatorWidth > 0) {
@@ -198,14 +209,13 @@ class TabPainter extends CustomPainter {
       _paint.style = PaintingStyle.fill;
       var top = size.height - notifier.commonTab.indicatorHeight;
       var bottom = top + notifier.commonTab.indicatorHeight;
-      var left = notifier.curSelectedIndex * notifier.tabWidth + (notifier.tabWidth - notifier.commonTab.indicatorWidth) / 2.0;
+      var left = notifier.curIndicatorLeft;
       var right = left + notifier.commonTab.indicatorWidth;
       canvas.drawRRect(RRect.fromLTRBR(left, top, right, bottom, Radius.zero), _paint);
     }
   }
 
   void drawStrokeBorder(int i, Size size, Canvas canvas) {
-    _paint.style = PaintingStyle.stroke;
     _paint.color = i % 2 == 0 ? Colors.red : Colors.blue;
     double left = i * notifier.tabWidth + notifier.stroke / 2.0;
     double width = notifier.tabWidth - notifier.stroke;
@@ -226,6 +236,7 @@ class TabPainter extends CustomPainter {
     ui.Paragraph paragraph = getParagraph(fontSize, fontColor, text, size);
     canvas.drawParagraph(paragraph, Offset(leftOfTab, topOfTabVerticalCenter));
   }
+
   ui.Paragraph getParagraph(double fontSize, ui.Color fontColor, String text, ui.Size size) {
     ui.ParagraphBuilder paragraphBuilder = ui.ParagraphBuilder(ui.ParagraphStyle())
       ..pushStyle(ui.TextStyle(fontSize: fontSize, color: fontColor))
@@ -242,20 +253,17 @@ class TabPainter extends CustomPainter {
 }
 
 Size measureTextSize(
-  BuildContext context,
-  String text,
-  TextStyle style, {
-  int maxLines = 2 ^ 31,
-  double maxWidth = double.infinity,
-}) {
+    BuildContext context,
+    String text,
+    TextStyle style, {
+      int maxLines = 2 ^ 31,
+      double maxWidth = double.infinity,
+    }) {
   if (text.isEmpty) {
     return Size.zero;
   }
-  final TextPainter textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-      locale: Localizations.localeOf(context),
-      text: TextSpan(text: text, style: style),
-      maxLines: maxLines)
+  final TextPainter textPainter =
+  TextPainter(textDirection: TextDirection.ltr, locale: Localizations.localeOf(context), text: TextSpan(text: text, style: style), maxLines: maxLines)
     ..layout(maxWidth: maxWidth);
   return textPainter.size;
 }

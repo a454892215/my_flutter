@@ -12,6 +12,12 @@ class CommonValueAnim {
     controller = AnimationController(duration: Duration(milliseconds: milliseconds), vsync: vsync);
   }
 
+  void setAnimation(double begin, double end){
+    tween.begin = begin;
+    tween.end = end;
+    animation = tween.animate(controller);
+  }
+
   setControllerConfig(ControllerSettingCallBack callBack){
     callBack(controller);
   }
@@ -35,9 +41,7 @@ class CommonValueAnim {
   }
 
   void start(double begin, double end) {
-    tween.begin = begin;
-    tween.end = end;
-    animation = tween.animate(controller);
+    setAnimation(begin, end);
     controller.addListener(_onUpdate);
     controller.forward();
     state = 1;

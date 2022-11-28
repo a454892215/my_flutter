@@ -10,12 +10,19 @@ class CommonValueAnim {
     TickerProvider vsync,
   ) {
     controller = AnimationController(duration: Duration(milliseconds: milliseconds), vsync: vsync);
+    controller.reset();
   }
 
+
+
+  void setReverseDuring(milliseconds){
+    controller.reverseDuration = Duration(milliseconds: milliseconds);
+  }
+  late int state = -1; // 1. 表示处于正向动画状态， -1. 表示处于逆向动画状态
   final DoubleCallback listener;
   late AnimationController controller;
   late Tween<double> tween = Tween<double>(begin: 0.0, end: 0.0);
-  late Animation<double> animation;
+  late Animation<double> animation = tween.animate(controller);
 
   void stop() {
     controller.stop();
@@ -31,12 +38,26 @@ class CommonValueAnim {
     tween.end = end;
     animation = tween.animate(controller);
     controller.addListener(_onUpdate);
-    controller.forward(from: 0);
+    controller.forward();
+    state = 1;
   }
 
   void stopAndStart(double begin, double end){
     stop();
     start(begin, end);
+  }
+
+  void reverse(){
+    controller.reverse();
+    state = -1;
+  }
+
+  void switchPlay(double begin, double end){
+    if(state == 1){
+      reverse();
+    }else{
+      start(begin, end);
+    }
   }
 
   void setDuring(int milliseconds) {
@@ -75,10 +96,11 @@ class CommonColorAnim {
   void start() {
     animation = tween.animate(controller);
     controller.addListener(_onUpdate);
-    controller.forward(from: 0);
+    controller.forward();
   }
 
   void reverseNow() {
+    controller.stop();
     controller.reverse();
   }
 

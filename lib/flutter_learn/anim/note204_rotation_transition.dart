@@ -20,7 +20,9 @@ class RotationTransitionSample extends StatefulWidget {
 }
 
 class _SizeTransitionDemoState extends State with TickerProviderStateMixin {
-  late CommonValueAnim valueAnim = CommonValueAnim((d) {}, 250, this)..setReverseDuring(250);
+  late CommonValueAnim valueAnim = CommonValueAnim((d) {}, 250, this)..setReverseDuring(250)..setControllerConfig((controller) {
+    controller.forward();
+  });
 
   @override
   void initState() {

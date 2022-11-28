@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 typedef DoubleCallback = void Function(double d);
 typedef ColorCallback = void Function(Color color);
-
+typedef ControllerSettingCallBack = void Function(AnimationController controller);
 class CommonValueAnim {
   CommonValueAnim(
     this.listener,
@@ -10,10 +10,11 @@ class CommonValueAnim {
     TickerProvider vsync,
   ) {
     controller = AnimationController(duration: Duration(milliseconds: milliseconds), vsync: vsync);
-    controller.reset();
   }
 
-
+  setControllerConfig(ControllerSettingCallBack callBack){
+    callBack(controller);
+  }
 
   void setReverseDuring(milliseconds){
     controller.reverseDuration = Duration(milliseconds: milliseconds);

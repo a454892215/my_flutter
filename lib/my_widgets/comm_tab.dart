@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+
 import '../util/math_util.dart';
 import 'comm_anim.dart';
 
@@ -18,6 +19,7 @@ class CommonTab extends StatefulWidget {
     this.indicatorWidth = 60,
     this.indicatorHeight = 2.5,
     this.tabWidth = 60,
+    this.indicatorAnimEnable = false,
     required this.tabList,
     required this.width,
     required this.height,
@@ -39,6 +41,7 @@ class CommonTab extends StatefulWidget {
   final double width;
   final double height;
   final OnItemClick onItemSelected;
+  final bool indicatorAnimEnable;
 
   @override
   State<StatefulWidget> createState() {
@@ -91,16 +94,19 @@ class OnRepaintNotifier extends ChangeNotifier {
   late int curSelectedIndex = 0;
   double stroke = 5;
   double curIndicatorLeft = 0;
+  int indicatorAnimDuring = 1;
 
   OnRepaintNotifier(this.commonTab, this.tabList, this.commonTabState) {
     tabWidth = commonTab.tabWidth;
     tabCount = tabList.length;
     curIndicatorLeft = curSelectedIndex * tabWidth + (tabWidth - commonTab.indicatorWidth) / 2.0;
-
+    if (commonTab.indicatorAnimEnable) {
+      indicatorAnimDuring = 200;
+    }
   }
 
   late CommonValueAnim jumpAnim = CommonValueAnim(jumpAnimUpdate, 200, commonTabState);
-  late CommonValueAnim indicatorScrollAnim = CommonValueAnim(indicatorScrollAnimUpdate, 1, commonTabState);
+  late CommonValueAnim indicatorScrollAnim = CommonValueAnim(indicatorScrollAnimUpdate, indicatorAnimDuring, commonTabState);
 
   void onTapUp(TapUpDetails details) {
     int curTimestamp = DateTime.now().millisecondsSinceEpoch;
@@ -115,8 +121,10 @@ class OnRepaintNotifier extends ChangeNotifier {
     double tarIndicatorLeft = curSelectedIndex * tabWidth + (tabWidth - commonTab.indicatorWidth) / 2.0;
     double x = curSelectedIndex * tabWidth + scrolledX;
     double dxTabLeftToCenterOfSelectedItem = commonTab.width / 2.0 - x - tabWidth / 2.0;
-    jumpAnim.stopAndStart(scrolledX, scrolledX + dxTabLeftToCenterOfSelectedItem);
-    indicatorScrollAnim.stopAndStart(lastIndicatorLeft, tarIndicatorLeft);
+    jumpAnim.stop();
+    jumpAnim.start(scrolledX, scrolledX + dxTabLeftToCenterOfSelectedItem);
+    indicatorScrollAnim.stop();
+    indicatorScrollAnim.start(lastIndicatorLeft, tarIndicatorLeft);
     commonTab.onItemSelected(curSelectedIndex);
   }
 

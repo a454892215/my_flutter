@@ -38,22 +38,39 @@ class _State extends State {
     );
   }
 
+  /// CommonTab
   Widget _buildCommonTab() {
     List<dynamic> tabList = [];
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 13; i++) {
       tabList.add("Tab-$i");
     }
-    double commTabWidth = 300;
+    int maxShowingTabCount = 5;
+    double leftRightPadding = 10;
+    double tabWidth = (300 - leftRightPadding * 2) / maxShowingTabCount;
+    int realShowingTabCount = tabList.length > maxShowingTabCount ? maxShowingTabCount : tabList.length;
+    double commTabWidth = tabWidth * realShowingTabCount;
     double commTabHeight = 50;
     return Center(
       child: Container(
-        width: commTabWidth,
+        width: double.infinity,
         height: commTabHeight,
-        color: Colors.blue,
+        padding: EdgeInsets.only(left: leftRightPadding, right: leftRightPadding),
+        decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xffdbdbdd), width: 2))),
         child: CommonTab(
           tabList: tabList,
+          onItemSelected: (pos) {
+          },
           width: commTabWidth,
-          height: commTabHeight, onItemSelected: (int pos) {  },
+          height: commTabHeight,
+          tabWidth: tabWidth,
+          fontColor: const Color(0xffbbbbbb),
+          selectedFontColor: const Color(0xff0185cb),
+          indicatorColor: const Color(0xff0084cb),
+          indicatorWidth: tabWidth,
+          indicatorHeight: 2,
+          fontSize: 14,
+          selectedFontSize: 15,
+          indicatorAnimEnable: true,
         ),
       ),
     );

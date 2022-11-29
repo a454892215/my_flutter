@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 typedef DoubleCallback = void Function(double d);
 typedef ColorCallback = void Function(Color color);
 typedef ControllerSettingCallBack = void Function(AnimationController controller);
+
 class CommonValueAnim {
   CommonValueAnim(
     this.listener,
@@ -12,19 +13,20 @@ class CommonValueAnim {
     controller = AnimationController(duration: Duration(milliseconds: milliseconds), vsync: vsync);
   }
 
-  void setAnimation(double begin, double end){
+  void setAnimation(double begin, double end) {
     tween.begin = begin;
     tween.end = end;
     animation = tween.animate(controller);
   }
 
-  setControllerConfig(ControllerSettingCallBack callBack){
+  setControllerConfig(ControllerSettingCallBack callBack) {
     callBack(controller);
   }
 
-  void setReverseDuring(milliseconds){
+  void setReverseDuring(milliseconds) {
     controller.reverseDuration = Duration(milliseconds: milliseconds);
   }
+
   late int state = -1; // 1. 表示处于正向动画状态， -1. 表示处于逆向动画状态
   final DoubleCallback listener;
   late AnimationController controller;
@@ -40,28 +42,28 @@ class CommonValueAnim {
     listener(animation.value);
   }
 
-  void start(double begin, double end) {
+  void start(double begin, double end, {double? from = 0}) {
     setAnimation(begin, end);
     controller.addListener(_onUpdate);
-    controller.forward();
+    controller.forward(from: from);
     state = 1;
   }
 
-  void stopAndStart(double begin, double end){
+  void stopAndStart(double begin, double end) {
     stop();
     start(begin, end);
   }
 
-  void reverse(){
+  void reverse() {
     controller.reverse();
     state = -1;
   }
 
-  void switchPlay(double begin, double end){
-    if(state == 1){
+  void switchPlay(double begin, double end) {
+    if (state == 1) {
       reverse();
-    }else{
-      start(begin, end);
+    } else {
+      start(begin, end, from: null);
     }
   }
 
@@ -78,8 +80,7 @@ class CommonColorAnim {
     Color end,
     TickerProvider vsync,
   ) {
-    controller = AnimationController(
-        duration: Duration(milliseconds: milliseconds), vsync: vsync, reverseDuration: Duration(milliseconds: milliseconds));
+    controller = AnimationController(duration: Duration(milliseconds: milliseconds), vsync: vsync, reverseDuration: Duration(milliseconds: milliseconds));
     tween = ColorTween(begin: begin, end: end);
     animation = tween.animate(controller);
   }
@@ -98,10 +99,10 @@ class CommonColorAnim {
     listener(animation.value!);
   }
 
-  void start() {
+  void start({from = 0}) {
     animation = tween.animate(controller);
     controller.addListener(_onUpdate);
-    controller.forward();
+    controller.forward(from: from);
   }
 
   void reverseNow() {

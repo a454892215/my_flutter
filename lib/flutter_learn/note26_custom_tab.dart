@@ -71,6 +71,7 @@ class _State extends State {
           fontSize: 14,
           selectedFontSize: 15,
           indicatorAnimEnable: true,
+          bgColor: Colors.grey,
         ),
       ),
     );

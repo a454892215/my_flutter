@@ -20,6 +20,7 @@ class CommonTab extends StatefulWidget {
     this.indicatorHeight = 2.5,
     this.tabWidth = 60,
     this.indicatorAnimEnable = false,
+    this.bgColor,
     required this.tabList,
     required this.width,
     required this.height,
@@ -42,6 +43,7 @@ class CommonTab extends StatefulWidget {
   final double height;
   final OnItemClick onItemSelected;
   final bool indicatorAnimEnable;
+  final Color? bgColor;
 
   @override
   State<StatefulWidget> createState() {
@@ -65,9 +67,10 @@ class MyState extends State<CommonTab> with TickerProviderStateMixin {
             onHorizontalDragEnd: notifier.onHorizontalDragEnd,
             child: Align(
               alignment: Alignment.topLeft,
-              child: SizedBox(
+              child: Container(
                 width: widget.width,
                 height: widget.height,
+                color: widget.bgColor,
                 child: CustomPaint(
                   painter: TabPainter(context, notifier),
                 ),

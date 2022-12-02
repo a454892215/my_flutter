@@ -61,6 +61,7 @@ class Page1State extends State {
               RouterButton(params: ["/SharedPreferencesSamplePage", "去-SharedPreferencesSamplePage-页面"]),
               RouterButton(params: ["/GetXSamplePage", "去-GetXSamplePage-页面"]),
               RouterButton(params: ["/CustomTabSamplePage", "去-CustomTabSamplePage-页面"]),
+              RouterButton(params: ["/LogTestSamplePage", "去-LogTestSamplePage-页面"]),
               RouterButton(params: ["/page999", "去404页面"]),
             ],
           )),

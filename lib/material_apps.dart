@@ -9,9 +9,9 @@ import 'package:my_flutter_lib_3/pages/page3.dart';
 
 import 'flutter_learn/note23_datetime_range_sample.dart';
 import 'flutter_learn/note24_shared_pref_sample.dart';
-import 'flutter_learn/note25_getx_sample.dart';
 import 'flutter_learn/note26_custom_tab.dart';
 import 'flutter_learn/note27_log_test.dart';
+import 'flutter_learn/note28_dialog.dart';
 import 'flutter_learn/other/note211_will_pos_scope.dart';
 import 'flutter_learn/note06_chexobx_radio_sample.dart';
 import 'flutter_learn/note07_form_sample.dart';
@@ -94,6 +94,7 @@ Widget getMaterialApp() {
       '/SharedPreferencesSamplePage': (BuildContext context) => const SharedPreferencesSamplePage(),
       '/CustomTabSamplePage': (BuildContext context) => const CustomTabSamplePage(),
       '/LogTestSamplePage': (BuildContext context) => const LogTestSamplePage(),
+      '/DialogSamplePage': (BuildContext context) => const DialogSamplePage(),
 
     },
 

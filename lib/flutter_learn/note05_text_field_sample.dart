@@ -62,6 +62,7 @@ class _TextSamplePageState extends State {
             buildEditTextBox(_textEditingController, _focusNode),
             buildEmptyBox(),
             buildEditTextBox(null, null),
+            _buildClassicInputWidget(),
           ],
         ),
       ),
@@ -206,6 +207,46 @@ class _TextSamplePageState extends State {
           borderRadius: BorderRadius.all(Radius.circular(0)),
           //设置边框颜色和粗细(width)
           borderSide: BorderSide(color: Colors.red, width: 2)),
+    );
+  }
+
+
+  Widget _buildClassicInputWidget() {
+    return SizedBox(
+      width: 320,
+      height: 50,
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          const Positioned(left: 10, top: 7, child: Text("¥  ", style: TextStyle(fontSize: 18, color: Color(0xff121317)))),
+          TextField(
+            style: const TextStyle(fontSize: 14, color: Color(0xff121317)),
+            maxLines: 1,
+            minLines: 1,
+            maxLength: 12,
+           // controller: editController,
+            decoration: InputDecoration(
+              isCollapsed: false,
+              counterText: "",
+              counter: null, // 隐藏计数器
+              border: _buildOutlineInputBorder(),
+              focusedBorder: _buildOutlineInputBorder(),
+              enabledBorder: _buildOutlineInputBorder(),
+              focusedErrorBorder: _buildOutlineInputBorder(),
+              disabledBorder: _buildOutlineInputBorder(),
+              errorBorder: _buildOutlineInputBorder(),
+              contentPadding: const EdgeInsets.only(top: 0, bottom: 0, left: 30, right: 8),
+            ),
+            keyboardType: TextInputType.number,
+          )
+        ],
+      ),
+    );
+  }
+  OutlineInputBorder _buildOutlineInputBorder() {
+    return const OutlineInputBorder(
+      borderRadius: BorderRadius.all(Radius.circular(5)),
+      borderSide: BorderSide(color: Color(0xffdbdbdd), width: 1),
     );
   }
 

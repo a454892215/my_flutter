@@ -29,4 +29,7 @@ main() {
   var ls5 = [9, 2, 3, 4];
   var ret = ls5.map((e) => "a$e").toList();
   Log.d("map 迭代：$ret");
+
+  var ls6= List.generate(10, (index) => index);
+  Log.d("ls6: $ls6");
 }

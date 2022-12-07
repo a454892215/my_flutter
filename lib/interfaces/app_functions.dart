@@ -14,3 +14,5 @@ typedef BollCallback = void Function(bool b);
 typedef DynamicCallback = void Function(dynamic d);
 
 typedef DurationCallback = void Function(Duration duration);
+
+typedef Callback<T> = void Function(T t);

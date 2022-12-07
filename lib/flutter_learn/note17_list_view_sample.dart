@@ -22,8 +22,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     super.initState();
     // 监听滑动
     _scrollController.addListener(() {
-      num scrolledOffset = _scrollController.offset;
-      Log.d("scrolledOffset $scrolledOffset");
+    //  num scrolledOffset = _scrollController.offset;
+    //  Log.d("scrolledOffset $scrolledOffset");
     });
   }
 

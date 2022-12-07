@@ -16,3 +16,4 @@ typedef DynamicCallback = void Function(dynamic d);
 typedef DurationCallback = void Function(Duration duration);
 
 typedef Callback<T> = void Function(T t);
+typedef Callback2<T, D> = void Function(T t, D d);

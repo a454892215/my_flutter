@@ -13,9 +13,9 @@ class ScrollRadioGroup extends StatelessWidget {
     this.scrollDir = Axis.horizontal,
     this.itemMargin = 10,
     this.bgColor,
-    required this.itemWidth,
     required this.width,
     required this.height,
+    required this.itemWidth,
     required this.onSelectChanged,
   });
 
@@ -28,14 +28,15 @@ class ScrollRadioGroup extends StatelessWidget {
   final double height;
   final double itemWidth;
   final Callback<int> onSelectChanged;
-  final Color? bgColor;
   final ScrollController scrollController = ScrollController();
+  final Color? bgColor;
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       assert(selectedIndex.value > -2);
       return Align(
+        alignment: Alignment.topLeft,
         child: Container(
           width: width,
           height: height,
@@ -43,15 +44,17 @@ class ScrollRadioGroup extends StatelessWidget {
           child: ListView.separated(
             itemCount: size,
             shrinkWrap: true,
-            controller: scrollController,
             scrollDirection: scrollDir,
+            controller: scrollController,
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, pos) {
               return GestureDetector(
                 onTap: () {
-                  selectedIndex.value = pos;
-                  onSelectChanged(pos);
-                  autoScroll(pos);
+                  if (selectedIndex.value != pos) {
+                    selectedIndex.value = pos;
+                    onSelectChanged(pos);
+                    autoScroll(pos);
+                  }
                 },
                 child: itemBuilder(context, pos, selectedIndex.value),
               );

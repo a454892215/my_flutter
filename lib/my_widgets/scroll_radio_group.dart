@@ -30,6 +30,7 @@ class ScrollRadioGroup extends StatelessWidget {
   final Callback<int> onSelectChanged;
   final ScrollController scrollController = ScrollController();
   final Color? bgColor;
+  final GlobalKey rootKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +39,7 @@ class ScrollRadioGroup extends StatelessWidget {
       return Align(
         alignment: Alignment.topLeft,
         child: Container(
+          key: rootKey,
           width: width,
           height: height,
           color: bgColor,
@@ -69,6 +71,7 @@ class ScrollRadioGroup extends StatelessWidget {
   }
 
   void autoScroll(int selectedPos) {
+    final width = rootKey.currentContext?.size?.width ?? this.width;
     double selectedItemOriLeft = selectedPos * (itemMargin + itemWidth);
     var offset = scrollController.offset;
     double itemLeft = selectedItemOriLeft - offset;

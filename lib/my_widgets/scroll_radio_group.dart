@@ -71,14 +71,16 @@ class ScrollRadioGroup extends StatelessWidget {
   }
 
   void autoScroll(int selectedPos) {
-    final width = rootKey.currentContext?.size?.width ?? this.width;
+    double parentWidth = rootKey.currentContext?.size?.width ?? this.width;
+    double contentWidth = size * itemWidth + (size - 1) * itemMargin;
+    double width = contentWidth < parentWidth ? contentWidth : parentWidth;
     double selectedItemOriLeft = selectedPos * (itemMargin + itemWidth);
     var offset = scrollController.offset;
     double itemLeft = selectedItemOriLeft - offset;
     double itemCenter = width / 2 - itemLeft - itemWidth / 2;
     double realNeedScrollDistance = 0;
     if (itemCenter < 0) {
-      double canToLeftMaxScroll = size * itemWidth + (size - 1) * itemMargin - width;
+      double canToLeftMaxScroll = contentWidth - width;
       double canToLeftScroll = canToLeftMaxScroll - offset;
       realNeedScrollDistance = canToLeftScroll < itemCenter.abs() ? -canToLeftScroll : itemCenter;
     } else {

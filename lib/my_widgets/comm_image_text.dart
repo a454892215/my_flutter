@@ -4,6 +4,9 @@ class ImageText extends StatefulWidget {
   const ImageText(
       {super.key,
         this.imageUri,
+        this.width,
+        this.height,
+        this.decoration,
         required this.imageWidth,
         required this.text,
         required this.fontSize,
@@ -21,6 +24,9 @@ class ImageText extends StatefulWidget {
   final Color textColor;
   final double padding;
   final Color? bgColor;
+  final double? width;
+  final double? height;
+  final Decoration? decoration;
   final Axis axis;
   final BorderRadius borderRadius;
   final VoidCallback onClick;
@@ -40,7 +46,11 @@ class _State extends State<ImageText> {
         color: widget.bgColor,
         child: InkWell(
           onTap: widget.onClick,
-          child: Center(
+          child: Container(
+            width: widget.width,
+            height: widget.height,
+            alignment: Alignment.center,
+            decoration: widget.decoration,
             child: Flex(
               mainAxisSize: MainAxisSize.min,
               direction: widget.axis,

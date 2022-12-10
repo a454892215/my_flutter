@@ -45,12 +45,13 @@ class _MyState extends State<GridRadioGroup> {
       assert(controller.selectedIndex.value > -2);
       return SizedBox(
         width: widget.width,
-        height: widget.height,
+        height: widget.size == 0 ? 0: widget.height,
         child: GridView.builder(
           itemCount: widget.size,
           shrinkWrap: true,
           scrollDirection: widget.scrollDir,
           padding: const EdgeInsets.all(0),
+
           physics: const BouncingScrollPhysics(),
           itemBuilder: (context, pos) {
             return GestureDetector(

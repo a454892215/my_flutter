@@ -7,7 +7,7 @@ class ImageText extends StatefulWidget {
         this.width,
         this.height,
         this.decoration,
-        required this.imageWidth,
+        this.imageWidth,
         required this.text,
         required this.fontSize,
         required this.textColor,
@@ -18,7 +18,7 @@ class ImageText extends StatefulWidget {
         this.bgColor});
 
   final String? imageUri;
-  final double imageWidth;
+  final double? imageWidth;
   final String text;
   final double fontSize;
   final Color textColor;
@@ -29,7 +29,7 @@ class ImageText extends StatefulWidget {
   final Decoration? decoration;
   final Axis axis;
   final BorderRadius borderRadius;
-  final VoidCallback onClick;
+  final VoidCallback? onClick;
 
   @override
   State<StatefulWidget> createState() {

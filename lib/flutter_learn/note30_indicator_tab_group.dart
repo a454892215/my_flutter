@@ -19,7 +19,7 @@ class IndicatorTabGroupPage extends StatefulWidget {
   }
 }
 
-class _State extends State {
+class _State extends State{
   final double itemWidth = 80;
 
   @override
@@ -37,7 +37,7 @@ class _State extends State {
             height: 60,
             itemWidth: itemWidth,
             onSelectChanged: (pos) {},
-            bgColor: Colors.red,
+            bgColor: Colors.orange,
             alignment: Alignment.center,
           ),
         ],

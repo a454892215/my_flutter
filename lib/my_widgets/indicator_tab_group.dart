@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 
 import '../interfaces/app_functions.dart';
@@ -40,54 +41,56 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
   final GlobalKey rootKey = GlobalKey();
   final ScrollController scrollController = ScrollController();
   final selectedIndex = 0.obs;
-  final indicatorLeft = 0.0.obs;
   late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
     ..init(200, this, 0.0, 0.0)
     ..addListener(onUpdate);
+  final ValueNotifier<double> leftNotifier = ValueNotifier<double>(0.0);
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      assert(selectedIndex.value > -2);
-      return Align(
-        alignment: widget.alignment,
-        child: Container(
-          key: rootKey,
-          width: widget.width,
-          height: widget.height,
-          color: widget.bgColor,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            controller: scrollController,
-            physics: const BouncingScrollPhysics(),
-            child: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                Row(
+    return Align(
+      alignment: widget.alignment,
+      child: Container(
+        key: rootKey,
+        width: widget.width,
+        height: widget.height,
+        color: widget.bgColor,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          controller: scrollController,
+          physics: const BouncingScrollPhysics(),
+          child: Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              Obx(() {
+                assert(selectedIndex.value > -2);
+                return Row(
                   children: List.generate(widget.size, (pos) {
                     return GestureDetector(
                       onTap: () => onItemSelectChanged(pos),
                       child: widget.itemBuilder(context, pos, selectedIndex.value),
                     );
                   }),
-                ),
-                Obx(
-                  () => Positioned(
-                    left: indicatorLeft.value,
-                    //   rect: anim.animation,
+                );
+              }),
+              ValueListenableBuilder(
+                valueListenable: leftNotifier,
+                builder: (BuildContext context, double value, Widget? child) {
+                  return Positioned(
+                    left: value,
                     child: Container(
                       width: widget.itemWidth,
                       height: 3,
                       color: Colors.red,
                     ),
-                  ),
-                )
-              ],
-            ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 
   void onItemSelectChanged(int pos) {
@@ -100,8 +103,8 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
   }
 
   void onUpdate() {
-    if(anim.animation != null){
-      indicatorLeft.value = anim.animation!.value;
+    if (anim.animation != null) {
+      leftNotifier.value = anim.animation!.value;
     }
   }
 

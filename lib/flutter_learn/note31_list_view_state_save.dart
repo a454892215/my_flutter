@@ -23,6 +23,7 @@ class ListViewStateSaveTestPage extends StatefulWidget {
 
 class _State extends State {
   final double itemWidth = 80;
+  final ValueNotifier<double> heightNotifier = ValueNotifier<double>(0.0);
 
   @override
   Widget build(BuildContext context) {
@@ -30,20 +31,57 @@ class _State extends State {
       appBar: AppBar(
         title: const Text("ListView状态保存验证"),
       ),
-      body: Column(
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                showListDialog();
-              },
-              child: const Text("dialog listview")),
-        ],
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: const Color(0xffff9ef0),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            ElevatedButton(
+                onPressed: () {
+                  showListDialog();
+                },
+                child: const Text("dialog listview")),
+            Positioned(
+              top: 40,
+              child: ElevatedButton(
+                  onPressed: () {
+                    if (heightNotifier.value < 300) {
+                      heightNotifier.value += 20;
+                    }
+                  },
+                  child: const Text("增加高度...")),
+            ),
+            Positioned(
+                bottom: 0,
+                child: ValueListenableBuilder(
+                  valueListenable: heightNotifier,
+                  builder: (a, b, c) {
+                    print("===ValueListenableBuilder====");
+                    return Container(
+                      width: 200,
+                      height: heightNotifier.value,
+                      color: Colors.yellow,
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        clipBehavior: Clip.antiAlias,
+                        child: SizedBox(
+                          width: 200,
+                          height: 300,
+                          child: _buildListView(),
+                        ),
+                      ),
+                    );
+                  },
+                ))
+          ],
+        ),
       ),
     );
   }
 
   void showListDialog() {
-
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -69,11 +107,8 @@ class _State extends State {
     return widget2!;
   }
 
-  ListView? listView;
-
   Widget _buildListView() {
-    // Log.d("====$listView=====");
-    listView ??= ListView.builder(
+    return ListView.builder(
         restorationId: '2',
         itemCount: 20,
         itemBuilder: (BuildContext context, int index) {
@@ -87,6 +122,5 @@ class _State extends State {
             ),
           );
         });
-    return listView!;
   }
 }

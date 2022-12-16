@@ -17,6 +17,7 @@ class IndicatorTabGroup extends StatefulWidget {
     required this.itemWidth,
     required this.onSelectChanged,
     this.indicatorAttr,
+    required this.controller,
   });
 
   final int size;
@@ -29,6 +30,7 @@ class IndicatorTabGroup extends StatefulWidget {
   final Color? bgColor;
   final Alignment alignment;
   final IndicatorAttr? indicatorAttr;
+  final IndicatorTabController controller;
 
   @override
   State<StatefulWidget> createState() {
@@ -43,7 +45,6 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
     ..init(200, this, 0.0, 0.0)
     ..addListener(onUpdate);
   final ValueNotifier<double> leftNotifier = ValueNotifier<double>(0.0);
-  final ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +63,7 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
             alignment: Alignment.bottomLeft,
             children: [
               ValueListenableBuilder(
-                valueListenable: selectedIndexNotifier,
+                valueListenable: widget.controller.selectedIndexNotifier,
                 builder: (BuildContext context, int value, Widget? child) {
                   return Row(
                     children: List.generate(widget.size, (pos) {
@@ -97,18 +98,18 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
 
   Widget _buildItem(BuildContext context, int pos) {
     if (widget.itemMargin == 0 || pos == 0) {
-      return widget.itemBuilder(context, pos, selectedIndexNotifier.value);
+      return widget.itemBuilder(context, pos, widget.controller.selectedIndexNotifier.value);
     } else {
-      return Row(children: [SizedBox(width: widget.itemMargin), widget.itemBuilder(context, pos, selectedIndexNotifier.value)]);
+      return Row(children: [SizedBox(width: widget.itemMargin), widget.itemBuilder(context, pos, widget.controller.selectedIndexNotifier.value)]);
     }
   }
 
   void onItemSelectChanged(int pos) {
-    if (selectedIndexNotifier.value != pos) {
+    if (widget.controller.selectedIndexNotifier.value != pos) {
       if (widget.indicatorAttr != null) {
         anim.updateEndAndStart(pos * (widget.itemWidth + widget.itemMargin));
       }
-      selectedIndexNotifier.value = pos;
+      widget.controller.selectedIndexNotifier.value = pos;
       widget.onSelectChanged(pos);
       autoScroll(pos);
     }
@@ -152,4 +153,16 @@ class IndicatorAttr {
   final Color color;
   final double height;
   final double horPadding;
+}
+
+class IndicatorTabController {
+  IndicatorTabController({int defSelectPos = 0}) {
+    selectedIndexNotifier.value = defSelectPos;
+  }
+
+  final ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
+
+  void onItemSelectChanged(int pos) {
+    selectedIndexNotifier.value = pos;
+  }
 }

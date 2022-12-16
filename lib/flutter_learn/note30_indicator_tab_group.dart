@@ -41,6 +41,7 @@ class _State extends State {
             bgColor: Colors.orange,
             alignment: Alignment.center,
             indicatorAttr: IndicatorAttr(color: Colors.red, height: 3, horPadding: 19),
+            controller: IndicatorTabController(),
           ),
         ],
       ),

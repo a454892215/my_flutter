@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
-
 import '../interfaces/app_functions.dart';
 import 'comm_anim2.dart';
 
@@ -19,6 +16,7 @@ class IndicatorTabGroup extends StatefulWidget {
     required this.height,
     required this.itemWidth,
     required this.onSelectChanged,
+    required this.indicatorAttr,
   });
 
   final int size;
@@ -30,6 +28,7 @@ class IndicatorTabGroup extends StatefulWidget {
   final Callback<int> onSelectChanged;
   final Color? bgColor;
   final Alignment alignment;
+  final IndicatorAttr indicatorAttr;
 
   @override
   State<StatefulWidget> createState() {
@@ -40,11 +39,11 @@ class IndicatorTabGroup extends StatefulWidget {
 class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
   final GlobalKey rootKey = GlobalKey();
   final ScrollController scrollController = ScrollController();
-  final selectedIndex = 0.obs;
   late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
     ..init(200, this, 0.0, 0.0)
     ..addListener(onUpdate);
   final ValueNotifier<double> leftNotifier = ValueNotifier<double>(0.0);
+  final ValueNotifier<int> selectedIndexNotifier = ValueNotifier<int>(0);
 
   @override
   Widget build(BuildContext context) {
@@ -62,17 +61,19 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
           child: Stack(
             alignment: Alignment.bottomLeft,
             children: [
-              Obx(() {
-                assert(selectedIndex.value > -2);
-                return Row(
-                  children: List.generate(widget.size, (pos) {
-                    return GestureDetector(
-                      onTap: () => onItemSelectChanged(pos),
-                      child: widget.itemBuilder(context, pos, selectedIndex.value),
-                    );
-                  }),
-                );
-              }),
+              ValueListenableBuilder(
+                valueListenable: selectedIndexNotifier,
+                builder: (BuildContext context, int value, Widget? child) {
+                  return Row(
+                    children: List.generate(widget.size, (pos) {
+                      return GestureDetector(
+                        onTap: () => onItemSelectChanged(pos),
+                        child: widget.itemBuilder(context, pos, selectedIndexNotifier.value),
+                      );
+                    }),
+                  );
+                },
+              ),
               ValueListenableBuilder(
                 valueListenable: leftNotifier,
                 builder: (BuildContext context, double value, Widget? child) {
@@ -80,8 +81,9 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
                     left: value,
                     child: Container(
                       width: widget.itemWidth,
-                      height: 3,
-                      color: Colors.red,
+                      height: widget.indicatorAttr.height,
+                      padding: EdgeInsets.only(left: widget.indicatorAttr.horPadding, right: widget.indicatorAttr.horPadding),
+                      child: Container(color: widget.indicatorAttr.color),
                     ),
                   );
                 },
@@ -94,9 +96,9 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
   }
 
   void onItemSelectChanged(int pos) {
-    if (selectedIndex.value != pos) {
+    if (selectedIndexNotifier.value != pos) {
       anim.updateEndAndStart(pos * widget.itemWidth);
-      selectedIndex.value = pos;
+      selectedIndexNotifier.value = pos;
       widget.onSelectChanged(pos);
       autoScroll(pos);
     }
@@ -128,4 +130,16 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
     }
     scrollController.animateTo(offset - realNeedScrollDistance, duration: const Duration(milliseconds: 200), curve: Curves.linear);
   }
+}
+
+class IndicatorAttr {
+  IndicatorAttr({
+    required this.color,
+    required this.height,
+    this.horPadding = 0,
+  });
+
+  final Color color;
+  final double height;
+  final double horPadding;
 }

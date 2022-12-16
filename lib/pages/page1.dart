@@ -65,6 +65,7 @@ class Page1State extends State {
               RouterButton(params: ["/DialogSamplePage", "去-DialogSamplePage-页面"]),
               RouterButton(params: ["/ScrollRadioGroupPage", "去-ScrollRadioGroupPage-页面"]),
               RouterButton(params: ["/IndicatorTabGroupPage", "去-IndicatorTabGroupPage-页面"]),
+              RouterButton(params: ["/ListViewStateSaveTestPage", "去-ListViewStateSaveTestPage-页面"]),
               RouterButton(params: ["/page999", "去404页面"]),
             ],
           )),

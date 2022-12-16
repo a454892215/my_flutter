@@ -16,7 +16,7 @@ class IndicatorTabGroup extends StatefulWidget {
     required this.height,
     required this.itemWidth,
     required this.onSelectChanged,
-    required this.indicatorAttr,
+    this.indicatorAttr,
   });
 
   final int size;
@@ -28,7 +28,7 @@ class IndicatorTabGroup extends StatefulWidget {
   final Callback<int> onSelectChanged;
   final Color? bgColor;
   final Alignment alignment;
-  final IndicatorAttr indicatorAttr;
+  final IndicatorAttr? indicatorAttr;
 
   @override
   State<StatefulWidget> createState() {
@@ -81,9 +81,9 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
                     left: value,
                     child: Container(
                       width: widget.itemWidth,
-                      height: widget.indicatorAttr.height,
-                      padding: EdgeInsets.only(left: widget.indicatorAttr.horPadding, right: widget.indicatorAttr.horPadding),
-                      child: Container(color: widget.indicatorAttr.color),
+                      height: widget.indicatorAttr?.height,
+                      padding: EdgeInsets.only(left: widget.indicatorAttr?.horPadding ?? 0, right: widget.indicatorAttr?.horPadding ?? 0),
+                      child: Container(color: widget.indicatorAttr?.color),
                     ),
                   );
                 },
@@ -97,7 +97,9 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
 
   void onItemSelectChanged(int pos) {
     if (selectedIndexNotifier.value != pos) {
-      anim.updateEndAndStart(pos * widget.itemWidth);
+      if (widget.indicatorAttr != null) {
+        anim.updateEndAndStart(pos * widget.itemWidth);
+      }
       selectedIndexNotifier.value = pos;
       widget.onSelectChanged(pos);
       autoScroll(pos);

@@ -36,6 +36,7 @@ class _State extends State {
             width: 320,
             height: 60,
             itemWidth: itemWidth,
+            itemMargin: 10,
             onSelectChanged: (pos) {},
             bgColor: Colors.orange,
             alignment: Alignment.center,

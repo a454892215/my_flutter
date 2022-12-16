@@ -3,6 +3,7 @@ import 'comm_anim2.dart';
 
 typedef ItemBuilder = Widget Function(BuildContext context, int index, int selectedPos);
 typedef Callback<T> = void Function(T t);
+
 class IndicatorTabGroup extends StatefulWidget {
   const IndicatorTabGroup({
     super.key,
@@ -67,7 +68,7 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
                     children: List.generate(widget.size, (pos) {
                       return GestureDetector(
                         onTap: () => onItemSelectChanged(pos),
-                        child: widget.itemBuilder(context, pos, selectedIndexNotifier.value),
+                        child: _buildItem(context, pos),
                       );
                     }),
                   );
@@ -94,10 +95,18 @@ class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
     );
   }
 
+  Widget _buildItem(BuildContext context, int pos) {
+    if (widget.itemMargin == 0 || pos == 0) {
+      return widget.itemBuilder(context, pos, selectedIndexNotifier.value);
+    } else {
+      return Row(children: [SizedBox(width: widget.itemMargin), widget.itemBuilder(context, pos, selectedIndexNotifier.value)]);
+    }
+  }
+
   void onItemSelectChanged(int pos) {
     if (selectedIndexNotifier.value != pos) {
       if (widget.indicatorAttr != null) {
-        anim.updateEndAndStart(pos * widget.itemWidth);
+        anim.updateEndAndStart(pos * (widget.itemWidth + widget.itemMargin));
       }
       selectedIndexNotifier.value = pos;
       widget.onSelectChanged(pos);

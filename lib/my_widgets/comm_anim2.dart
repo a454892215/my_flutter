@@ -24,14 +24,14 @@ class CommonTweenAnim<T> {
 
   Tween<T> get tween => _tween;
 
-  void updateEndA(T end) {
+  void updateEnd(T end) {
     _tween.begin = _animation.value;
     _tween.end = end;
     _animation = _tween.animate(controller);
   }
 
   void updateEndAndStart(T end) {
-    updateEndA(end);
+    updateEnd(end);
     controller.forward(from: 0);
   }
 

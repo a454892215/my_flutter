@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import '../interfaces/app_functions.dart';
 import 'comm_anim2.dart';
 
 typedef ItemBuilder = Widget Function(BuildContext context, int index, int selectedPos);
-
+typedef Callback<T> = void Function(T t);
 class IndicatorTabGroup extends StatefulWidget {
   const IndicatorTabGroup({
     super.key,

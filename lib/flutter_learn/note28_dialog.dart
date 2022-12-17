@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../my_widgets/bottom_dialog.dart';
+import '../my_widgets/bottom_drawer.dart';
 import '../my_widgets/comm_dialog.dart';
 import '../util/toast_util.dart';
 
@@ -21,7 +21,7 @@ class DialogSamplePage extends StatefulWidget {
 }
 
 class _State extends State {
-  DialogController dialogController = DialogController();
+  var drawerController = DrawerController2();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,9 @@ class _State extends State {
                   onPressed: () {
                     _showBottomDialog(back: true);
                   }),
-              ElevatedButton(child: const Text("底部弹窗2"), onPressed: () {}),
+              ElevatedButton(child: const Text("底部弹窗2"), onPressed: () {
+                drawerController.showOrDismiss();
+              }),
               ElevatedButton(
                   child: const Text("左边弹窗"),
                   onPressed: () {
@@ -56,14 +58,21 @@ class _State extends State {
           ),
           Positioned(
               bottom: 0,
-              child: BottomDialog(
-                height: 200,
-                controller: dialogController,
-                child: Container(
-                  height: 200,
-                  width: 300,
-                  color: Colors.blue,
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraintType) {
+                  print('=======1===maxWidth: ${constraintType.maxWidth} maxHeight : ${constraintType.maxHeight}==========');
+                  return BottomDrawer(
+                    height: 200,
+                    controller: drawerController,
+                    maxWidth: 360,
+                    maxHeight: 600,
+                    child: Container(
+                      height: 200,
+                      width: 300,
+                      color: Colors.blue,
+                    ),
+                  );
+                },
               )),
         ],
       ),

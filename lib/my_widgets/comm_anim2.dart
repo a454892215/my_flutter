@@ -9,7 +9,11 @@ class CommonTweenAnim<T> {
     T begin,
     T end,
   ) {
-    _controller = AnimationController(duration: Duration(milliseconds: milliseconds), vsync: vsync);
+    _controller = AnimationController(
+      duration: Duration(milliseconds: milliseconds),
+      reverseDuration: Duration(milliseconds: milliseconds),
+      vsync: vsync,
+    );
     _tween = Tween<T>(begin: begin, end: end);
     _animation = _tween.animate(controller);
   }

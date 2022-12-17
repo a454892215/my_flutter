@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../my_widgets/bottom_dialog.dart';
 import '../my_widgets/comm_dialog.dart';
 import '../util/toast_util.dart';
 
@@ -20,54 +21,62 @@ class DialogSamplePage extends StatefulWidget {
 }
 
 class _State extends State {
+  DialogController dialogController = DialogController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Dialog-Test"),
-      ),
-      body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: ListView(
-          children: [
-            ElevatedButton(
-                child: const Text("底部弹窗1"),
-                onPressed: () {
-                  _showBottomDialog(back: true);
-                }),
-            ElevatedButton(
-                child: const Text("底部弹窗2"),
-                onPressed: () {
-                  _showBottomDialog(back: false);
-                }),
-            ElevatedButton(
-                child: const Text("左边弹窗"),
-                onPressed: () {
-                  Toast.show("左边弹窗");
-                }),
-            ElevatedButton(
-                child: const Text("右边弹窗"),
-                onPressed: () {
-                  Toast.show("右边弹窗");
-                }),
-            ElevatedButton(
-                child: const Text("中间弹窗"),
-                onPressed: () {
-                  Toast.show("中间弹窗");
-                }),
-          ],
-        ),
+      body: Stack(
+        children: [
+          ListView(
+            children: [
+              AppBar(title: const Text("Dialog-Test")),
+              ElevatedButton(
+                  child: const Text("底部弹窗1"),
+                  onPressed: () {
+                    _showBottomDialog(back: true);
+                  }),
+              ElevatedButton(child: const Text("底部弹窗2"), onPressed: () {}),
+              ElevatedButton(
+                  child: const Text("左边弹窗"),
+                  onPressed: () {
+                    Toast.show("左边弹窗");
+                  }),
+              ElevatedButton(
+                  child: const Text("右边弹窗"),
+                  onPressed: () {
+                    Toast.show("右边弹窗");
+                  }),
+              ElevatedButton(
+                  child: const Text("中间弹窗"),
+                  onPressed: () {
+                    Toast.show("中间弹窗");
+                  }),
+            ],
+          ),
+          Positioned(
+              bottom: 0,
+              child: BottomDialog(
+                height: 200,
+                controller: dialogController,
+                child: Container(
+                  height: 200,
+                  width: 300,
+                  color: Colors.blue,
+                ),
+              )),
+        ],
       ),
     );
   }
 
-  void _showBottomDialog({bool back=true}) {
+  void _showBottomDialog({bool back = true}) {
     bottomDialog(
         back: back,
         child: Container(
           height: 400,
           color: Colors.blue,
+
           ///1. 如果换成ListView 不能拖动侧滑菜单关闭
           child: Column(
             children: [

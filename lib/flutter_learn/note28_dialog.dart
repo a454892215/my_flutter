@@ -60,12 +60,9 @@ class _State extends State {
               bottom: 0,
               child: LayoutBuilder(
                 builder: (context, constraintType) {
-                  print('=======1===maxWidth: ${constraintType.maxWidth} maxHeight : ${constraintType.maxHeight}==========');
                   return BottomDrawer(
                     height: 200,
                     controller: drawerController,
-                    maxWidth: 360,
-                    maxHeight: 600,
                     child: Container(
                       height: 200,
                       width: 300,

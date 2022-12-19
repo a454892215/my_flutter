@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'comm_anim2.dart';
 
 class BottomDrawer extends StatefulWidget {
@@ -8,15 +8,13 @@ class BottomDrawer extends StatefulWidget {
     required this.child,
     required this.height,
     required this.controller,
-    required this.maxWidth,
-    required this.maxHeight,
+    this.outClickDismiss = true,
   });
 
   final Widget child;
   final double height;
-  final double maxWidth;
-  final double maxHeight;
   final DrawerController2 controller;
+  final bool outClickDismiss;
 
   @override
   State<StatefulWidget> createState() {
@@ -26,7 +24,7 @@ class BottomDrawer extends StatefulWidget {
 
 class MyState extends State<BottomDrawer> with TickerProviderStateMixin {
   final ValueNotifier<double> contentHeightNotifier = ValueNotifier<double>(0);
-  final ValueNotifier<double> bgHeightNotifier = ValueNotifier<double>(0);
+  final ValueNotifier<double> bgHeightNotifier = ValueNotifier<double>(0.0);
   late CommonTweenAnim<double> heightAnim = CommonTweenAnim<double>()
     ..init(200, this, 0.0, widget.height)
     ..addListener(onHeightUpdate);
@@ -41,13 +39,30 @@ class MyState extends State<BottomDrawer> with TickerProviderStateMixin {
 
   void onHeightUpdate() {
     contentHeightNotifier.value = heightAnim.animation?.value ?? contentHeightNotifier.value;
+    if (heightAnim.animation?.status == AnimationStatus.forward && contentHeightNotifier.value == 0) {
+      onPrepareOpenDrawer();
+    }
+
     if (heightAnim.controller.isCompleted) {
-      openState = 1;
+      onOpenedDrawer();
     } else if (heightAnim.controller.isDismissed && openState != -1) {
-      openState = -1;
+      onClosedDrawer();
     } else {
       openState = 0;
     }
+  }
+
+  onPrepareOpenDrawer() {
+    bgHeightNotifier.value = 1.sh;
+  }
+
+  onOpenedDrawer() {
+    openState = 1;
+  }
+
+  onClosedDrawer() {
+    openState = -1;
+    bgHeightNotifier.value = 0;
   }
 
   void show() {
@@ -68,19 +83,34 @@ class MyState extends State<BottomDrawer> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      width: widget.maxWidth,
-      height: widget.maxHeight,
-      color: Colors.black54,
+    return GestureDetector(
+      onTap: () {
+        if (widget.outClickDismiss) {
+          dismiss();
+        }
+      },
       child: ValueListenableBuilder(
-        valueListenable: contentHeightNotifier,
+        valueListenable: bgHeightNotifier,
         builder: (BuildContext context, double value, Widget? child) {
-          //  print("===ValueListenableBuilder=${heightNotifier.value}===");
-          return SizedBox(
-            width: widget.height,
-            height: contentHeightNotifier.value,
-            child: FittedBox(fit: BoxFit.cover, clipBehavior: Clip.hardEdge, child: widget.child),
+          return Container(
+            alignment: Alignment.bottomCenter,
+            width: 1.sw,
+            height: bgHeightNotifier.value,
+            color: Colors.black54,
+            child: ValueListenableBuilder(
+              valueListenable: contentHeightNotifier,
+              builder: (BuildContext context, double value, Widget? child) {
+                //  print("===ValueListenableBuilder=${heightNotifier.value}===");
+                return GestureDetector(
+                  onTap: () {},
+                  child: SizedBox(
+                    width: widget.height,
+                    height: contentHeightNotifier.value,
+                    child: FittedBox(fit: BoxFit.cover, clipBehavior: Clip.hardEdge, child: widget.child),
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

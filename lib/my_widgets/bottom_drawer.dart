@@ -28,7 +28,7 @@ class MyState extends State<BottomDrawer> with TickerProviderStateMixin {
   double bgHeight = 0;
   late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
     ..init(200, this, 0.0, 1.0)
-    ..addListener(onHeightUpdate);
+    ..addListener(onAnimUpdate);
 
   final ColorTween colorTween = ColorTween(begin: const Color(0x00ffffff), end: const Color(0x88000000));
   Color? curBgColor = Colors.transparent;
@@ -41,7 +41,7 @@ class MyState extends State<BottomDrawer> with TickerProviderStateMixin {
 
   int openState = -1;
 
-  void onHeightUpdate() {
+  void onAnimUpdate() {
     if (anim.animation?.status == AnimationStatus.forward && anim.animation?.value == 0) {
       onPrepareOpenDrawer();
     }

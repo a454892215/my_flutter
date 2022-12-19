@@ -36,7 +36,7 @@ class _State extends State {
                   onPressed: () {
                     _showBottomDialog(back: true);
                   }),
-              ElevatedButton(child: const Text("底部弹窗2"), onPressed: () {
+              ElevatedButton(child: const Text("自定义的嵌套当前页面的底部弹窗"), onPressed: () {
                 drawerController.showOrDismiss();
               }),
               ElevatedButton(

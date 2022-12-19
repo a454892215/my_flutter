@@ -130,10 +130,10 @@ class DrawerController2 {
   }
 
   void dismiss() {
-    _state!.dismiss();
+    _state?.dismiss();
   }
 
   void showOrDismiss() {
-    _state!.showOrDismiss();
+    _state?.showOrDismiss();
   }
 }

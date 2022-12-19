@@ -55,6 +55,8 @@ dependencies:
   logger: ^1.1.0
   # getx
   get: ^4.6.5
+  # 屏幕适配
+  flutter_screenutil: ^5.6.0
 
 
   # The following adds the Cupertino Icons font to your application.

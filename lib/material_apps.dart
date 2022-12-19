@@ -15,6 +15,7 @@ import 'flutter_learn/note28_dialog.dart';
 import 'flutter_learn/note29_scroll_radio_group.dart';
 import 'flutter_learn/note30_indicator_tab_group.dart';
 import 'flutter_learn/note31_list_view_state_save.dart';
+import 'flutter_learn/note32_screen_adapter.dart';
 import 'flutter_learn/other/note211_will_pos_scope.dart';
 import 'flutter_learn/note06_chexobx_radio_sample.dart';
 import 'flutter_learn/note07_form_sample.dart';
@@ -45,6 +46,7 @@ import 'network/http_sample_ui.dart';
 void main() {
   runApp(getMaterialApp());
 }
+
 
 
 
@@ -101,6 +103,7 @@ Widget getMaterialApp() {
       '/ScrollRadioGroupPage': (BuildContext context) => const ScrollRadioGroupPage(),
       '/IndicatorTabGroupPage': (BuildContext context) => const IndicatorTabGroupPage(),
       '/ListViewStateSaveTestPage': (BuildContext context) => const ListViewStateSaveTestPage(),
+      '/ScreenAdapterTestPage': (BuildContext context) => const ScreenAdapterTestPage(),
 
     },
 

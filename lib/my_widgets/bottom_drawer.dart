@@ -23,11 +23,15 @@ class BottomDrawer extends StatefulWidget {
 }
 
 class MyState extends State<BottomDrawer> with TickerProviderStateMixin {
-  final ValueNotifier<double> contentHeightNotifier = ValueNotifier<double>(0);
-  final ValueNotifier<double> bgHeightNotifier = ValueNotifier<double>(0.0);
-  late CommonTweenAnim<double> heightAnim = CommonTweenAnim<double>()
-    ..init(200, this, 0.0, widget.height)
+  final ValueNotifier<double> drawerChangeNotifier = ValueNotifier<double>(0);
+  double contentHeight = 0;
+  double bgHeight = 0;
+  late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
+    ..init(200, this, 0.0, 1.0)
     ..addListener(onHeightUpdate);
+
+  final ColorTween colorTween = ColorTween(begin: const Color(0x00ffffff), end: const Color(0x88000000));
+  Color? curBgColor = Colors.transparent;
 
   @override
   void initState() {
@@ -38,22 +42,24 @@ class MyState extends State<BottomDrawer> with TickerProviderStateMixin {
   int openState = -1;
 
   void onHeightUpdate() {
-    contentHeightNotifier.value = heightAnim.animation?.value ?? contentHeightNotifier.value;
-    if (heightAnim.animation?.status == AnimationStatus.forward && contentHeightNotifier.value == 0) {
+    if (anim.animation?.status == AnimationStatus.forward && anim.animation?.value == 0) {
       onPrepareOpenDrawer();
     }
-
-    if (heightAnim.controller.isCompleted) {
+    if (anim.controller.isCompleted) {
       onOpenedDrawer();
-    } else if (heightAnim.controller.isDismissed && openState != -1) {
+    } else if (anim.controller.isDismissed && openState != -1) {
       onClosedDrawer();
     } else {
       openState = 0;
     }
+    double animValue = (anim.animation?.value ?? drawerChangeNotifier.value);
+    drawerChangeNotifier.value = animValue;
+    curBgColor = colorTween.lerp(animValue);
+    contentHeight = animValue * widget.height;
   }
 
   onPrepareOpenDrawer() {
-    bgHeightNotifier.value = 1.sh;
+    bgHeight = 1.sh;
   }
 
   onOpenedDrawer() {
@@ -62,15 +68,15 @@ class MyState extends State<BottomDrawer> with TickerProviderStateMixin {
 
   onClosedDrawer() {
     openState = -1;
-    bgHeightNotifier.value = 0;
+    bgHeight = 0;
   }
 
   void show() {
-    heightAnim.controller.forward(from: 0);
+    anim.controller.forward(from: 0);
   }
 
   void dismiss() {
-    heightAnim.controller.reverse();
+    anim.controller.reverse();
   }
 
   void showOrDismiss() {
@@ -90,26 +96,20 @@ class MyState extends State<BottomDrawer> with TickerProviderStateMixin {
         }
       },
       child: ValueListenableBuilder(
-        valueListenable: bgHeightNotifier,
+        valueListenable: drawerChangeNotifier,
         builder: (BuildContext context, double value, Widget? child) {
           return Container(
             alignment: Alignment.bottomCenter,
             width: 1.sw,
-            height: bgHeightNotifier.value,
-            color: Colors.black54,
-            child: ValueListenableBuilder(
-              valueListenable: contentHeightNotifier,
-              builder: (BuildContext context, double value, Widget? child) {
-                //  print("===ValueListenableBuilder=${heightNotifier.value}===");
-                return GestureDetector(
-                  onTap: () {},
-                  child: SizedBox(
-                    width: widget.height,
-                    height: contentHeightNotifier.value,
-                    child: FittedBox(fit: BoxFit.cover, clipBehavior: Clip.hardEdge, child: widget.child),
-                  ),
-                );
-              },
+            height: bgHeight,
+            color: curBgColor,
+            child: GestureDetector(
+              onTap: () {},
+              child: SizedBox(
+                width: widget.height,
+                height: contentHeight,
+                child: FittedBox(fit: BoxFit.cover, clipBehavior: Clip.hardEdge, child: widget.child),
+              ),
             ),
           );
         },

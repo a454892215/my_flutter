@@ -8,11 +8,11 @@ class Toast {
 
   static void toast(Object msg) {
     Fluttertoast.showToast(
-        msg: msg.toString(),
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0);
+        msg: msg.toString(), gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
   }
+}
+
+void toast(Object msg) {
+  Fluttertoast.showToast(
+      msg: msg.toString(), gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
 }

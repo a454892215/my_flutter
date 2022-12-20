@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/my_checkbox.dart';
+import 'package:my_flutter_lib_3/util/toast_util.dart';
 import 'package:provider/provider.dart';
+
+import '../my_widgets/switcher.dart';
+import '../style/dimen.dart';
 
 /// 官方提供的 Checkbox， Radio， Switch 等控件不能完全灵活的自定义宽高，相对位置等，后期可能都需要自定义...
 /// 复选框 Checkbox, 用法示例
@@ -49,8 +53,48 @@ class _SamplePageState extends State {
             buildSizedBox5(),
             buildSizedBox6(),
             buildSizedBox7(),
+            const SizedBox(height: 20),
+            _buildSwitcher(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSwitcher() {
+    return Switcher(
+      isOpen: false,
+      horizontalPadding: dimen3,
+      thumbAttr: SwitcherAttr(
+        width: dimen48,
+        height: dimen48,
+        radius: dimen24,
+        selectedColor: Colors.white,
+        unselectedColor: Colors.white,
+      ),
+      barAttr: SwitcherAttr(
+        width: dimen120,
+        height: dimen54,
+        radius: dimen27,
+        selectedColor: const Color(0xff0087ce),
+        unselectedColor: const Color(0xffe9e9ea),
+      ),
+      onListener: (bool isOpen) {
+        toast("isOpen:$isOpen ");
+      },
+      middleLayerWidget: Row(
+        children: [
+          SizedBox(width: dimen18),
+          Text(
+            "开",
+            style: TextStyle(color: Colors.white, fontSize: dimen33),
+          ),
+          SizedBox(width: dimen20),
+          Text(
+            "关",
+            style: TextStyle(color: const Color(0xffafafaf), fontSize: dimen33),
+          )
+        ],
       ),
     );
   }
@@ -126,18 +170,9 @@ class _SamplePageState extends State {
             return Row(
               children: [
                 Radio(
-                    value: 0,
-                    groupValue: notifier.intRadioValue,
-                    activeColor: Colors.green,
-                    onChanged: (int? value) => notifier.setIntRadioValue(value ?? 0)),
-                Radio(
-                    value: 1,
-                    groupValue: notifier.intRadioValue,
-                    onChanged: (int? value) => notifier.setIntRadioValue(value ?? 0)),
-                Radio(
-                    value: 2,
-                    groupValue: notifier.intRadioValue,
-                    onChanged: (int? value) => notifier.setIntRadioValue(value ?? 0)),
+                    value: 0, groupValue: notifier.intRadioValue, activeColor: Colors.green, onChanged: (int? value) => notifier.setIntRadioValue(value ?? 0)),
+                Radio(value: 1, groupValue: notifier.intRadioValue, onChanged: (int? value) => notifier.setIntRadioValue(value ?? 0)),
+                Radio(value: 2, groupValue: notifier.intRadioValue, onChanged: (int? value) => notifier.setIntRadioValue(value ?? 0)),
               ],
             );
           }),
@@ -212,15 +247,13 @@ class _SamplePageState extends State {
     );
   }
 
-
-
   /// 2. Slider, 用法示例:
   Widget buildSizedBox7() {
     return Container(
-        height: 80,
-        width: 280,
-        color: Colors.pink,
-        child: Consumer<_MyValuesNotifier>(builder: (context, notifier, child){
+      height: 80,
+      width: 280,
+      color: Colors.pink,
+      child: Consumer<_MyValuesNotifier>(builder: (context, notifier, child) {
         return Slider(
           value: notifier.sliderValue,
           min: 0,
@@ -231,7 +264,8 @@ class _SamplePageState extends State {
             notifier.setSliderValue(value);
           },
         );
-        }),);
+      }),
+    );
   }
 }
 
@@ -243,6 +277,7 @@ class _MyValuesNotifier extends ChangeNotifier {
   bool switchEnable = false;
   bool switchListTileEnable = false;
   double sliderValue = 0;
+
   void setIntValue(int value) {
     intValue = value;
     notifyListeners();

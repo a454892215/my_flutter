@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../my_widgets/bottom_drawer.dart';
 import '../my_widgets/comm_dialog.dart';
+import '../my_widgets/overlay_pop.dart';
 import '../util/toast_util.dart';
 
 void main() {
@@ -22,9 +23,10 @@ class DialogSamplePage extends StatefulWidget {
 
 class _State extends State {
   var drawerController = DrawerController2();
-
+  PopWindow popWindow = PopWindow();
   @override
   Widget build(BuildContext context) {
+    popWindow.init(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -36,13 +38,15 @@ class _State extends State {
                   onPressed: () {
                     _showBottomDialog(back: true);
                   }),
-              ElevatedButton(child: const Text("自定义的嵌套当前页面的底部弹窗"), onPressed: () {
-                drawerController.showOrDismiss();
-              }),
               ElevatedButton(
-                  child: const Text("左边弹窗"),
+                  child: const Text("自定义的嵌套当前页面的底部弹窗"),
                   onPressed: () {
-                    Toast.show("左边弹窗");
+                    drawerController.showOrDismiss();
+                  }),
+              ElevatedButton(
+                  child: const Text("overlay"),
+                  onPressed: () {
+                    popWindow.show();
                   }),
               ElevatedButton(
                   child: const Text("右边弹窗"),
@@ -96,4 +100,5 @@ class _State extends State {
           ),
         ));
   }
+
 }

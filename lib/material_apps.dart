@@ -7,6 +7,7 @@ import 'package:my_flutter_lib_3/pages/page1.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
+import 'flutter_learn/note20_2_tween_anim_builder_sample.dart';
 import 'flutter_learn/note23_datetime_range_sample.dart';
 import 'flutter_learn/note24_shared_pref_sample.dart';
 import 'flutter_learn/note26_custom_tab.dart';
@@ -36,7 +37,7 @@ import 'flutter_learn/note02_provider_sample.dart';
 import 'flutter_learn/note01_scaffold_sample.dart';
 import 'flutter_learn/note05_text_field_sample.dart';
 import 'flutter_learn/note04_text_sample.dart';
-import 'flutter_learn/note20_animate_sample.dart';
+import 'flutter_learn/note20_1_animate_sample.dart';
 import 'flutter_learn/note21_hero_anim.dart';
 import 'flutter_learn/note22_backdrop_filter.dart';
 import 'navigator/observer.dart';
@@ -91,6 +92,7 @@ Widget getMaterialApp() {
       '/RefreshSamplePage': (BuildContext context) => const RefreshSamplePage(),
       '/SmartRefreshSamplePage': (BuildContext context) => const SmartRefreshSamplePage(),
       '/AnimationSamplePage': (BuildContext context) => const AnimationSamplePage(),
+      '/TweenAnimationBuilderTestPage': (BuildContext context) => const TweenAnimationBuilderTestPage(),
       '/HeroSample': (BuildContext context) => const HeroSample(),
       '/BackdropFilterPage': (BuildContext context) => const BackdropFilterPage(),
       '/WillPopScopeSamplePage': (BuildContext context) => const WillPopScopeSamplePage(),

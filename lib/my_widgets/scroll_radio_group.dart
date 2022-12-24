@@ -35,7 +35,7 @@ class ScrollRadioGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      assert(selectedIndex.value > -2);
+      selectedIndex.value = selectedIndex.value;
       return Align(
         alignment: Alignment.topLeft,
         child: Container(

@@ -10,7 +10,7 @@ main() {
   ));
 }
 
-///1. CurvedAnimation-Interval 插值延时动画，即可以指定原动画运行到指定位置才开始动画
+///1. CurvedAnimation-Interval 可以指定动画相对控制器延时多久运行
 class IntervalAnimSample extends StatefulWidget {
   const IntervalAnimSample({Key? key}) : super(key: key);
 
@@ -24,18 +24,15 @@ class _State extends State with SingleTickerProviderStateMixin {
     vsync: this,
   );
 
-  /// 1. 创建颜色动画
   late final Animation<double> _rotationAnim2 = Tween(begin: 0.0, end: 5.0).animate(_controller);
-  late final Animation<Offset> _slideAnim2 =
-      Tween(begin: const Offset(0, 0), end: const Offset(8, 0)).animate(_controller);
+  late final Animation<Offset> _slideAnim2 = Tween(begin: const Offset(0, 0), end: const Offset(8, 0)).animate(_controller);
 
   late final Animation<double> _rotationAnim1 = Tween(begin: 0.0, end: 5.0).animate(CurvedAnimation(
     parent: _controller,
-    //1. 0.5 表示值到动画播放到一半才开始
+    /// 1. 0.5 表示值到动画播放到一半才开始
     curve: const Interval(0.2, 1.0),
   ));
-  late final Animation<Offset> _slideAnim1 =
-      Tween(begin: const Offset(0, 0), end: const Offset(8, 0)).animate(CurvedAnimation(
+  late final Animation<Offset> _slideAnim1 = Tween(begin: const Offset(0, 0), end: const Offset(8, 0)).animate(CurvedAnimation(
     parent: _controller,
 
     ///1. 0.5 表示值到动画播放到一半才开始

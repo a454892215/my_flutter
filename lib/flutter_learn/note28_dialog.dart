@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../my_widgets/bottom_drawer.dart';
 import '../my_widgets/comm_dialog.dart';
-import '../my_widgets/overlay_pop.dart';
+import '../my_widgets/pop_window.dart';
 import '../util/toast_util.dart';
 
 void main() {
@@ -44,7 +44,7 @@ class _State extends State {
                     drawerController.showOrDismiss();
                   }),
               ElevatedButton(
-                  child: const Text("overlay"),
+                  child: const Text("overlay-popWindow"),
                   onPressed: () {
                     popWindow.show();
                   }),

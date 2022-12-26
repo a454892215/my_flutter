@@ -72,9 +72,6 @@ class MyState extends State<PopPage> with TickerProviderStateMixin {
 
   void onAnimUpdate() {
     double animValue = (anim.animation?.value ?? drawerChangeNotifier.value);
-    drawerChangeNotifier.value = animValue;
-    curBgColor = colorTween.lerp(animValue);
-    translateY = widget.bottomWidgetHeight * (1.0 - animValue);
     if (anim.controller.isCompleted && state != 1) {
       state = 1;
     } else if (anim.controller.isDismissed && state != -1) {
@@ -83,6 +80,9 @@ class MyState extends State<PopPage> with TickerProviderStateMixin {
     } else {
       state = 0;
     }
+    drawerChangeNotifier.value = animValue;
+    curBgColor = colorTween.lerp(animValue);
+    translateY = widget.bottomWidgetHeight * (1.0 - animValue);
   }
 
   void onDismissed() {
@@ -110,24 +110,28 @@ class MyState extends State<PopPage> with TickerProviderStateMixin {
       onTap: () {
         widget.controller.dismiss();
       },
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: ValueListenableBuilder(
-          valueListenable: drawerChangeNotifier,
-          builder: (BuildContext context, double value, Widget? child) {
-            return Container(
-              color: curBgColor,
-              alignment: widget.alignment,
-              child: GestureDetector(
-                onTap: () {},
-                child: Transform.translate(
-                  offset: Offset(0, translateY),
-                  child: widget.child,
+      child: ValueListenableBuilder(
+        valueListenable: drawerChangeNotifier,
+        builder: (BuildContext context, double value, Widget? child) {
+          print("state:  $state =======");
+          return Offstage(
+            offstage: state == -1,
+            child: Material(
+              color: Colors.transparent,
+              child: Container(
+                color: curBgColor,
+                alignment: widget.alignment,
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Transform.translate(
+                    offset: Offset(0, translateY),
+                    child: widget.child,
+                  ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

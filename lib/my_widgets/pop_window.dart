@@ -106,33 +106,40 @@ class MyState extends State<PopPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        widget.controller.dismiss();
-      },
-      child: ValueListenableBuilder(
-        valueListenable: drawerChangeNotifier,
-        builder: (BuildContext context, double value, Widget? child) {
-          print("state:  $state =======");
-          return Offstage(
-            offstage: state == -1,
-            child: Material(
-              color: Colors.transparent,
-              child: Container(
-                color: curBgColor,
-                alignment: widget.alignment,
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Transform.translate(
-                    offset: Offset(0, translateY),
-                    child: widget.child,
+    return WillPopScope(
+        onWillPop: onBack,
+        child: GestureDetector(
+          onTap: () {
+            widget.controller.dismiss();
+          },
+          child: ValueListenableBuilder(
+            valueListenable: drawerChangeNotifier,
+            builder: (BuildContext context, double value, Widget? child) {
+              return Offstage(
+                offstage: state == -1,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    color: curBgColor,
+                    alignment: widget.alignment,
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Transform.translate(
+                        offset: Offset(0, translateY),
+                        child: widget.child,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
+              );
+            },
+          ),
+        ));
+  }
+
+  Future<bool> onBack() async {
+    print("=========onBack=========");
+    startDismissAnim();
+    return false;
   }
 }

@@ -24,9 +24,11 @@ class DialogSamplePage extends StatefulWidget {
 class _State extends State {
   var drawerController = DrawerController2();
   PopWindow popWindow = PopWindow();
+
   @override
   Widget build(BuildContext context) {
-    popWindow.init(context);
+    double bottomWidgetHeight = 200;
+    popWindow.init(context, bottomWidgetHeight, buildPopWindowWidget(bottomWidgetHeight));
     return Scaffold(
       body: Stack(
         children: [
@@ -80,6 +82,24 @@ class _State extends State {
     );
   }
 
+  Container buildPopWindowWidget(double bottomWidgetHeight) {
+    return Container(
+      width: 300,
+      height: bottomWidgetHeight,
+      color: Colors.blue,
+      alignment: Alignment.center,
+      child: ListView.builder(
+          padding: EdgeInsets.zero,
+          itemBuilder: (context, index) {
+            return Container(
+              height: 30,
+              alignment: Alignment.center,
+              child: Text("text-$index"),
+            );
+          }),
+    );
+  }
+
   void _showBottomDialog({bool back = true}) {
     bottomDialog(
         back: back,
@@ -100,5 +120,4 @@ class _State extends State {
           ),
         ));
   }
-
 }

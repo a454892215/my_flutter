@@ -5,32 +5,54 @@ import 'comm_anim2.dart';
 class PopWindow {
   MyState? _state;
   late BuildContext context;
-  late OverlayEntry entry;
+  OverlayEntry? entry;
+  late double bottomWidgetHeight;
+  late Widget child;
 
   void _attach(MyState state) {
     _state = state;
   }
 
-  void init(BuildContext context) {
+  void init(BuildContext context, double bottomWidgetHeight, Widget child) {
     this.context = context;
+    this.bottomWidgetHeight = bottomWidgetHeight;
+    this.child = child;
   }
 
   void dismiss() {
-    _state?.dismiss();
-    entry.remove();
+    _state?.startDismissAnim();
+  }
+
+  void destroy() {
+    entry!.remove();
+    print("=======destroy=======");
   }
 
   void show() {
-    entry = OverlayEntry(builder: (context) => PopPage(key: GlobalKey(), controller: this));
-    Overlay.of(context)?.insert(entry);
+    if (entry != null && entry!.mounted) {
+      print("=======mounted=======");
+      _state?.startShowAnim();
+    } else {
+      print("====not===mounted=======");
+      entry = OverlayEntry(
+          builder: (context) => PopPage(
+                key: GlobalKey(),
+                controller: this,
+                bottomWidgetHeight: bottomWidgetHeight,
+                child: child,
+              ));
+      Overlay.of(context)?.insert(entry!);
+    }
   }
 }
 
 class PopPage extends StatefulWidget {
-  const PopPage({super.key, this.alignment = Alignment.bottomCenter, required this.controller});
+  const PopPage({super.key, this.alignment = Alignment.bottomCenter, required this.controller, required this.bottomWidgetHeight, required this.child});
 
   final Alignment alignment;
   final PopWindow controller;
+  final double bottomWidgetHeight;
+  final Widget child;
 
   @override
   State<StatefulWidget> createState() {
@@ -43,39 +65,53 @@ class MyState extends State<PopPage> with TickerProviderStateMixin {
     ..init(200, this, 0.0, 1.0)
     ..addListener(onAnimUpdate);
   Color? curBgColor;
-
+  late int state = -1;
   final ValueNotifier<double> drawerChangeNotifier = ValueNotifier<double>(0);
+  final ColorTween colorTween = ColorTween(begin: const Color(0x00ffffff), end: const Color(0x88000000));
+  late double translateY = widget.bottomWidgetHeight;
 
   void onAnimUpdate() {
     double animValue = (anim.animation?.value ?? drawerChangeNotifier.value);
     drawerChangeNotifier.value = animValue;
     curBgColor = colorTween.lerp(animValue);
+    translateY = widget.bottomWidgetHeight * (1.0 - animValue);
+    if (anim.controller.isCompleted && state != 1) {
+      state = 1;
+    } else if (anim.controller.isDismissed && state != -1) {
+      state = -1;
+      onDismissed();
+    } else {
+      state = 0;
+    }
+  }
+
+  void onDismissed() {
+    // widget.controller.destroy();
   }
 
   @override
   void initState() {
     super.initState();
     widget.controller._attach(this);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      show();
-    });
+    startShowAnim();
   }
 
-  void show() {
+  void startShowAnim() {
     anim.controller.forward(from: 0);
   }
 
-  void dismiss() {
+  void startDismissAnim() {
     anim.controller.reverse();
   }
-
-  final ColorTween colorTween = ColorTween(begin: const Color(0x00ffffff), end: const Color(0x88000000));
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        widget.controller.dismiss();
+      },
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         body: ValueListenableBuilder(
           valueListenable: drawerChangeNotifier,
           builder: (BuildContext context, double value, Widget? child) {
@@ -84,12 +120,9 @@ class MyState extends State<PopPage> with TickerProviderStateMixin {
               alignment: widget.alignment,
               child: GestureDetector(
                 onTap: () {},
-                child: Container(
-                  width: 300,
-                  height: 200,
-                  color: Colors.blue,
-                  alignment: Alignment.center,
-                  child: const Text("内容"),
+                child: Transform.translate(
+                  offset: Offset(0, translateY),
+                  child: widget.child,
                 ),
               ),
             );

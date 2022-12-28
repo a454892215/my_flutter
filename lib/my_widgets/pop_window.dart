@@ -1,13 +1,11 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
-
-import '../util/Log.dart';
 import 'comm_anim2.dart';
 
 class PopWindow {
   MyState? _state;
   late BuildContext context;
-  late OverlayEntry entry;
+  OverlayEntry? entry;
   late Widget child;
   late double contentHeight;
 
@@ -23,18 +21,23 @@ class PopWindow {
 
   void dismiss() {
     _state?.dismiss();
-    entry.remove();
+  }
+
+  void destroy() {
+    entry?.remove();
   }
 
   void show() {
-    entry = OverlayEntry(
-        builder: (context) => PopPage(
-              key: GlobalKey(),
-              controller: this,
-              contentHeight: contentHeight,
-              child: child,
-            ));
-    Overlay.of(context)?.insert(entry);
+    if (entry == null) {
+      entry = OverlayEntry(
+          builder: (context) => PopPage(
+                controller: this,
+                contentHeight: contentHeight,
+                child: child,
+              ));
+      Overlay.of(context)?.insert(entry!);
+    }
+    _state?.show();
   }
 }
 

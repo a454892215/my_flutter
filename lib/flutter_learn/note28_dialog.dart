@@ -27,7 +27,6 @@ class _State extends State {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     popWindow.init(
         context,
         Container(
@@ -35,12 +34,15 @@ class _State extends State {
           height: 200,
           color: Colors.blue,
           alignment: Alignment.center,
-          child: const Text("内容"),
-        ), 200);
-=======
-    double bottomWidgetHeight = 200;
-    popWindow.init(context, bottomWidgetHeight, buildPopWindowWidget(bottomWidgetHeight));
->>>>>>> d6d2476e7455d1332680c0fe75e068a8f4da2758
+          child: ListView(
+            children: List.generate(
+                30,
+                (index) => Center(
+                      child: Text("index-$index"),
+                    )),
+          ),
+        ),
+        200);
     return Scaffold(
       body: Stack(
         children: [

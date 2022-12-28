@@ -33,7 +33,7 @@ class MyState extends State<Switcher> with TickerProviderStateMixin {
   late int state = widget.isOpen ? 1 : -1;
   final double start = 0.0; // 关闭状态
   final double end = 1.0; // 打开状态
-  late CommonTweenAnim<double> amin = CommonTweenAnim<double>()
+  late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
     ..init(200, this, start, end)
     ..addListener(onAnimUpdate);
 
@@ -41,12 +41,12 @@ class MyState extends State<Switcher> with TickerProviderStateMixin {
   late final ValueNotifier<double> notifier = ValueNotifier<double>(curAnimValue);
 
   void onAnimUpdate() {
-    curAnimValue = amin.animation?.value ?? 0;
+    curAnimValue = anim.animation?.value ?? 0;
     notifier.value = curAnimValue;
-    if (amin.controller.isCompleted && state != 1) {
+    if (anim.controller.isCompleted && state != 1) {
       state = 1;
       widget.onListener(true);
-    } else if (amin.controller.isDismissed && state != -1) {
+    } else if (anim.controller.isDismissed && state != -1) {
       state = -1;
       widget.onListener(false);
     } else {
@@ -56,9 +56,9 @@ class MyState extends State<Switcher> with TickerProviderStateMixin {
 
   void switchState() {
     if (state == 1) {
-      amin.controller.reverse(from: end);
+      anim.controller.reverse(from: end);
     } else if (state == -1) {
-      amin.controller.forward(from: start);
+      anim.controller.forward(from: start);
     }
   }
 

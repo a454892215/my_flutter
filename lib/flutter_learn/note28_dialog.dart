@@ -24,9 +24,18 @@ class DialogSamplePage extends StatefulWidget {
 class _State extends State {
   var drawerController = DrawerController2();
   PopWindow popWindow = PopWindow();
+
   @override
   Widget build(BuildContext context) {
-    popWindow.init(context);
+    popWindow.init(
+        context,
+        Container(
+          width: 300,
+          height: 200,
+          color: Colors.blue,
+          alignment: Alignment.center,
+          child: const Text("内容"),
+        ), 200);
     return Scaffold(
       body: Stack(
         children: [
@@ -100,5 +109,4 @@ class _State extends State {
           ),
         ));
   }
-
 }

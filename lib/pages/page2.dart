@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:get_cli/get_cli.dart';
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
 
 class Page2 extends StatefulWidget {

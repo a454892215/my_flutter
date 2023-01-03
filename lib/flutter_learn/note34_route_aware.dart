@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../material_apps.dart';
 import '../util/Log.dart';
@@ -61,13 +65,20 @@ class _State extends State<RouteAwareTestPage> with RouteAware {
 
   @override
   Widget build(BuildContext context) {
+    /// 设置单个页面状态栏, 如果页面有AppBar会无效
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.green,
+      statusBarIconBrightness: Brightness.dark,
+    ));
     return Scaffold(
-         backgroundColor: Colors.green,
         body: SafeArea(
           child: ListView(
             children: [
-              AppBar(
-                title: const Text("RouteAwareTestPage"),
+              Container(
+                color: Colors.green,
+                height: 150.w,
+                alignment: Alignment.center,
+                child: const Text("RouteAwareTestPage"),
               )
             ],
           ),

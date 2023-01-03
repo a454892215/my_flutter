@@ -51,3 +51,12 @@ cupertino_icons: ^1.0.2
   image_picker: ^0.8.5+3
   badges: ^2.0.3
   reorderables: ^0.5.1
+
+  get_storage 2.0.3
+  intl: ^0.17.0
+  dio_cookie_manager: ^2.0.0
+  cookie_jar: ^3.0.1
+  dio_http2_adapter: ^2.0.0
+  shared_preferences: ^2.0.7
+  flutter_easyloading: ^3.0.5
+  encrypt: ^5.0.0

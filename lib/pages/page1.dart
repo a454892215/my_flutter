@@ -68,6 +68,7 @@ class Page1State extends State {
               RouterButton(params: ["/IndicatorTabGroupPage", "去-IndicatorTabGroupPage-页面"]),
               RouterButton(params: ["/ListViewStateSaveTestPage", "去-ListViewStateSaveTestPage-页面"]),
               RouterButton(params: ["/ScreenAdapterTestPage", "去-ScreenAdapterTestPage-页面"]),
+              RouterButton(params: ["/WidgetsBindingObserverTestPage", "去-WidgetsBindingObserverTestPage-页面"]),
               RouterButton(params: ["/page999", "去404页面"]),
             ],
           )),

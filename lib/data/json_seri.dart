@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 /// 2.指定此类的代码生成文件(格式：part '文件名.g.dart';)
 part 'json_seri.g.dart';
 
-/// 使用命令flutter packages pub run build_runner build进行一次性构建，
+/// 使用命令 flutter packages pub run build_runner build 进行一次性构建，
 /// 构建过程中flutter会使用Model类的源文件（包含@JsonSerializable标注的）来生成对应的.g.dart文件。
 /// 3.添加序列化标注
 @JsonSerializable()
@@ -22,4 +22,29 @@ class PersonModel {
 
   /// 5.添加序列化方法(格式：Map<String, dynamic> toJson() => _$类名ToJson(this);)
   Map<String, dynamic> toJson() => _$PersonModelToJson(this);
+}
+
+@JsonSerializable()
+class TestModel {
+  @JsonKey(name: 'first_name')
+  String? firstName;
+  String? lastName;
+
+  TestModel({this.firstName, this.lastName});
+
+  factory TestModel.fromJson(Map<String, dynamic> json) => _$TestModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TestModelToJson(this);
+}
+
+@JsonSerializable()
+class TestModel2 {
+  String? firstName;
+  String? lastName;
+
+  TestModel2({this.firstName, this.lastName});
+
+  factory TestModel2.fromJson(Map<String, dynamic> json) => _$TestModel2FromJson(json);
+
+  Map<String, dynamic> toJson() => _$TestModel2ToJson(this);
 }

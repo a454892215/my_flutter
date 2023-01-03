@@ -18,6 +18,7 @@ import 'flutter_learn/note30_indicator_tab_group.dart';
 import 'flutter_learn/note31_list_view_state_save.dart';
 import 'flutter_learn/note32_screen_adapter.dart';
 import 'flutter_learn/note33_widget_binding_observe.dart';
+import 'flutter_learn/note34_route_aware.dart';
 import 'flutter_learn/other/note211_will_pos_scope.dart';
 import 'flutter_learn/note06_chexobx_radio_sample.dart';
 import 'flutter_learn/note07_form_sample.dart';
@@ -50,7 +51,7 @@ void main() {
 }
 
 
-
+RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 Widget getMaterialApp() {
   /// 使用 GetMaterialApp 取代MaterialApp 以方便使用Get.to(_SecondPage()) 导航页面
@@ -108,6 +109,7 @@ Widget getMaterialApp() {
       '/ListViewStateSaveTestPage': (BuildContext context) => const ListViewStateSaveTestPage(),
       '/ScreenAdapterTestPage': (BuildContext context) => const ScreenAdapterTestPage(),
       '/WidgetsBindingObserverTestPage': (BuildContext context) => const WidgetsBindingObserverTestPage(),
+      '/RouteAwareTestPage': (BuildContext context) => const RouteAwareTestPage(),
 
     },
 
@@ -117,7 +119,7 @@ Widget getMaterialApp() {
     },
 
     /// 配置页面离开和进入的监听
-    navigatorObservers: [MyNavigatorObserver()],
+    navigatorObservers: [MyNavigatorObserver(), routeObserver],
 
     /// 与 routes 中的 / 效果基本一致， 指定应用的第一个显示页面
     ///   initialRoute: '/page1',

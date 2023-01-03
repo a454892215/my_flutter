@@ -62,9 +62,15 @@ class _State extends State<RouteAwareTestPage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [],
-      ),
-    );
+         backgroundColor: Colors.green,
+        body: SafeArea(
+          child: ListView(
+            children: [
+              AppBar(
+                title: const Text("RouteAwareTestPage"),
+              )
+            ],
+          ),
+        ));
   }
 }

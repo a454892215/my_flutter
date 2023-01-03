@@ -52,9 +52,14 @@ class _State extends State<WidgetsBindingObserverTestPage> with WidgetsBindingOb
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(children: [
-
-      ],),
-    );
+        body: SafeArea(
+      child: ListView(
+        children: [
+          AppBar(
+            title: const Text("WidgetsBindingObserverTestPage"),
+          )
+        ],
+      ),
+    ));
   }
 }

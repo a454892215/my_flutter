@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../util/Log.dart';
+
 void main() {
   runApp(const MaterialApp(
     title: "MaterialApp",
@@ -33,16 +35,16 @@ class _State extends State<WidgetsBindingObserverTestPage> with WidgetsBindingOb
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.inactive: // 不清楚什么状态
-        print('====inactive======');
+        Log.d('====inactive======');
         break;
       case AppLifecycleState.resumed: // 从后台切换前台，界面可见
-        print('=======resumed======');
+        Log.d('=======resumed======');
         break;
       case AppLifecycleState.paused: // 界面不可见，后台
-        print('=======paused======');
+        Log.d('=======paused======');
         break;
       case AppLifecycleState.detached: // App 结束
-        print('=======detached======');
+        Log.d('=======detached======');
         break;
     }
   }
@@ -50,15 +52,9 @@ class _State extends State<WidgetsBindingObserverTestPage> with WidgetsBindingOb
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: const Color(0xffff9ef0),
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [],
-        ),
-      ),
+      body: ListView(children: [
+
+      ],),
     );
   }
 }

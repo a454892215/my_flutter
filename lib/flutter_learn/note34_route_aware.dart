@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../material_apps.dart';
+import '../util/Log.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -26,34 +27,34 @@ class _State extends State<RouteAwareTestPage> with RouteAware {
 
   @override
   void didChangeDependencies() {
-    print("=====didChangeDependencies====== $widget");
+    Log.d("=====didChangeDependencies====== $widget");
     routeObserver.subscribe(this, ModalRoute.of(context) as PageRoute); //Subscribe it here
     super.didChangeDependencies();
   }
 
   @override
   void didPopNext() {
-    print('=========didPopNext============');
+    Log.d('=========didPopNext============');
   }
 
   @override
   void didPush() {
-    print('=========didPush============');
+    Log.d('=========didPush============');
   }
 
   @override
   void didPop() {
-    print('=========didPop============');
+    Log.d('=========didPop============');
   }
 
   @override
   void didPushNext() {
-    print('=========didPushNext============');
+    Log.d('=========didPushNext============');
   }
 
   @override
   void dispose() {
-    print('=========dispose============');
+    Log.d('=========dispose============');
     super.dispose();
     routeObserver.unsubscribe(this);
   }
@@ -61,14 +62,8 @@ class _State extends State<RouteAwareTestPage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: const Color(0xffff9ef0),
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [],
-        ),
+      body: ListView(
+        children: [],
       ),
     );
   }

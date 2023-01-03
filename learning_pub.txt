@@ -75,3 +75,9 @@ cupertino_icons: ^1.0.2
   lottie
   telnet: ^1.0.7
   image_cropper: ^3.0.1
+  extended_text_field
+  objectbox: 1.6.0
+  objectbox_flutter_libs:  1.6.0
+  flutter_oss_aliyun
+  scrollview_observer
+  photo_view  // 图片等内容等缩放拖拽 .

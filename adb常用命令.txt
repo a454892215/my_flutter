@@ -1,0 +1,16 @@
+adb shell dumpsys activity | findstr "mFocusedActivity"
+
+adb shell dumpsys activity activities | findstr mResumedActivity
+
+1. adb bugreport > bugreport.txt 这个命令可以自动生成log文件并打包好，然后上传到PC当前目录
+2. adb pull /data/anr/traces.txt > anr_log.txt    导出ANR Log信息
+3. kernel log(仅仅有从当前时间起的非常少的log) cat proc/kmsg > kmsg.txt
+adb shell dumpstate //各类信息。比方进程信息，内存信息。进程是否异常，kernnel的log等
+adb shell dumpcrash
+
+2、anr log:  adb pull /data/anr
+3、tombstone log:  adb pull /data/tombstones
+4、core log:  adb pull  /data/log/core
+5、开机log:  adb shell dmesg > dmesg.txt
+6、logcatch adb:  pull /data/logcatch
+7、qxdm log:  adb pull /sdcard/logs

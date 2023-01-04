@@ -44,6 +44,25 @@ class _State extends State<ExceptionTestPage> {
                 List? ls;
                 toast('length: ${ls!.length}');
               }),
+          CupertinoButton(
+              child: const Text("flutter UI渲染异常"),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Container(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            width: 200,
+                            height: 200,
+                            color: Colors.green,
+                            decoration: const BoxDecoration(color: Colors.red),
+                          ),
+                        ),
+                      );
+                    });
+              }),
         ],
       ),
     ));

@@ -23,9 +23,15 @@ class GlobeExceptionHandler {
   }
 
   void reportException(FlutterErrorDetails details, int type) {
-    final errorMsg = 'exception: ${details.exceptionAsString()} \r\n${details.stack.toString()}';
+    var errorMsg = 'exception: ${details.exceptionAsString()} \r\n${details.stack.toString()}';
+    String splitMark = '    ';
+    List<String> errInfoList = errorMsg.split(splitMark);
+    if(errInfoList.length > 101){
+      errInfoList = errInfoList.sublist(0, 101);
+    }
+    errorMsg = errInfoList.join(splitMark);
     saveLogToLocal(errorMsg);
-    Log.e("Not catch Exception type: $type: $errorMsg");
+    Log.e("Not catch Exception type: $type: lineNum:${errInfoList.length}  $errorMsg");
   }
 
   Future<void> saveLogToLocal(String log) async {
@@ -33,10 +39,16 @@ class GlobeExceptionHandler {
     String filePath = tempDir.path;
     File file = File('$filePath/ExceptionLog.txt');
     bool isExist = await file.exists();
-    if (!isExist) {
+    if (isExist) {
+      var mb = await file.length() / 1024 / 1024;
+      if (mb >= 10) {
+        file.writeAsString('', mode: FileMode.write);
+      }
+      Log.d("log file Size: $mb MB");
+    } else {
       file = await file.create();
       isExist = await file.exists();
-      Log.d('filePath: exception log file is not exist and has created finished：$isExist');
+      Log.d('exception log file is not exist and has created finished：$isExist');
     }
     log = '\r\n\r\n${DateTime.now()}\r\n$log';
     file.writeAsString(log, mode: FileMode.append);

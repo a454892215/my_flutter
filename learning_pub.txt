@@ -80,4 +80,5 @@ cupertino_icons: ^1.0.2
   objectbox_flutter_libs:  1.6.0
   flutter_oss_aliyun
   scrollview_observer
+  path_provider
   photo_view  // 图片等内容等缩放拖拽 .

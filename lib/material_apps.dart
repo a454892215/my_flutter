@@ -22,6 +22,7 @@ import 'flutter_learn/note31_list_view_state_save.dart';
 import 'flutter_learn/note32_screen_adapter.dart';
 import 'flutter_learn/note33_widget_binding_observe.dart';
 import 'flutter_learn/note34_route_aware.dart';
+import 'flutter_learn/note35_exception.dart';
 import 'flutter_learn/other/note211_will_pos_scope.dart';
 import 'flutter_learn/note06_chexobx_radio_sample.dart';
 import 'flutter_learn/note07_form_sample.dart';
@@ -113,6 +114,7 @@ Widget getMaterialApp() {
       '/ScreenAdapterTestPage': (BuildContext context) => const ScreenAdapterTestPage(),
       '/WidgetsBindingObserverTestPage': (BuildContext context) => const WidgetsBindingObserverTestPage(),
       '/RouteAwareTestPage': (BuildContext context) => const RouteAwareTestPage(),
+      '/ExceptionTestPage': (BuildContext context) => const ExceptionTestPage(),
 
     },
 

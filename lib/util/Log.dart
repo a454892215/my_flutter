@@ -24,7 +24,6 @@ class Log {
     String pre = traceList[0];
     for (int i = 1; i <= 5; i++) {
       var cur = traceList[i];
-      print('cur $cur');
       if (pre.contains("/Log.") && !cur.contains("/Log.")) {
         logger.log(level, "$cur $tag$msg");
         break;

@@ -14,3 +14,5 @@ adb shell dumpcrash
 5、开机log:  adb shell dmesg > dmesg.txt
 6、logcatch adb:  pull /data/logcatch
 7、qxdm log:  adb pull /sdcard/logs
+
+adb logcat -c -b main -b events -b radio -b system    清空手机所有日志

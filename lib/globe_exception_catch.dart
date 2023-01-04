@@ -22,7 +22,8 @@ class GlobeExceptionHandler {
 
   void reportException(FlutterErrorDetails details, int type) {
     final errorMsg = {"exception": details.exceptionAsString(), "stackTrace": details.stack.toString()};
+
     /// TODO 上报错误
-    Log.e("发生了异常 type:$type  : $errorMsg");
+    Log.e("Not catch Exception type: $type: $errorMsg");
   }
 }

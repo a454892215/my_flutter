@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_flutter_lib_3/util/toast_util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -39,6 +40,14 @@ class _State extends State<ExceptionTestPage> {
                 toast('length: ${ls!.length}');
               }),
           CupertinoButton(
+              child: const Text("flutter 异步异常"),
+              onPressed: () async {
+                await Future.delayed(const Duration(milliseconds: 1000),(){
+                  List? ls;
+                  toast('length: ${ls!.length}');
+                });
+              }),
+          CupertinoButton(
               child: const Text("flutter UI渲染异常"),
               onPressed: () {
                 showDialog(
@@ -58,5 +67,9 @@ class _State extends State<ExceptionTestPage> {
         ],
       ),
     ));
+  }
+
+  static Future<void> exe() async {
+
   }
 }

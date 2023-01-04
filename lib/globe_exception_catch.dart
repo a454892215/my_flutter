@@ -5,28 +5,24 @@ import 'package:my_flutter_lib_3/util/Log.dart';
 typedef VoidCallback = void Function();
 
 class GlobeExceptionHandler {
+  /// 1. 同步异常
   void init(VoidCallback onRunApp) {
-    /// 1. 获取 widget build 过程中出现的异常错误
     FlutterError.onError = (FlutterErrorDetails details) {
-      reportLog(details);
+      reportException(details, 0);
     };
 
     runZonedGuarded(
       () => onRunApp(),
       (error, stackTrace) {
-        /// 2. 没被catch的异常
-        reportLog(FlutterErrorDetails(exception: error, stack: stackTrace));
+        ///2. 异步异常
+        reportException(FlutterErrorDetails(exception: error, stack: stackTrace), 1);
       },
     );
   }
 
-  void reportLog(FlutterErrorDetails details) {
-    final errorMsg = {
-      "exception": details.exceptionAsString(),
-      "stackTrace": details.stack.toString(),
-    };
-
+  void reportException(FlutterErrorDetails details, int type) {
+    final errorMsg = {"exception": details.exceptionAsString(), "stackTrace": details.stack.toString()};
     /// TODO 上报错误
-    Log.e("GlobeExeHandler-发生了异常 : $errorMsg");
+    Log.e("发生了异常 type:$type  : $errorMsg");
   }
 }

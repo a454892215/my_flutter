@@ -57,12 +57,6 @@ void main() {
 RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 Widget getMaterialApp() {
-  if (Platform.isAndroid) {
-    /// 沉侵式配置
-    // SystemUiOverlayStyle systemUiOverlayStyle =
-    // const SystemUiOverlayStyle(statusBarColor: Colors.transparent);
-    // SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  }
   /// 使用 GetMaterialApp 取代MaterialApp 以方便使用Get.to(_SecondPage()) 导航页面
   return GetMaterialApp(
     debugShowCheckedModeBanner: false,

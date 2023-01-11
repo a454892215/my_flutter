@@ -1,5 +1,7 @@
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/material.dart';
+import '../material_apps.dart';
+import '../util/Log.dart';
 import 'comm_anim2.dart';
 
 class PopWindow {
@@ -8,30 +10,33 @@ class PopWindow {
   OverlayEntry? entry;
   late Widget child;
   late double contentHeight;
+  late bool dismissOnClickBg;
 
   void _attach(MyState state) {
     _state = state;
   }
 
-  void init(BuildContext context, Widget child, double contentHeight) {
+  void init(BuildContext context, Widget child, double contentHeight, {dismissOnClickBg = true}) {
     this.context = context;
     this.child = child;
     this.contentHeight = contentHeight;
+    this.dismissOnClickBg = dismissOnClickBg;
   }
 
   void dismiss() {
     _state?.dismiss();
   }
 
-  void destroy() {
-    entry?.remove();
+  void _destroy() {
+    entry!.remove();
+    Log.d('PopWindow 弹窗被销毁');
   }
 
   void show() {
     if (entry == null) {
       entry = OverlayEntry(
           builder: (context) => PopPage(
-                controller: this,
+                popWindow: this,
                 contentHeight: contentHeight,
                 child: child,
               ));
@@ -45,13 +50,13 @@ class PopPage extends StatefulWidget {
   const PopPage({
     super.key,
     this.alignment = Alignment.bottomCenter,
-    required this.controller,
+    required this.popWindow,
     required this.child,
     required this.contentHeight,
   });
 
   final Alignment alignment;
-  final PopWindow controller;
+  final PopWindow popWindow;
   final Widget child;
   final double contentHeight;
 
@@ -61,7 +66,7 @@ class PopPage extends StatefulWidget {
   }
 }
 
-class MyState extends State<PopPage> with TickerProviderStateMixin {
+class MyState extends State<PopPage> with TickerProviderStateMixin, RouteAware {
   late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
     ..init(200, this, 0.0, 1.0)
     ..addListener(onAnimUpdate);
@@ -91,9 +96,15 @@ class MyState extends State<PopPage> with TickerProviderStateMixin {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    routeObserver.subscribe(this, ModalRoute.of(widget.popWindow.context) as PageRoute); //Subs
+  }
+
+  @override
   void initState() {
     super.initState();
-    widget.controller._attach(this);
+    widget.popWindow._attach(this);
     BackButtonInterceptor.add(isInterceptor);
     show();
   }
@@ -101,7 +112,13 @@ class MyState extends State<PopPage> with TickerProviderStateMixin {
   @override
   void dispose() {
     BackButtonInterceptor.remove(isInterceptor);
+    routeObserver.unsubscribe(this);
     super.dispose();
+  }
+
+  @override
+  void didPop() {
+    widget.popWindow._destroy();
   }
 
   /// true 拦截事件
@@ -118,13 +135,19 @@ class MyState extends State<PopPage> with TickerProviderStateMixin {
   }
 
   void dismiss() {
-    anim.controller.reverse();
+    if(state == 1){
+      anim.controller.reverse();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        if (widget.popWindow.dismissOnClickBg) {
+          dismiss();
+        }
+      },
       child: ValueListenableBuilder(
         valueListenable: drawerChangeNotifier,
         builder: (BuildContext context, double value, Widget? child) {

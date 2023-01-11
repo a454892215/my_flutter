@@ -35,6 +35,8 @@ class _State extends State {
           color: Colors.blue,
           alignment: Alignment.center,
           child: ListView(
+            key: UniqueKey(),
+            padding: EdgeInsets.zero,
             children: List.generate(
                 30,
                 (index) => Center(

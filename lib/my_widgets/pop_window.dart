@@ -98,6 +98,7 @@ class MyState extends State<PopPage> with TickerProviderStateMixin, RouteAware {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    Log.d(' ===========PopWindow===== didChangeDependencies ==路由订阅================ ');
     routeObserver.subscribe(this, ModalRoute.of(widget.popWindow.context) as PageRoute); //Subs
   }
 

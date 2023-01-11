@@ -6,7 +6,9 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:my_flutter_lib_3/flutter_learn/note16_custom_scroll_sample2.dart';
 import 'package:my_flutter_lib_3/flutter_learn/note03_button_sample_page.dart';
 import 'package:my_flutter_lib_3/pages/err_page.dart';
-import 'package:my_flutter_lib_3/pages/page1.dart';
+import 'package:my_flutter_lib_3/pages/flutter_lib_api_samples.dart';
+import 'package:my_flutter_lib_3/pages/flutter_system_api_samples.dart';
+import 'package:my_flutter_lib_3/pages/home_page.dart';
 import 'package:my_flutter_lib_3/pages/page2.dart';
 import 'package:my_flutter_lib_3/pages/page3.dart';
 
@@ -72,8 +74,10 @@ Widget getMaterialApp() {
 
     /// routes 路由配置：对象是Map<String, WidgetBuilder>
     routes: {
-      '/': (BuildContext context) => const Page1(),
-      '/page1': (BuildContext context) => const Page1(),
+      '/': (BuildContext context) => const HomePage(),
+      '/HomePage': (BuildContext context) => const HomePage(),
+      '/SystemApiSampleListPage': (BuildContext context) => const SystemApiSampleListPage(),
+      '/LibApiSamplesPage': (BuildContext context) => const LibApiSamplesPage(),
       '/page2': (BuildContext context) => const Page2(),
       '/page3': (BuildContext context) => const Page3(),
       '/ButtonSamplePage': (BuildContext context) => const ButtonSamplePage(),

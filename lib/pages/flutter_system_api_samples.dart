@@ -6,8 +6,8 @@ import '../my_widgets/comm_widgets.dart';
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
 /// 1. StatelessWidget 无动态变化属性的页面
 /// 2. StatefulWidget 动态变化属性的页面
-class Page1 extends StatefulWidget {
-  const Page1({super.key});
+class SystemApiSampleListPage extends StatefulWidget {
+  const SystemApiSampleListPage({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -19,7 +19,7 @@ class Page1State extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Icon(Icons.home)),
+      appBar: AppBar(title: const Text("系统API用例")),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Toast.toast("你好啊");

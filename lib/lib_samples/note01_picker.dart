@@ -59,104 +59,106 @@ class MyHomePageState extends State<MyHomePage> {
               icon: const Icon(Icons.add))
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.all(10.0),
-        alignment: Alignment.topCenter,
-        child: ListView(
-          children: <Widget>[
-            ListTile(
-              title: const Text('1. Picker Show'),
-              onTap: () {
-                showPicker(context);
-              },
-            ),
-            ListTile(
-              title: const Text('2. Picker Show Modal'),
-              onTap: () {
-                showPickerModal(context);
-              },
-            ),
-            ListTile(
-              title: const Text('3. Picker Show Icons'),
-              onTap: () {
-                showPickerIcons(context);
-              },
-            ),
-            ListTile(
-              title: const Text('4. Picker Show (Array)'),
-              onTap: () {
-                showPickerArray(context);
-              },
-            ),
-            ListTile(
-              title: const Text('5. Picker Show Number'),
-              onTap: () {
-                showPickerNumber(context);
-              },
-            ),
-            ListTile(
-              title: const Text('6. Picker Show Number FormatValue'),
-              onTap: () {
-                showPickerNumberFormatValue(context);
-              },
-            ),
-            ListTile(
-              title: const Text('7. Picker Show Date'),
-              onTap: () {
-                showPickerDate(context);
-              },
-            ),
-            ListTile(
-              title: const Text('8. Picker Show Datetime'),
-              onTap: () {
-                showPickerDateTime(context);
-              },
-            ),
-            ListTile(
-              title: const Text('9. Picker Show Date (Custom)'),
-              onTap: () {
-                showPickerDateCustom(context);
-              },
-            ),
-            ListTile(
-              title: const Text('10. Picker Show Datetime (24)'),
-              onTap: () {
-                showPickerDateTime24(context);
-              },
-            ),
-            ListTile(
-              title: const Text('11. Picker Show Datetime (Round background)'),
-              onTap: () {
-                showPickerDateTimeRoundBg(context);
-              },
-            ),
-            ListTile(
-              title: const Text('12. Picker Show Date Range'),
-              onTap: () {
-                showPickerDateRange(context);
-              },
-            ),
-            ListTile(
-              title: const Text('13. DurationPicker (time)'),
-              onTap: () {
-                showPickerDurationSelect(context);
-              },
-            ),
-            ListTile(
-              title: const Text('14. Customize UI effects (time)'),
-              onTap: () {
-                showPickerCustomizeUI(context);
-              },
-            ),
-            ListTile(
-              title: const Text('15. Use onBuilderItem'),
-              onTap: () {
-                showPickerCustomBuilder(context);
-              },
-            ),
-          ],
-        ),
-      ),
+      body: Builder(builder: (context){
+        return Container(
+          padding: const EdgeInsets.all(10.0),
+          alignment: Alignment.topCenter,
+          child: ListView(
+            children: <Widget>[
+              ListTile(
+                title: const Text('1. Picker Show'),
+                onTap: () {
+                  showPicker(context);
+                },
+              ),
+              ListTile(
+                title: const Text('2. Picker Show Modal'),
+                onTap: () {
+                  showPickerModal(context);
+                },
+              ),
+              ListTile(
+                title: const Text('3. Picker Show Icons'),
+                onTap: () {
+                  showPickerIcons(context);
+                },
+              ),
+              ListTile(
+                title: const Text('4. Picker Show (Array)'),
+                onTap: () {
+                  showPickerArray(context);
+                },
+              ),
+              ListTile(
+                title: const Text('5. Picker Show Number'),
+                onTap: () {
+                  showPickerNumber(context);
+                },
+              ),
+              ListTile(
+                title: const Text('6. Picker Show Number FormatValue'),
+                onTap: () {
+                  showPickerNumberFormatValue(context);
+                },
+              ),
+              ListTile(
+                title: const Text('7. Picker Show Date'),
+                onTap: () {
+                  showPickerDate(context);
+                },
+              ),
+              ListTile(
+                title: const Text('8. Picker Show Datetime'),
+                onTap: () {
+                  showPickerDateTime(context);
+                },
+              ),
+              ListTile(
+                title: const Text('9. Picker Show Date (Custom)'),
+                onTap: () {
+                  showPickerDateCustom(context);
+                },
+              ),
+              ListTile(
+                title: const Text('10. Picker Show Datetime (24)'),
+                onTap: () {
+                  showPickerDateTime24(context);
+                },
+              ),
+              ListTile(
+                title: const Text('11. Picker Show Datetime (Round background)'),
+                onTap: () {
+                  showPickerDateTimeRoundBg(context);
+                },
+              ),
+              ListTile(
+                title: const Text('12. Picker Show Date Range'),
+                onTap: () {
+                  showPickerDateRange(context);
+                },
+              ),
+              ListTile(
+                title: const Text('13. DurationPicker (time)'),
+                onTap: () {
+                  showPickerDurationSelect(context);
+                },
+              ),
+              ListTile(
+                title: const Text('14. Customize UI effects (time)'),
+                onTap: () {
+                  showPickerCustomizeUI(context);
+                },
+              ),
+              ListTile(
+                title: const Text('15. Use onBuilderItem'),
+                onTap: () {
+                  showPickerCustomBuilder(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },),
     );
   }
 

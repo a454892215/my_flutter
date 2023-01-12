@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/util/Log.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:my_flutter_lib_3/util/file_dir_util.dart';
 
 typedef VoidCallback = void Function();
 
@@ -35,7 +35,7 @@ class GlobeExceptionHandler {
   }
 
   Future<void> saveLogToLocal(String log) async {
-    Directory tempDir = await getTemporaryDirectory();
+    Directory tempDir = await FileU.getTemporaryDirectoryPath();
     String filePath = tempDir.path;
     File file = File('$filePath/ExceptionLog.txt');
     bool isExist = await file.exists();

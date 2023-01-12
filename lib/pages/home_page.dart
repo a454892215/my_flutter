@@ -17,7 +17,7 @@ class Page2State extends State {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("API用例大全"),
+          title: const Center(child: Text("API用例大全"),),
         ),
         backgroundColor: const Color.fromARGB(255, 217, 216, 216),
         body: Align(

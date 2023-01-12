@@ -9,17 +9,17 @@ class Log {
     printer: MyLogPrinter(),
   );
 
-  static void d(Object msg) {
+  static void d(dynamic msg) {
     if (debug) {
       _print(Level.debug, msg);
     }
   }
 
-  static void e(Object msg) {
+  static void e(dynamic msg) {
     _print(Level.error, msg);
   }
 
-  static void _print(Level level, Object msg) {
+  static void _print(Level level, dynamic msg) {
     var traceList = StackTrace.current.toString().replaceAll(RegExp(r"(\s\s\s\s)+"), "    ").split("\n");
     String pre = traceList[0];
     for (int i = 1; i <= 5; i++) {

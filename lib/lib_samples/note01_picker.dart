@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'picker_test.dart';
 import 'PickerData.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 void main() {
   runApp(const MaterialApp(
     title: "MaterialApp",
@@ -37,37 +36,18 @@ const Set<PointerDeviceKind> _kTouchLikeDeviceTypes = <PointerDeviceKind>{
 class _MyAppState extends State {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: _fontFamily,
-          primaryTextTheme: TextTheme().apply(fontFamily: _fontFamily),
-        ),
-        scrollBehavior: const MaterialScrollBehavior()
-            .copyWith(scrollbars: true, dragDevices: _kTouchLikeDeviceTypes),
-        localizationsDelegates: [
-          PickerLocalizationsDelegate.delegate, // 如果要使用本地化，请添加此行，则可以显示中文按钮
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: [
-          const Locale('en', 'US'),
-          const Locale('zh', 'CH'),
-          const Locale('ko', 'KO'),
-          const Locale('it', 'IT'),
-          const Locale('ar', 'AR'),
-          const Locale('tr', 'TR')
-        ],
-        home: MyHomePage());
+    return const MyHomePage();
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  MyHomePageState createState() => MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePageState extends State<MyHomePage> {
   final double listSpec = 4.0;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String stateText = "";

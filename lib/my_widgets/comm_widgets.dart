@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 
 class RouterButton extends StatelessWidget {
   const RouterButton({super.key, required this.params});
@@ -11,7 +13,7 @@ class RouterButton extends StatelessWidget {
       color: Colors.grey,
       padding: const EdgeInsets.only(top: 4),
       child: MaterialButton(
-        onPressed: () => Navigator.of(context).pushNamed(params[0]),
+        onPressed: () => Get.toNamed(params[0]),
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         color: Colors.green,
         padding: const EdgeInsets.all(0),

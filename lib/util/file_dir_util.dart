@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as my_path;
-import 'Log.dart';
 
 main() {
 

@@ -43,6 +43,7 @@ import 'flutter_learn/note04_text_sample.dart';
 import 'flutter_learn/note20_1_animate_sample.dart';
 import 'flutter_learn/note21_hero_anim.dart';
 import 'flutter_learn/note22_backdrop_filter.dart';
+import 'lib_samples/note02_screenshot_event.dart';
 import 'network/http_sample_ui.dart';
 
 Map<String, GetPageBuilder> routers = {

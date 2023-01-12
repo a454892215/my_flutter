@@ -60,6 +60,7 @@ dependencies:
   back_button_interceptor: ^6.0.2
   get_cli: ^1.8.1
   flutter_picker: ^2.0.5
+  screen_capture_event: ^1.1.1
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../lib_samples/note01_picker.dart';
+import '../lib_samples/note02_screenshot_event.dart';
 import '../my_widgets/comm_widgets.dart';
 
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
@@ -24,13 +25,16 @@ class Page2State extends State {
           title: const Text("第三方库API用例"),
         ),
         backgroundColor: const Color.fromARGB(222, 231, 231, 231),
-        body: Align(
-            alignment: Alignment.topCenter,
-            child: ListView(
-              shrinkWrap: true,
-              children: <CupertinoButton>[
-                CupertinoButton(child: const Text("picker库用例"), onPressed: () => Get.to(const PickerSamplePage())),
-              ],
-            )));
+        body: Material(
+          child: Align(
+              alignment: Alignment.topCenter,
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  MaterialButton(child: const Text("picker库用例"), onPressed: () => Get.to(const PickerSamplePage())),
+                  MaterialButton(child: const Text("ScreenShotEvent用例"), onPressed: () => Get.to(const ScreenShotEventSamplePage())),
+                ],
+              )),
+        ));
   }
 }

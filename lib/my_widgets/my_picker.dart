@@ -2,13 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-
-
 
 // Eyeballed values comparing with a native picker to produce the right
 // curvatures and densities.
@@ -18,7 +15,6 @@ const double _kSqueeze = 1.45;
 
 // Opacity fraction value that dims the wheel above and below the "magnifier"
 // lens.
-const double _kOverAndUnderCenterOpacity = 1;
 
 /// An iOS-styled picker.
 ///
@@ -77,19 +73,18 @@ class MyCupertinoPicker extends StatefulWidget {
     this.useMagnifier = false,
     this.magnification = 1.0,
     this.scrollController,
+    this.kOverAndUnderCenterOpacity = 1,
     this.squeeze = _kSqueeze,
     required this.itemExtent,
     required this.onSelectedItemChanged,
     required List<Widget> children,
     this.selectionOverlay = const CupertinoPickerDefaultSelectionOverlay(),
     bool looping = false,
-  }) : assert(diameterRatio > 0.0, RenderListWheelViewport.diameterRatioZeroMessage),
+  })  : assert(diameterRatio > 0.0, RenderListWheelViewport.diameterRatioZeroMessage),
         assert(magnification > 0),
         assert(itemExtent > 0),
         assert(squeeze > 0),
-        childDelegate = looping
-            ? ListWheelChildLoopingListDelegate(children: children)
-            : ListWheelChildListDelegate(children: children),
+        childDelegate = looping ? ListWheelChildLoopingListDelegate(children: children) : ListWheelChildListDelegate(children: children),
         super(key: key);
 
   /// Creates a picker from an [IndexedWidgetBuilder] callback where the builder
@@ -117,13 +112,14 @@ class MyCupertinoPicker extends StatefulWidget {
     this.useMagnifier = false,
     this.magnification = 1.0,
     this.scrollController,
+    this.kOverAndUnderCenterOpacity = 1,
     this.squeeze = _kSqueeze,
     required this.itemExtent,
     required this.onSelectedItemChanged,
     required NullableIndexedWidgetBuilder itemBuilder,
     int? childCount,
     this.selectionOverlay = const CupertinoPickerDefaultSelectionOverlay(),
-  }) : assert(diameterRatio > 0.0, RenderListWheelViewport.diameterRatioZeroMessage),
+  })  : assert(diameterRatio > 0.0, RenderListWheelViewport.diameterRatioZeroMessage),
         assert(magnification > 0),
         assert(itemExtent > 0),
         assert(squeeze > 0),
@@ -138,6 +134,7 @@ class MyCupertinoPicker extends StatefulWidget {
   ///
   /// Must not be null and defaults to `1.1` to visually mimic iOS.
   final double diameterRatio;
+  final double kOverAndUnderCenterOpacity;
 
   /// Background color behind the children.
   ///
@@ -291,7 +288,7 @@ class _CupertinoPickerState extends State<MyCupertinoPicker> {
                 offAxisFraction: widget.offAxisFraction,
                 useMagnifier: widget.useMagnifier,
                 magnification: widget.magnification,
-                overAndUnderCenterOpacity: _kOverAndUnderCenterOpacity,
+                overAndUnderCenterOpacity: widget.kOverAndUnderCenterOpacity,
                 itemExtent: widget.itemExtent,
                 squeeze: widget.squeeze,
                 onSelectedItemChanged: _handleSelectedItemChanged,
@@ -299,8 +296,7 @@ class _CupertinoPickerState extends State<MyCupertinoPicker> {
               ),
             ),
           ),
-          if (widget.selectionOverlay != null)
-            _buildSelectionOverlay(widget.selectionOverlay!),
+          if (widget.selectionOverlay != null) _buildSelectionOverlay(widget.selectionOverlay!),
         ],
       ),
     );
@@ -330,7 +326,6 @@ class _CupertinoPickerState extends State<MyCupertinoPicker> {
 ///
 ///  * [CupertinoPicker], which uses this widget as its default [CupertinoPicker.selectionOverlay].
 class CupertinoPickerDefaultSelectionOverlay extends StatelessWidget {
-
   /// Creates an iOS 14 style selection overlay that highlights the magnified
   /// area (or the currently selected item, depending on how you described it
   /// elsewhere) of a [CupertinoPicker].
@@ -426,6 +421,7 @@ class _RenderCupertinoPickerSemantics extends RenderProxyBox {
 
   FixedExtentScrollController get controller => _controller;
   late FixedExtentScrollController _controller;
+
   set controller(FixedExtentScrollController value) => _updateController(_controller, value);
 
   // This method exists to allow controller to be non-null. It is only called with a null oldValue from constructor.
@@ -444,6 +440,7 @@ class _RenderCupertinoPickerSemantics extends RenderProxyBox {
 
   TextDirection get textDirection => _textDirection;
   TextDirection _textDirection;
+
   set textDirection(TextDirection value) {
     if (textDirection == value) {
       return;
@@ -472,6 +469,7 @@ class _RenderCupertinoPickerSemantics extends RenderProxyBox {
     _currentIndex = controller.selectedItem;
     markNeedsSemanticsUpdate();
   }
+
   @override
   void describeSemanticsConfiguration(SemanticsConfiguration config) {
     super.describeSemanticsConfiguration(config);

@@ -22,7 +22,7 @@ class _State extends State<CupertinoPickerTestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Column(
+      child: ListView(
         children: [
           Container(height: 50, color: Colors.yellow, child: const Center(child: Text("CupertinoPicker-用例"),),),
           buildSample1(),
@@ -39,7 +39,7 @@ class _State extends State<CupertinoPickerTestPage> {
       color: Colors.grey,
       child: MyCupertinoPicker(
         key: UniqueKey(),
-        /// 立体效果
+        /// 偏转两侧UI形成的立体效果
         diameterRatio: 4,
         backgroundColor: Colors.transparent,
         onSelectedItemChanged: (int value) {},
@@ -74,7 +74,7 @@ class _State extends State<CupertinoPickerTestPage> {
           color: Colors.grey,
           child: MyCupertinoPicker(
             key: UniqueKey(),
-            /// 立体效果
+            /// 偏转两侧UI形成的立体效果
             diameterRatio: 0.57,
             backgroundColor: Colors.transparent,
             onSelectedItemChanged: (int value) {},
@@ -112,7 +112,7 @@ class _State extends State<CupertinoPickerTestPage> {
      color: Colors.grey,
       child: MyCupertinoPicker(
         key: UniqueKey(),
-        /// 立体效果
+        /// 偏转两侧UI形成的立体效果
         diameterRatio: 50,
         backgroundColor: Colors.transparent,
         onSelectedItemChanged: (int value) {},

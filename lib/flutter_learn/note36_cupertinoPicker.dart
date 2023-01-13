@@ -28,9 +28,43 @@ class _State extends State<CupertinoPickerTestPage> {
           buildSample1(),
           buildSample2(),
           buildSample3(),
+          buildSample4(),
         ],
       ),
     ));
+  }
+
+  Widget buildSample4() {
+    return Container(
+      height: 150,
+      color: Colors.grey,
+      child: ListWheelScrollView(
+        /// 偏转两侧UI形成的立体效果
+        physics: const FixedExtentScrollPhysics(),
+        controller: FixedExtentScrollController(),
+        diameterRatio: 40,
+        onSelectedItemChanged: (int value) {},
+        itemExtent: 50,
+        // item高度
+        useMagnifier: false,
+        overAndUnderCenterOpacity: 1,
+        /// 使用放大 magnification > 1，滚动时候 下面多一根横线
+        magnification: 1,
+        /// 两侧缩小比： squeeze
+        squeeze: 1,
+        children: List.generate(
+            20,
+                (index) => Container(
+              height: 50,
+              alignment: Alignment.center,
+              color: index % 2 == 0 ? Colors.green : Colors.blue,
+              child: Text(
+                "item:$index",
+                style: const TextStyle(fontSize: 14),
+              ),
+            )),
+      ),
+    );
   }
 
   Widget buildSample3() {

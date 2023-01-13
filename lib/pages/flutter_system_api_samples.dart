@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_flutter_lib_3/util/toast_util.dart';
@@ -85,7 +86,7 @@ class Page1State extends State {
 
   List<Widget> getList2() {
     return [
-      MaterialButton(child: const Text("CupertinoPicker-用例"), onPressed: () => Get.to(const CupertinoPickerTestPage())),
+      CupertinoButton(onPressed: () => Get.to(const CupertinoPickerTestPage()), color: Colors.blue,child: const Text("CupertinoPicker-用例"),),
     ];
   }
 }

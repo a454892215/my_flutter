@@ -20,6 +20,7 @@ class GlobeExceptionHandler {
         reportException(FlutterErrorDetails(exception: error, stack: stackTrace), 1);
       },
     );
+    printExceptionLogSummary();
   }
 
   String sepMark = '\r\n\r\n';
@@ -32,30 +33,32 @@ class GlobeExceptionHandler {
       errInfoList = errInfoList.sublist(0, 101);
     }
     errorMsg = errInfoList.join(splitMark);
-    saveLogToLocal(errorMsg);
+    appendLogToLocal(errorMsg);
     Log.e("Not catch Exception type: $type: lineNum:${errInfoList.length}  $errorMsg");
   }
 
-  Future<void> saveLogToLocal(String log) async {
+  Future<File> getLogFile() async {
     Directory tempDir = await FileU.getTemporaryDirectoryPath();
     String filePath = tempDir.path;
     File file = File('$filePath/ExceptionLog.txt');
     bool isExist = await file.exists();
-    if (isExist) {
-      var mb = await file.length() / 1024 / 1024;
-      if (mb >= 5) {
-        // 如果保存的异常数据大小大于阈值，清空一半异常数据
-        removeOldLog(file);
-      }
-      Log.d("log file Size: $mb MB");
-    } else {
+    if (!isExist) {
       file = await file.create();
       isExist = await file.exists();
       Log.d('exception log file is not exist and has created finished：$isExist');
     }
+    return file;
+  }
+
+  Future<void> appendLogToLocal(String log) async {
+    File file = await getLogFile();
+    var mb = await file.length() / 1024 / 1024;
+    if (mb >= 4) {
+      Log.d("当前保存的log文件大小超标， 开始清空部分log  当前log文件size：${mb.toStringAsFixed(2)}-MB");
+      removeOldLog(file);
+    }
     log = '$sepMark${DateTime.now()}\r\n$log';
     file.writeAsString(log, mode: FileMode.append);
-    Log.d("exception log has saved to local，path: ${file.path}");
   }
 
   Future<void> removeOldLog(File logFile) async {
@@ -66,6 +69,18 @@ class GlobeExceptionHandler {
       var sublist = logList.sublist(start);
       String newLog = sublist.join(sepMark);
       logFile.writeAsString(newLog, mode: FileMode.write);
+      Log.d("清空前的log num是: ${logList.length}  清空后的log num是：${sublist.length}");
+    }
+  }
+
+  Future<void> printExceptionLogSummary() async {
+    File logFile = await getLogFile();
+    double mb = await logFile.length() / 1024 / 1024;
+    String log = await logFile.readAsString();
+    if(log.length > 1){
+      List<String> logList = log.split(sepMark);
+      var num = logList.length;
+      Log.d("异常log文件大小是：${mb.toStringAsFixed(2)}MB 异常log数目是：$num");
     }
   }
 }

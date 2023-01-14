@@ -14,7 +14,7 @@ class EnvironmentConfig {
     String packageName = packageInfo.packageName;
     String version = packageInfo.version;
     String buildNum = packageInfo.buildNumber;
-   return " appName:$appName  packageName:$packageName  version:$version  buildNum$buildNum";
+   return " appName:$appName  packageName:$packageName  version:$version  buildNum:$buildNum";
   }
 
 }

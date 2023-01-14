@@ -21,10 +21,10 @@ class LibApiSamplesPage extends StatefulWidget {
 
 class Page2State extends State {
 
-  @override
+@override
   void initState() {
     super.initState();
-    Log.d(EnvironmentConfig.getAppInfo());
+    EnvironmentConfig.getAppInfo().then((value) => Log.i(value));
   }
 
   @override

@@ -22,11 +22,13 @@ class GlobeExceptionHandler {
     );
   }
 
+  String sepMark = '\r\n\r\n';
+
   void reportException(FlutterErrorDetails details, int type) {
     var errorMsg = 'exception: ${details.exceptionAsString()} \r\n${details.stack.toString()}';
     String splitMark = '    ';
     List<String> errInfoList = errorMsg.split(splitMark);
-    if(errInfoList.length > 101){
+    if (errInfoList.length > 101) {
       errInfoList = errInfoList.sublist(0, 101);
     }
     errorMsg = errInfoList.join(splitMark);
@@ -41,8 +43,9 @@ class GlobeExceptionHandler {
     bool isExist = await file.exists();
     if (isExist) {
       var mb = await file.length() / 1024 / 1024;
-      if (mb >= 10) {
-        file.writeAsString('', mode: FileMode.write);
+      if (mb >= 5) {
+        // 如果保存的异常数据大小大于阈值，清空一半异常数据
+        removeOldLog(file);
       }
       Log.d("log file Size: $mb MB");
     } else {
@@ -50,8 +53,19 @@ class GlobeExceptionHandler {
       isExist = await file.exists();
       Log.d('exception log file is not exist and has created finished：$isExist');
     }
-    log = '\r\n\r\n${DateTime.now()}\r\n$log';
+    log = '$sepMark${DateTime.now()}\r\n$log';
     file.writeAsString(log, mode: FileMode.append);
     Log.d("exception log has saved to local，path: ${file.path}");
+  }
+
+  Future<void> removeOldLog(File logFile) async {
+    String log = await logFile.readAsString();
+    List<String> logList = log.split(sepMark);
+    if (logList.length > 1) {
+      int start = logList.length ~/ 2;
+      var sublist = logList.sublist(start);
+      String newLog = sublist.join(sepMark);
+      logFile.writeAsString(newLog, mode: FileMode.write);
+    }
   }
 }

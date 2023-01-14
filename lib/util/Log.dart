@@ -2,17 +2,23 @@
 
 import 'package:logger/logger.dart';
 
+import '../env.dart';
+
 class Log {
   static const String tag = "LLpp:";
-  static const debug = true;
+  static const debugEnable = EnvironmentConfig.APP_ENV == 'debug';
   static var logger = Logger(
     printer: MyLogPrinter(),
   );
 
   static void d(dynamic msg) {
-    if (debug) {
+    if (debugEnable) {
       _print(Level.debug, msg);
     }
+  }
+
+  static void i(dynamic msg) {
+    _print(Level.info, msg);
   }
 
   static void e(dynamic msg) {

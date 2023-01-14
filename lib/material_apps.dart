@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get.dart';
 import 'package:my_flutter_lib_3/pages/err_page.dart';
 import 'package:my_flutter_lib_3/routers.dart';
+import 'package:my_flutter_lib_3/util/Log.dart';
+import 'env.dart';
 import 'navigator/observer.dart';
 
 //默认配置下： 只有此目录下文件名字为main的dart文件的main函数才能正常启动flutter material开发环境？
@@ -29,7 +31,7 @@ Widget getMaterialApp() {
     /// routes 路由配置：对象是Map<String, WidgetBuilder>
     // routes: [], 这种方式配置路由，defaultTransition 不能生效
     getPages: routers.entries.map((e) => GetPage(name: e.key, page: e.value)).toList(),
-
+    initialBinding: AppInitBinding(),
     /// 配置404页面: 如果路由不存在则跳到该页面
     onGenerateRoute: (RouteSettings settings) {
       return MaterialPageRoute(builder: (BuildContext context) => const ErrPage());
@@ -122,3 +124,19 @@ TextButtonThemeData textButtonTheme = const TextButtonThemeData(
 );
 
 /// 5. MaterialApp种配置默认页面的三种方式，1.home  2.initialRoute(需要和routes配合使用)， 3. routes种的/
+
+class AppInitBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(AppInitController());
+  }
+}
+
+class AppInitController extends GetxController {
+
+  @override
+  void onReady() {
+    super.onReady();
+    Log.i(EnvironmentConfig.getEnvInfo());
+  }
+}

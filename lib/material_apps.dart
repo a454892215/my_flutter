@@ -32,6 +32,7 @@ Widget getMaterialApp() {
     // routes: [], 这种方式配置路由，defaultTransition 不能生效
     getPages: routers.entries.map((e) => GetPage(name: e.key, page: e.value)).toList(),
     initialBinding: AppInitBinding(),
+
     /// 配置404页面: 如果路由不存在则跳到该页面
     onGenerateRoute: (RouteSettings settings) {
       return MaterialPageRoute(builder: (BuildContext context) => const ErrPage());
@@ -39,6 +40,9 @@ Widget getMaterialApp() {
 
     /// 配置页面离开和进入的监听
     navigatorObservers: [MyNavigatorObserver(), routeObserver],
+    routingCallback: (Routing? routing) {
+      Log.d('cur route: ${routing?.current}  name: ${routing?.route?.settings.name}');
+    },
 
     /// 与 routes 中的 / 效果基本一致， 指定应用的第一个显示页面
     ///   initialRoute: '/page1',
@@ -133,7 +137,6 @@ class AppInitBinding extends Bindings {
 }
 
 class AppInitController extends GetxController {
-
   @override
   void onReady() {
     super.onReady();

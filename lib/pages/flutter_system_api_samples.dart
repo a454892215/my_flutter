@@ -86,7 +86,11 @@ class Page1State extends State {
 
   List<Widget> getList2() {
     return [
-      CupertinoButton(onPressed: () => Get.to(const CupertinoPickerTestPage()), color: Colors.blue,child: const Text("CupertinoPicker-用例"),),
+      CupertinoButton(
+        onPressed: () => Get.to(() => const CupertinoPickerTestPage()),
+        color: Colors.blue,
+        child: const Text("CupertinoPicker-用例"),
+      ),
     ];
   }
 }

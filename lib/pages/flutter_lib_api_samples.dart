@@ -31,8 +31,8 @@ class Page2State extends State {
               child: ListView(
                 shrinkWrap: true,
                 children: <Widget>[
-                  MaterialButton(child: const Text("picker库用例"), onPressed: () => Get.to(const PickerSamplePage())),
-                  MaterialButton(child: const Text("ScreenShotEvent用例"), onPressed: () => Get.to(const ScreenShotEventSamplePage())),
+                  MaterialButton(child: const Text("picker库用例"), onPressed: () => Get.to(() => const PickerSamplePage())),
+                  MaterialButton(child: const Text("ScreenShotEvent用例"), onPressed: () => Get.to(() => const ScreenShotEventSamplePage())),
                 ],
               )),
         ));

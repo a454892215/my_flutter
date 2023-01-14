@@ -6,18 +6,13 @@ import 'package:my_flutter_lib_3/util/Log.dart';
 import 'env.dart';
 import 'navigator/observer.dart';
 
-//默认配置下： 只有此目录下文件名字为main的dart文件的main函数才能正常启动flutter material开发环境？
-void main() {
-  runApp(getMaterialApp());
-}
-
 RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 Widget getMaterialApp() {
   /// 使用 GetMaterialApp 取代MaterialApp 以方便使用Get.to(_SecondPage()) 导航页面
   return GetMaterialApp(
     debugShowCheckedModeBanner: false,
-
+    enableLog: false,
     /// title 只对Android生效，ios种，任务视图名称取的是 Info.pList 文件中的CFBundleDisplayName或CFBundleName
     title: "app标题",
 

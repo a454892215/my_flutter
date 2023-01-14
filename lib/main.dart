@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'globe_exception_catch.dart';
 import 'material_apps.dart';
-
 void main() {
   // WidgetsFlutterBinding.ensureInitialized(); // 保证 WidgetsBindingObserver使用时候，已经初始化
   GlobeExceptionHandler().init(() => runApp(buildScreenUtilInit(child: getMaterialApp())));

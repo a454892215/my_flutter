@@ -13,6 +13,7 @@ Widget getMaterialApp() {
   return GetMaterialApp(
     debugShowCheckedModeBanner: false,
     enableLog: false,
+
     /// title 只对Android生效，ios种，任务视图名称取的是 Info.pList 文件中的CFBundleDisplayName或CFBundleName
     title: "app标题",
 
@@ -133,8 +134,9 @@ class AppInitBinding extends Bindings {
 
 class AppInitController extends GetxController {
   @override
-  void onReady() {
+  Future<void> onReady() async {
     super.onReady();
-    Log.i(EnvironmentConfig.getEnvInfo());
+    var appInfo = await EnvironmentConfig.getAppInfo();
+    Log.i(EnvironmentConfig.getEnvInfo() + appInfo);
   }
 }

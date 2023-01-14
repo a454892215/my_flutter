@@ -57,7 +57,7 @@ class GlobeExceptionHandler {
       Log.d("当前保存的log文件大小超标， 开始清空部分log  当前log文件size：${mb.toStringAsFixed(2)}-MB");
       removeOldLog(file);
     }
-    log = '$sepMark${DateTime.now()}\r\n$log';
+    log = '${DateTime.now()}\r\n$log$sepMark';
     file.writeAsString(log, mode: FileMode.append);
   }
 
@@ -69,7 +69,7 @@ class GlobeExceptionHandler {
       var sublist = logList.sublist(start);
       String newLog = sublist.join(sepMark);
       logFile.writeAsString(newLog, mode: FileMode.write);
-      Log.d("清空前的log num是: ${logList.length}  清空后的log num是：${sublist.length}");
+      Log.d("删除前的log num是: ${logList.length}  删除后的log num是：${sublist.length}");
     }
   }
 
@@ -79,7 +79,7 @@ class GlobeExceptionHandler {
     String log = await logFile.readAsString();
     if(log.length > 1){
       List<String> logList = log.split(sepMark);
-      var num = logList.length;
+      var num = logList.length - 1;
       Log.d("异常log文件大小是：${mb.toStringAsFixed(2)}MB 异常log数目是：$num");
     }
   }

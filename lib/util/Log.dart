@@ -28,6 +28,7 @@ class Log {
   static void _print(Level level, dynamic msg) {
     var traceList = StackTrace.current.toString().replaceAll(RegExp(r"(\s\s\s\s)+"), "    ").split("\n");
     String pre = traceList[0];
+    bool isLocated = false;
     for (int i = 1; i <= 5; i++) {
       var cur = traceList[i];
       if (pre.contains("/Log.") && !cur.contains("/Log.")) {
@@ -35,6 +36,9 @@ class Log {
         break;
       }
       pre = traceList[i];
+    }
+    if(!isLocated){
+      logger.log(level, "未定位到调用位置 $tag$msg");
     }
   }
 }

@@ -81,6 +81,8 @@ class GlobeExceptionHandler {
       List<String> logList = log.split(sepMark);
       var num = logList.length - 1;
       Log.d("异常log文件大小是：${mb.toStringAsFixed(2)}MB 异常log数目是：$num");
+    }else{
+      Log.d("本地无缓存异常log...");
     }
   }
 }

@@ -24,6 +24,6 @@ class LocalSaveHelper {
   Future<void> saveStr(String content) async {
     File file = await getFile();
     file.writeAsString(content, mode: FileMode.write);
-    Log.d('保存内容完毕： length: $content  path:${file.path}');
+    Log.d('保存内容完毕： length: ${content.length}  path:${file.path}');
   }
 }

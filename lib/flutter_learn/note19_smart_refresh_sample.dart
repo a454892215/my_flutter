@@ -67,6 +67,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         enablePullDown: true,
         enablePullUp: true,
         header: const ClassicHeader(refreshingIcon: CupertinoActivityIndicator()),
+        footer: const ClassicFooter(loadingIcon: CupertinoActivityIndicator()),
         controller: _refreshController,
         onRefresh: _onRefresh,
         onLoading: _onLoadMore,
@@ -95,7 +96,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   void _onLoadMore() async {
     Log.d("==============_onLoadMore=================");
-    await Future.delayed(const Duration(milliseconds: 1000));
+    await Future.delayed(const Duration(milliseconds: 3000));
     setState(() {
       for (int i = 0; i < 10; i++) {
         list.add("data:-$i");
@@ -132,7 +133,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
           // Log.d("itemBuilder index: $index");
           String text = "文本$index";
           return Container(
-            height: 30,
+            height: 60,
             margin: const EdgeInsets.only(left: 10, right: 10),
             color: Colors.green,
             alignment: Alignment.center,

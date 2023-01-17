@@ -45,7 +45,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("SmartRefresher-示例"),
+        title: const Text("SmartRefresher-聊天室-示例"),
       ),
       body: Container(
         color: Colors.grey[200],
@@ -74,29 +74,9 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         child: buildListView());
   }
 
-  CustomFooter buildCustomFooter() {
-    return CustomFooter(
-      builder: (context, mode) {
-        Widget footerView;
-        if (mode == LoadStatus.idle) {
-          footerView = const Text("上拉加载");
-        } else if (mode == LoadStatus.loading) {
-          footerView = const CupertinoActivityIndicator();
-        } else if (mode == LoadStatus.failed) {
-          footerView = const Text("加载失败, 点击重试！");
-        } else if (mode == LoadStatus.canLoading) {
-          footerView = const Text("松手,加载更多!");
-        } else {
-          footerView = const Text("没有更多数据了!");
-        }
-        return SizedBox(height: 55.0, child: Center(child: footerView));
-      },
-    );
-  }
-
   void _onLoadMore() async {
     Log.d("==============_onLoadMore=================");
-    await Future.delayed(const Duration(milliseconds: 3000));
+    await Future.delayed(const Duration(milliseconds: 1000));
     setState(() {
       for (int i = 0; i < 10; i++) {
         list.add("data:-$i");
@@ -109,7 +89,10 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     Log.d("==============_onRefresh=================");
     await Future.delayed(const Duration(milliseconds: 1000));
     setState(() {
-    //  listSize += 2;
+      list.clear();
+      for (int i = 0; i < 3; i++) {
+        list.add("data:-$i");
+      }
       _refreshController.refreshCompleted();
     });
   }

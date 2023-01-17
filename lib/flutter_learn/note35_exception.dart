@@ -42,10 +42,18 @@ class _State extends State<ExceptionTestPage> {
           CupertinoButton(
               child: const Text("flutter 异步异常"),
               onPressed: () async {
-                await Future.delayed(const Duration(milliseconds: 1000),(){
+                await Future.delayed(const Duration(milliseconds: 1000), () {
                   List? ls;
                   toast('length: ${ls!.length}');
                 });
+              }),
+          CupertinoButton(
+              child: const Text("flutter 异步测试"),
+              onPressed: () async {
+                var start = DateTime.now().microsecondsSinceEpoch;
+                Future.delayed(const Duration(milliseconds: 1000), () {});
+                var end = DateTime.now().microsecondsSinceEpoch;
+                print("LLpp 结束请求数据....cost time:${end- start}");
               }),
           CupertinoButton(
               child: const Text("flutter UI渲染异常"),
@@ -69,7 +77,5 @@ class _State extends State<ExceptionTestPage> {
     ));
   }
 
-  static Future<void> exe() async {
-
-  }
+  static Future<void> exe() async {}
 }

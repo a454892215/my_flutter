@@ -33,6 +33,7 @@ class Log {
       var cur = traceList[i];
       if (pre.contains("/Log.") && !cur.contains("/Log.")) {
         logger.log(level, "$cur $tag$msg");
+        isLocated = true;
         break;
       }
       pre = traceList[i];

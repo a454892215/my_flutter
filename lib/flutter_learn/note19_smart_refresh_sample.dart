@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../util/Log.dart';
+
 /// SmartRefresher 下拉刷新，和加载更多
 /// 一定要注意的是,ListView一定要作为SmartRefresher的child,不能与其分开,详细原因看
 class SmartRefreshSamplePage extends StatefulWidget {
@@ -15,15 +17,20 @@ class SmartRefreshSamplePage extends StatefulWidget {
 }
 
 class _SamplePageState extends State with SingleTickerProviderStateMixin {
-  int listSize = 3;
+  List<String> list = [];
   final ScrollController _scrollController = ScrollController();
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
   void initState() {
     super.initState();
+    for (int i = 0; i < 10; i++) {
+      list.add("data:-$i");
+    }
     _scrollController.addListener(() {});
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +53,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
           children: [
             Container(
               height: 300,
-              color: Colors.grey[500],
+              color: const Color(0xffa8a8a8),
               child: buildSmartRefresher(),
             ),
           ],
@@ -59,11 +66,10 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     return SmartRefresher(
         enablePullDown: true,
         enablePullUp: true,
-        header: const WaterDropHeader(),
-        footer: buildCustomFooter(),
+        header: const ClassicHeader(refreshingIcon: CupertinoActivityIndicator()),
         controller: _refreshController,
         onRefresh: _onRefresh,
-        onLoading: _onLoading,
+        onLoading: _onLoadMore,
         child: buildListView());
   }
 
@@ -87,28 +93,33 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     );
   }
 
-  void _onRefresh() async {
+  void _onLoadMore() async {
+    Log.d("==============_onLoadMore=================");
     await Future.delayed(const Duration(milliseconds: 1000));
     setState(() {
-      listSize  = 5;
-      _refreshController.refreshCompleted();
+      for (int i = 0; i < 10; i++) {
+        list.add("data:-$i");
+      }
+      _refreshController.loadComplete();
     });
   }
 
-  void _onLoading() async {
+  void _onRefresh() async {
+    Log.d("==============_onRefresh=================");
     await Future.delayed(const Duration(milliseconds: 1000));
     setState(() {
-      listSize += 2;
-      _refreshController.loadComplete();
+    //  listSize += 2;
+      _refreshController.refreshCompleted();
     });
   }
 
   /// 3. 带有分割线的 按需加载： ListView.separated
   ListView buildListView() {
     return ListView.separated(
-        itemCount: listSize,
+        itemCount: list.length,
         physics: const BouncingScrollPhysics(),
         shrinkWrap: false,
+        reverse: true,
         controller: _scrollController,
         separatorBuilder: (BuildContext context, int index) {
           return Container(

@@ -29,11 +29,10 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     }
     _scrollController.addListener(() {});
   }
-
-
-
+  late BuildContext context;
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => _MyValuesNotifier()),
@@ -62,16 +61,20 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     );
   }
 
-  SmartRefresher buildSmartRefresher() {
-    return SmartRefresher(
-        enablePullDown: true,
-        enablePullUp: true,
-        header: const ClassicHeader(refreshingIcon: CupertinoActivityIndicator()),
-        footer: const ClassicFooter(loadingIcon: CupertinoActivityIndicator()),
-        controller: _refreshController,
-        onRefresh: _onRefresh,
-        onLoading: _onLoadMore,
-        child: buildListView());
+  Widget buildSmartRefresher() {
+    return RefreshConfiguration.copyAncestor(
+        enableBallisticLoad: false, // 禁止惯性滑动加载更多
+        context: context,
+        child: SmartRefresher(
+            enablePullDown: true,
+            enablePullUp: true,
+            header: const ClassicHeader(refreshingIcon: CupertinoActivityIndicator()),
+            footer: const ClassicFooter(loadingIcon: CupertinoActivityIndicator()),
+            reverse: true,
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            onLoading: _onLoadMore,
+            child: buildListView()));
   }
 
   void _onLoadMore() async {
@@ -101,7 +104,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   ListView buildListView() {
     return ListView.separated(
         itemCount: list.length,
-        physics: const BouncingScrollPhysics(),
+        physics: const ClampingScrollPhysics(),
         shrinkWrap: false,
         reverse: true,
         controller: _scrollController,

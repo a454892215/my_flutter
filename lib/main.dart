@@ -1,18 +1,29 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'globe_exception_catch.dart';
 import 'material_apps.dart';
+
 void main() {
   // WidgetsFlutterBinding.ensureInitialized(); // 保证 WidgetsBindingObserver使用时候，已经初始化
-  GlobeExceptionHandler().init(() => runApp(buildScreenUtilInit(child: getMaterialApp())));
+  GlobeExceptionHandler().init(() => runApp(buildScreenUtilInit(child: getRootWidget())));
   if (Platform.isAndroid) {
     /// 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
   }
+}
+
+Widget getRootWidget() {
+  return RefreshConfiguration(
+    headerBuilder: () => const ClassicHeader(refreshingIcon: CupertinoActivityIndicator()),
+    footerBuilder: () => const ClassicFooter(loadingIcon: CupertinoActivityIndicator()),
+    child: getMaterialApp(),
+  );
 }
 
 /// 屏幕适配配置，单位为1080px*1920px

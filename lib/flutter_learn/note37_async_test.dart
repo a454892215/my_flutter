@@ -76,20 +76,20 @@ class _State extends State<AsyncTestPage> {
               ElevatedButton(
                   child: const Text("flutter 防抖-验证"),
                   onPressed: () async {
-                    EasyDebounce.debounce('async-throttle-5', const Duration(milliseconds: 100), () async {
+                    EasyDebounce.debounce('async-throttle-5', const Duration(milliseconds: 100), () {
                       int cost = DateTime.now().millisecondsSinceEpoch - lastExeTime;
                       Log.d("====执行了======cost time: $cost");
                       lastExeTime = DateTime.now().millisecondsSinceEpoch;
                     });
                   }),
               ElevatedButton(
-                  child: const Text("flutter 防抖-异步Isolate密集运算测试-不卡UI"),
+                  child: const Text("flutter 异步Isolate密集运算测试-不卡UI"),
                   onPressed: () async {
                     if(taskIsFinished){
                       ExeTimer timer = ExeTimer();
                       taskIsFinished = false;
                       await compute<String, int>(computeTask, '');
-                      timer.printExeTime(tag: '密集计算任务耗时 '); // 耗时 2000多 毫秒 并且UI被卡住了
+                      timer.printExeTime(tag: '密集计算任务耗时 '); // 耗时 2000多 毫秒 并且UI未被卡住
                       taskIsFinished = true;
                     }
 

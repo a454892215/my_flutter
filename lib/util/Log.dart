@@ -32,14 +32,14 @@ class Log {
     for (int i = 1; i <= 5; i++) {
       var cur = traceList[i];
       if (pre.contains("/Log.") && !cur.contains("/Log.")) {
-        logger.log(level, "$cur $tag$msg");
+        logger.log(level, "${DateTime.now()} $cur $tag$msg");
         isLocated = true;
         break;
       }
       pre = traceList[i];
     }
     if(!isLocated){
-      logger.log(level, "未定位到调用位置 $tag$msg");
+      logger.log(level, "${DateTime.now()} 未定位到调用位置 $tag$msg");
     }
   }
 }

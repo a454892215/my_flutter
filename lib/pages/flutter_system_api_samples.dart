@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:my_flutter_lib_3/util/toast_util.dart';
 
 import '../flutter_learn/note36_cupertinoPicker.dart';
+import '../flutter_learn/note37_async_test.dart';
 import '../my_widgets/comm_widgets.dart';
 
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
@@ -86,11 +87,8 @@ class Page1State extends State {
 
   List<Widget> getList2() {
     return [
-      CupertinoButton(
-        onPressed: () => Get.to(() => const CupertinoPickerTestPage()),
-        color: Colors.blue,
-        child: const Text("CupertinoPicker-用例"),
-      ),
+      CupertinoButton(onPressed: () => Get.to(() => const CupertinoPickerTestPage()), color: Colors.blue, child: const Text("CupertinoPicker-用例")),
+      CupertinoButton(onPressed: () => Get.to(() => const AsyncTestPage()), color: Colors.blue, child: const Text("flutter 异步测试-用例")),
     ];
   }
 }

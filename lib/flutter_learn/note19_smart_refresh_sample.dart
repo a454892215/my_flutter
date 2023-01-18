@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../my_widgets/my_physics.dart';
 import '../util/Log.dart';
 
 /// SmartRefresher 下拉刷新，和加载更多
@@ -24,12 +25,14 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 20; i++) {
       list.add("data:-$i");
     }
     _scrollController.addListener(() {});
   }
+
   late BuildContext context;
+
   @override
   Widget build(BuildContext context) {
     this.context = context;
@@ -52,8 +55,15 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
           children: [
             Container(
               height: 300,
+              padding: const EdgeInsets.all(10),
               color: const Color(0xffa8a8a8),
               child: buildSmartRefresher(),
+            ),
+            Container(
+              height: 300,
+              padding: const EdgeInsets.all(10),
+              color: const Color(0xffa8a8a8),
+              child: buildListView2(),
             ),
           ],
         ),
@@ -63,14 +73,24 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   Widget buildSmartRefresher() {
     return RefreshConfiguration.copyAncestor(
-        enableBallisticLoad: false, // 禁止惯性滑动加载更多
+        enableBallisticLoad: false,
+        // 禁止惯性滑动加载更多
         context: context,
+        enableRefreshVibrate: true,
+        footerTriggerDistance: -1,
         child: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
-            header:  BezierHeader(),
-            footer: const ClassicFooter(loadingIcon: CupertinoActivityIndicator()),
-           // reverse: true,
+            header: const ClassicHeader(
+              refreshingIcon: CupertinoActivityIndicator(),
+              height: 60,
+            ),
+            footer: const ClassicFooter(
+              loadingIcon: CupertinoActivityIndicator(),
+              height: 90,
+              loadStyle: LoadStyle.ShowWhenLoading,
+            ),
+            // reverse: true,
             controller: _refreshController,
             onRefresh: _onRefresh,
             onLoading: _onLoadMore,
@@ -103,8 +123,38 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   /// 3. 带有分割线的 按需加载： ListView.separated
   ListView buildListView() {
     return ListView.separated(
+        key: UniqueKey(),
         itemCount: list.length,
-        physics: const ClampingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
+        shrinkWrap: false,
+        reverse: true,
+        controller: _scrollController,
+        separatorBuilder: (BuildContext context, int index) {
+          return Container(
+            color: Colors.red,
+            height: 5,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+          );
+        },
+        itemBuilder: (BuildContext context, int index) {
+          // Log.d("itemBuilder index: $index");
+          String text = "文本$index";
+          return Container(
+            height: 60,
+            margin: const EdgeInsets.only(left: 10, right: 10),
+            color: Colors.green,
+            alignment: Alignment.center,
+            child: Text(text),
+          );
+        });
+  }
+
+  /// 3. 带有分割线的 按需加载： ListView.separated
+  ListView buildListView2() {
+    return ListView.separated(
+        key: UniqueKey(),
+        itemCount: list.length,
+        physics: const MyBouncingScrollPhysics(),
         shrinkWrap: false,
         reverse: true,
         controller: _scrollController,

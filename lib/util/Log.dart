@@ -26,21 +26,24 @@ class Log {
   }
 
   static void _print(Level level, dynamic msg) {
+    String traceInfo = getTraceInfo();
+    logger.log(level, "${DateTime.now()} $traceInfo $tag$msg");
+  }
+
+  static String getTraceInfo() {
     var traceList = StackTrace.current.toString().replaceAll(RegExp(r"(\s\s\s\s)+"), "    ").split("\n");
     String pre = traceList[0];
-    bool isLocated = false;
-    for (int i = 1; i <= 5; i++) {
+    String traceInfo = '未定位到调用位置';
+    int end = traceList.length > 6 ? 6: traceList.length;
+    for (int i = 1; i < end; i++) {
       var cur = traceList[i];
-      if (pre.contains("/Log.") && !cur.contains("/Log.")) {
-        logger.log(level, "${DateTime.now()} $cur $tag$msg");
-        isLocated = true;
+      if (pre.contains("Log.") && !cur.contains("Log.")) {
+        traceInfo = cur;
         break;
       }
       pre = traceList[i];
     }
-    if(!isLocated){
-      logger.log(level, "${DateTime.now()} 未定位到调用位置 $tag$msg");
-    }
+    return traceInfo;
   }
 }
 

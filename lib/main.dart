@@ -22,6 +22,9 @@ Widget getRootWidget() {
   return RefreshConfiguration(
     headerBuilder: () => const ClassicHeader(refreshingIcon: CupertinoActivityIndicator()),
     footerBuilder: () => const ClassicFooter(loadingIcon: CupertinoActivityIndicator()),
+    hideFooterWhenNotFull: false, // Viewport不满一屏时,禁用上拉加载更多功能
+    enableBallisticLoad: false, // 可以通过惯性滑动触发加载更多
+    enableBallisticRefresh: false,
     child: getMaterialApp(),
   );
 }

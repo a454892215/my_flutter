@@ -68,9 +68,9 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         child: SmartRefresher(
             enablePullDown: true,
             enablePullUp: true,
-            header: const ClassicHeader(refreshingIcon: CupertinoActivityIndicator()),
+            header:  BezierHeader(),
             footer: const ClassicFooter(loadingIcon: CupertinoActivityIndicator()),
-            reverse: true,
+           // reverse: true,
             controller: _refreshController,
             onRefresh: _onRefresh,
             onLoading: _onLoadMore,

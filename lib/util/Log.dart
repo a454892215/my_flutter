@@ -43,6 +43,8 @@ class Log {
       }
       pre = traceList[i];
     }
+    var start = traceInfo.indexOf('(package:');
+    traceInfo = traceInfo.substring(start);
     return traceInfo;
   }
 }

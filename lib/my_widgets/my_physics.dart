@@ -25,6 +25,7 @@ class MyBouncingScrollPhysics extends ScrollPhysics {
     return v;
   }
 
+  /// 处理越界触摸滑动
   @override
   double applyPhysicsToUserOffset(ScrollMetrics position, double offset) {
     //  assert(offset != 0.0);
@@ -36,19 +37,19 @@ class MyBouncingScrollPhysics extends ScrollPhysics {
     if (position.outOfRange) {
       final double overscrollPastStart = math.max(position.minScrollExtent - position.pixels, 0.0);
       final double overscrollPastEnd = math.max(position.pixels - position.maxScrollExtent, 0.0);
-      final double overscrollPast = math.max(overscrollPastStart, overscrollPastEnd);
+      final double overscrollPast = math.max(overscrollPastStart, overscrollPastEnd); /// 越界滚动距离
+      /// 顺向反弹触摸滚动
       final bool easing = (overscrollPastStart > 0.0 && offset < 0.0) || (overscrollPastEnd > 0.0 && offset > 0.0);
-      Log.d("pixels:${position.pixels}  maxScrollExtent:${position.maxScrollExtent}");
       final double friction = easing
           // Apply less resistance when easing the overscroll vs tensioning.
-          ? frictionFactor((overscrollPast - offset.abs()) / position.viewportDimension)
-          : frictionFactor(overscrollPast / position.viewportDimension);
+          ? frictionFactor((overscrollPast - offset.abs()) / position.viewportDimension) /// 顺着反弹方向触摸滚动
+          : frictionFactor(overscrollPast / position.viewportDimension); /// 顶住阻力触摸滚动
       final double direction = offset.sign;
 
       ret = direction * _applyFriction(overscrollPast, offset.abs(), friction);
     }
     /// 不处理惯性滑动下的越界，只处理触摸滑动下的越界！
- //   Log.d("ret:$ret  isOut:${position.outOfRange}");
+    // Log.d("ret:$ret  isOut:${position.outOfRange}");
     return ret;
   }
 
@@ -70,11 +71,12 @@ class MyBouncingScrollPhysics extends ScrollPhysics {
   @override
   double applyBoundaryConditions(ScrollMetrics position, double value) => 0.0;
 
+  /// 处理惯性滚动
   @override
   Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
-   // Log.d("createBallisticSimulation===========velocity：$velocity");
     if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
+      Log.d("createBallisticSimulation======velocity：$velocity=>${tolerance.velocity}  ${position.outOfRange}");
       return BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,

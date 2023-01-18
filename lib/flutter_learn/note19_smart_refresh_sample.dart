@@ -151,9 +151,10 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   /// 3. 带有分割线的 按需加载： ListView.separated
   ListView buildListView2() {
+    var list2 = getList2();
     return ListView.separated(
         key: UniqueKey(),
-        itemCount: list.length,
+        itemCount: list2.length,
         physics: const MyBouncingScrollPhysics(),
         shrinkWrap: false,
         reverse: true,
@@ -176,6 +177,14 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
             child: Text(text),
           );
         });
+  }
+
+  List<String> getList2(){
+    List<String> list = [];
+    for (int i = 0; i < 40; i++) {
+      list.add("data:-$i");
+    }
+    return list;
   }
 }
 

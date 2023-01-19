@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:my_flutter_lib_3/my_widgets/refresher.dart';
+import 'package:my_flutter_lib_3/my_widgets/refresher/refresher.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../my_widgets/my_physics.dart';
@@ -67,6 +67,11 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                 sc: sc,
                 height: refresherContentHeight,
                 width: refresherContentWidth,
+                onRefresh: (state) async {
+                  await Future.delayed(const Duration(milliseconds: 2000));
+                  state.notifyRefreshFinish();
+                },
+                onLoadMore: (state) {  },
                 child: Container(
                   height: refresherContentHeight,
                   width: refresherContentWidth,

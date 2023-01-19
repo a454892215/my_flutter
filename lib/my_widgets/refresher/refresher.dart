@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 
-import '../util/Log.dart';
-import 'comm_anim2.dart';
-import 'my_physics.dart';
-import 'dart:math' as math;
+import '../../util/Log.dart';
+import '../comm_anim2.dart';
+import '../my_physics.dart';
+import 'header_indicator_widget.dart';
 
 void main() {}
+
+typedef OnRefresh = void Function(RefreshWidgetState state);
+typedef OnLoadMore = void Function(RefreshWidgetState state);
 
 class Refresher extends StatefulWidget {
   const Refresher({
@@ -14,22 +18,27 @@ class Refresher extends StatefulWidget {
     required this.sc,
     required this.height,
     required this.width,
+    required this.onRefresh,
+    required this.onLoadMore,
   });
 
   final Widget child;
   final ScrollController sc;
   final double height;
   final double width;
+  final OnRefresh onRefresh;
+  final OnLoadMore onLoadMore;
 
   @override
   State<StatefulWidget> createState() {
-    return _State();
+    return RefreshWidgetState();
   }
 }
 
-class _State extends State<Refresher> with TickerProviderStateMixin {
+class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin {
   late ScrollController sc = widget.sc;
   static double headerHeight = 180;
+  static double headerIndicatorHeight = 60;
 
   late final ValueNotifier<double> notifier = ValueNotifier<double>(-headerHeight);
 
@@ -37,11 +46,15 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
     ..init(200, this, 0, 1)
     ..addListener(onAnimUpdate);
   int state = 0;
+  double headerTriggerRefreshDistance = headerIndicatorHeight;
 
   void onAnimUpdate() {
     notifier.value = anim.animation?.value ?? -headerHeight;
     if (anim.controller.isCompleted && state != 1) {
       state = 1;
+      if (curRefreshState == RefreshState.refresh_finished) {
+        updateState(getScrolledHeaderY(), 4);
+      }
     } else if (anim.controller.isDismissed && state != -1) {
       state = -1;
     } else {
@@ -100,19 +113,11 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Container(
-            color: Colors.yellow,
-            height: 40,
-            width: widget.width,
-          ),
-          Container(
-            color: Colors.red,
-            height: 40,
-            width: widget.width,
-          ),
-          Container(
             color: Colors.blue,
-            height: 40,
+            height: headerIndicatorHeight,
             width: widget.width,
+            alignment: Alignment.center,
+            child: getHeaderWidget(curRefreshState),
           ),
         ],
       ),
@@ -125,17 +130,34 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
 
   void onPointerUp(PointerUpEvent event) {
     if (max > 0 && pixels >= max && notifier.value > -headerHeight) {
-      anim.update(-headerHeight, begin: notifier.value);
-      anim.controller.forward(from: 0);
-      Log.d("播放头部收回动画: ${anim.controller.value} ${anim.animation?.value}  ${notifier.value}");
+      // 释放刷新 => 正在刷新 或下拉刷新状态不变，回到隐藏头
+      updateState(getScrolledHeaderY(), 2);
+      animUpdateHeader();
     } else {
       Log.d("头部收回动画条件不满足：");
     }
   }
 
+  void animUpdateHeader() {
+    if (curRefreshState == RefreshState.refreshing) {
+      anim.update(-(headerHeight - headerTriggerRefreshDistance), begin: notifier.value);
+    } else if (curRefreshState == RefreshState.refresh_finished) {
+      anim.update(-headerHeight, begin: notifier.value);
+    } else {
+      anim.update(-headerHeight, begin: notifier.value);
+    }
+    anim.controller.forward(from: 0);
+  }
+
+  double getScrolledHeaderY() {
+    return headerHeight + notifier.value;
+  }
+
   void onPointerCancel(PointerCancelEvent event) {
     Log.d("========onPointerCancel======：");
   }
+
+  RefreshState curRefreshState = RefreshState.pull_down_refresh;
 
   void onPointerMove(PointerMoveEvent e) {
     ScrollPosition position = sc.position;
@@ -146,28 +168,63 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
     MyClampingScrollPhysics physics = sc.position.physics as MyClampingScrollPhysics;
     //header scroll
     if (pixels >= max) {
+      double scrolledHeaderY = getScrolledHeaderY();
       if (e.delta.dy > 0) {
         // header 向下滑动
         physics.scrollEnable = false;
-
-        /// scrolledHeaderY = 0;
-        double scrolledHeaderY = headerHeight + notifier.value;
         double scrolledRate = scrolledHeaderY / headerHeight;
         newValue = notifier.value + (e.delta.dy * (1 - scrolledRate));
         if (newValue > 0) newValue = 0;
         notifier.value = newValue;
-      //  Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   pixels:$pixels  newValue:$newValue  rate:$scrolledRate");
+        //  Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   pixels:$pixels  newValue:$newValue  rate:$scrolledRate");
       } else if (e.delta.dy < 0) {
         // header 向上滑动
         physics.scrollEnable = false;
         if (newValue < -headerHeight) newValue = -headerHeight;
         notifier.value = newValue;
-        Log.d("header 向上滑动 :  ${e.delta}  max:$max   min:$min  newValue:$newValue");
+        // Log.d("header 向上滑动 :  ${e.delta}  max:$max   min:$min  newValue:$newValue");
       }
+      //头部触摸移动只有两种状态切换（下拉刷新，释放刷新）
+      updateState(scrolledHeaderY, 1);
     } else if (pixels <= min) {
     } else {
       physics.scrollEnable = true;
     }
-    Log.d("pixels:$pixels  max:$max");
+    // Log.d("pixels:$pixels  max:$max ");
+  }
+
+  Future<void> updateState(double scrolledHeaderY, int switchType) async {
+    if (switchType == 1 && curRefreshState != RefreshState.refreshing) {
+      if (scrolledHeaderY >= headerTriggerRefreshDistance) {
+        curRefreshState = RefreshState.release_refresh;
+      } else {
+        curRefreshState = RefreshState.pull_down_refresh;
+      }
+    } else if (switchType == 2) {
+      // 释放刷新 => 正在刷新 或下拉刷新状态不变，动画隐藏头
+      if (curRefreshState == RefreshState.release_refresh) {
+        curRefreshState = RefreshState.refreshing;
+        widget.onRefresh(this);
+      }
+    } else if (switchType == 3) {
+      // 正在刷新->刷新结束
+      if (curRefreshState == RefreshState.refreshing) {
+        curRefreshState = RefreshState.refresh_finished;
+        notifier.value += 0.1; // 更新UI
+        // 在次状态停顿200毫秒后隐藏头部，恢复下拉刷新状态
+        await Future.delayed(const Duration(milliseconds: 300));
+        animUpdateHeader();
+      }
+    } else if (switchType == 4) {
+      // 刷新结束 -> 下拉刷新
+      if (curRefreshState == RefreshState.refresh_finished) {
+        curRefreshState = RefreshState.pull_down_refresh;
+      }
+    }
+  }
+
+  void notifyRefreshFinish() {
+    //  正在刷新->刷新结束
+    updateState(getScrolledHeaderY(), 3);
   }
 }

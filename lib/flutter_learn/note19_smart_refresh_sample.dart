@@ -34,7 +34,6 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => _MyValuesNotifier()),
@@ -67,8 +66,9 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                 height: refresherContentHeight,
                 width: refresherContentWidth,
                 onRefresh: (state) async {
-                  await Future.delayed(const Duration(milliseconds: 2000));
+                  await Future.delayed(const Duration(milliseconds: 1000));
                   addDataForList2(10);
+                  listView2Notifier.value++;
                   state.notifyRefreshFinish();
                 },
                 onLoadMore: (state) {},
@@ -164,31 +164,34 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   }
 
   var list2 = [];
-
+  late final ValueNotifier<int> listView2Notifier = ValueNotifier<int>(0);
   /// 3. 带有分割线的 按需加载： ListView.separated
   Widget buildListView2(ScrollController sc) {
-    return ListView.separated(
-        key: UniqueKey(),
-        itemCount: list2.length,
-        physics: MyClampingScrollPhysics(),
-        shrinkWrap: false,
-        reverse: true,
-        controller: sc,
-        separatorBuilder: (BuildContext context, int index) {
-          return Container(
-            color: Colors.red,
-            height: 5,
-          );
-        },
-        itemBuilder: (BuildContext context, int index) {
-          // Log.d("itemBuilder index: $index");
-          String text = "文本$index";
-          return Container(
-            height: 60,
-            color: Colors.green,
-            alignment: Alignment.center,
-            child: Text(text),
-          );
+    return ValueListenableBuilder(
+        valueListenable: listView2Notifier,
+        builder: (a, b, c) {
+          return ListView.separated(
+              itemCount: list2.length,
+              physics: MyClampingScrollPhysics(),
+              shrinkWrap: false,
+              reverse: true,
+              controller: sc,
+              separatorBuilder: (BuildContext context, int index) {
+                return Container(
+                  color: Colors.red,
+                  height: 5,
+                );
+              },
+              itemBuilder: (BuildContext context, int index) {
+                // Log.d("itemBuilder index: $index");
+                String text = "文本$index";
+                return Container(
+                  height: 60,
+                  color: Colors.green,
+                  alignment: Alignment.center,
+                  child: Text(text),
+                );
+              });
         });
   }
 

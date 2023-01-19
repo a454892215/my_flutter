@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -43,6 +44,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   }
 
   ScrollController sc = ScrollController();
+  double refresherContentHeight = 300;
+  double refresherContentWidth = 1080.w;
 
   Scaffold buildScaffold() {
     return Scaffold(
@@ -61,10 +64,13 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
             ),
             Refresher(
                 sc: sc,
+                height: refresherContentHeight,
+                width: refresherContentWidth,
                 child: Container(
-                  height: 300,
+                  height: refresherContentHeight,
+                  width: refresherContentWidth,
+                  color: const Color(0xffaeeeae),
                   padding: const EdgeInsets.all(10),
-                  color: const Color(0xffa8a8a8),
                   child: buildListView2(sc),
                 )),
           ],
@@ -156,7 +162,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     var list2 = getList2();
     return NotificationListener(
       // onNotification: (Notification notifier){
-      //   Log.d("sc: ${sc.offset}  position:${sc.position}  notifier: $notifier ");
+      //   Log.d("sc: ${sc.offset}");
       //   return true;
       // },
       child: ListView.separated(
@@ -170,7 +176,6 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
             return Container(
               color: Colors.red,
               height: 5,
-              margin: const EdgeInsets.only(left: 10, right: 10),
             );
           },
           itemBuilder: (BuildContext context, int index) {
@@ -178,7 +183,6 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
             String text = "文本$index";
             return Container(
               height: 60,
-              margin: const EdgeInsets.only(left: 10, right: 10),
               color: Colors.green,
               alignment: Alignment.center,
               child: Text(text),

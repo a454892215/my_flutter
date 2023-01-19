@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_lib_3/my_widgets/keep_alive_page.dart';
-import 'package:my_flutter_lib_3/my_widgets/scroll_radio_group.dart';
-
-import '../my_widgets/indicator_tab_group.dart';
 import '../util/Log.dart';
 
 void main() {

@@ -29,13 +29,12 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     for (int i = 0; i < 20; i++) {
       list.add("data:-$i");
     }
+    addDataForList2(40);
   }
-
-  late BuildContext context;
 
   @override
   Widget build(BuildContext context) {
-    this.context = context;
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => _MyValuesNotifier()),
@@ -69,9 +68,10 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                 width: refresherContentWidth,
                 onRefresh: (state) async {
                   await Future.delayed(const Duration(milliseconds: 2000));
+                  addDataForList2(10);
                   state.notifyRefreshFinish();
                 },
-                onLoadMore: (state) {  },
+                onLoadMore: (state) {},
                 child: Container(
                   height: refresherContentHeight,
                   width: refresherContentWidth,
@@ -163,46 +163,39 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         });
   }
 
+  var list2 = [];
+
   /// 3. 带有分割线的 按需加载： ListView.separated
   Widget buildListView2(ScrollController sc) {
-    var list2 = getList2();
-    return NotificationListener(
-      // onNotification: (Notification notifier){
-      //   Log.d("sc: ${sc.offset}");
-      //   return true;
-      // },
-      child: ListView.separated(
-          key: UniqueKey(),
-          itemCount: list2.length,
-          physics:  MyClampingScrollPhysics(),
-          shrinkWrap: false,
-          reverse: true,
-          controller: sc,
-          separatorBuilder: (BuildContext context, int index) {
-            return Container(
-              color: Colors.red,
-              height: 5,
-            );
-          },
-          itemBuilder: (BuildContext context, int index) {
-            // Log.d("itemBuilder index: $index");
-            String text = "文本$index";
-            return Container(
-              height: 60,
-              color: Colors.green,
-              alignment: Alignment.center,
-              child: Text(text),
-            );
-          }),
-    );
+    return ListView.separated(
+        key: UniqueKey(),
+        itemCount: list2.length,
+        physics: MyClampingScrollPhysics(),
+        shrinkWrap: false,
+        reverse: true,
+        controller: sc,
+        separatorBuilder: (BuildContext context, int index) {
+          return Container(
+            color: Colors.red,
+            height: 5,
+          );
+        },
+        itemBuilder: (BuildContext context, int index) {
+          // Log.d("itemBuilder index: $index");
+          String text = "文本$index";
+          return Container(
+            height: 60,
+            color: Colors.green,
+            alignment: Alignment.center,
+            child: Text(text),
+          );
+        });
   }
 
-  List<String> getList2() {
-    List<String> list = [];
-    for (int i = 0; i < 40; i++) {
-      list.add("data:-$i");
+  void addDataForList2(int size) {
+    for (int i = 0; i < size; i++) {
+      list2.add("data");
     }
-    return list;
   }
 }
 

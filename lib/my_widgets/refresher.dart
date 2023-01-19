@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../util/Log.dart';
 import 'comm_anim2.dart';
+import 'my_physics.dart';
 
 void main() {}
 
@@ -117,16 +118,20 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
     var min = position.minScrollExtent;
     var pixels = position.pixels;
     double newValue = notifier.value + e.delta.dy;
+    MyClampingScrollPhysics physics = sc.position.physics as MyClampingScrollPhysics;
     if (pixels >= max && e.delta.dy > 0) {
       // header 向下滑动
       if (newValue > 0) newValue = 0;
       notifier.value = newValue;
       Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   min:$min   pixels:$pixels  newValue:$newValue ");
-    } else if (notifier.value <= 0 && notifier.value >= -headerHeight && e.delta.dy < 0) {
+    } else if (notifier.value <= 0 && notifier.value > -headerHeight && e.delta.dy < 0) {
       // header 向上滑动
       if (newValue < -headerHeight) newValue = -headerHeight;
+      physics.scrollEnable = false;
       notifier.value = newValue;
-      Log.d("header 向上滑动 :  ${e.delta}  max:$max   min:$min   pixels:$pixels  newValue:$newValue ");
+      Log.d("header 向上滑动 :  ${e.delta}  max:$max   min:$min   pixels:$pixels  newValue:$newValue physics:$physics");
+    } else {
+      physics.scrollEnable = true;
     }
   }
 }

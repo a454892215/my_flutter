@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../my_widgets/my_physics.dart';
 import '../util/Log.dart';
 
 /// SmartRefresher 下拉刷新，和加载更多
@@ -168,7 +169,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
       child: ListView.separated(
           key: UniqueKey(),
           itemCount: list2.length,
-          physics: const ClampingScrollPhysics(),
+          physics:  MyClampingScrollPhysics(),
           shrinkWrap: false,
           reverse: true,
           controller: sc,

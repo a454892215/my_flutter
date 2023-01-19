@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:my_flutter_lib_3/pages/err_page.dart';
 import 'package:my_flutter_lib_3/routers.dart';
@@ -133,10 +134,18 @@ class AppInitBinding extends Bindings {
 }
 
 class AppInitController extends GetxController {
+
+  @override
+  void onInit() {
+    /// 强制竖屏
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+    super.onInit();
+  }
   @override
   Future<void> onReady() async {
     super.onReady();
     var appInfo = await EnvironmentConfig.getAppInfo();
     Log.i(EnvironmentConfig.getEnvInfo() + appInfo);
+
   }
 }

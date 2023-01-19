@@ -76,7 +76,8 @@ class MyBouncingScrollPhysics extends ScrollPhysics {
   Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
     final Tolerance tolerance = this.tolerance;
     if (velocity.abs() >= tolerance.velocity || position.outOfRange) {
-      Log.d("createBallisticSimulation======velocity：$velocity=>${tolerance.velocity}  ${position.outOfRange}");
+      Log.d("createBallisticSimulation spring：$spring  position:${position.pixels}  velocity:$velocity  "
+          "leadingExtent:${position.minScrollExtent} trailingExtent:${position.maxScrollExtent}  tolerance:$tolerance");
       return BouncingScrollSimulation(
         spring: spring,
         position: position.pixels,

@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_flutter_lib_3/my_widgets/refresher.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
-import '../my_widgets/my_physics.dart';
 import '../util/Log.dart';
 
 /// SmartRefresher 下拉刷新，和加载更多
@@ -19,7 +18,7 @@ class SmartRefreshSamplePage extends StatefulWidget {
 
 class _SamplePageState extends State with SingleTickerProviderStateMixin {
   List<String> list = [];
-  final ScrollController _scrollController = ScrollController();
+
   final RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   @override
@@ -28,7 +27,6 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     for (int i = 0; i < 20; i++) {
       list.add("data:-$i");
     }
-    _scrollController.addListener(() {});
   }
 
   late BuildContext context;
@@ -43,6 +41,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
       child: buildScaffold(),
     );
   }
+
+  ScrollController sc = ScrollController();
 
   Scaffold buildScaffold() {
     return Scaffold(
@@ -59,12 +59,14 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               color: const Color(0xffa8a8a8),
               child: buildSmartRefresher(),
             ),
-            Container(
-              height: 300,
-              padding: const EdgeInsets.all(10),
-              color: const Color(0xffa8a8a8),
-              child: buildListView2(),
-            ),
+            Refresher(
+                sc: sc,
+                child: Container(
+                  height: 300,
+                  padding: const EdgeInsets.all(10),
+                  color: const Color(0xffa8a8a8),
+                  child: buildListView2(sc),
+                )),
           ],
         ),
       ),
@@ -128,7 +130,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         physics: const BouncingScrollPhysics(),
         shrinkWrap: false,
         reverse: true,
-        controller: _scrollController,
+        controller: ScrollController(),
         separatorBuilder: (BuildContext context, int index) {
           return Container(
             color: Colors.red,
@@ -150,36 +152,42 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   }
 
   /// 3. 带有分割线的 按需加载： ListView.separated
-  ListView buildListView2() {
+  Widget buildListView2(ScrollController sc) {
     var list2 = getList2();
-    return ListView.separated(
-        key: UniqueKey(),
-        itemCount: list2.length,
-        physics: const MyBouncingScrollPhysics(),
-        shrinkWrap: false,
-        reverse: true,
-        controller: _scrollController,
-        separatorBuilder: (BuildContext context, int index) {
-          return Container(
-            color: Colors.red,
-            height: 5,
-            margin: const EdgeInsets.only(left: 10, right: 10),
-          );
-        },
-        itemBuilder: (BuildContext context, int index) {
-          // Log.d("itemBuilder index: $index");
-          String text = "文本$index";
-          return Container(
-            height: 60,
-            margin: const EdgeInsets.only(left: 10, right: 10),
-            color: Colors.green,
-            alignment: Alignment.center,
-            child: Text(text),
-          );
-        });
+    return NotificationListener(
+      // onNotification: (Notification notifier){
+      //   Log.d("sc: ${sc.offset}  position:${sc.position}  notifier: $notifier ");
+      //   return true;
+      // },
+      child: ListView.separated(
+          key: UniqueKey(),
+          itemCount: list2.length,
+          physics: const ClampingScrollPhysics(),
+          shrinkWrap: false,
+          reverse: true,
+          controller: sc,
+          separatorBuilder: (BuildContext context, int index) {
+            return Container(
+              color: Colors.red,
+              height: 5,
+              margin: const EdgeInsets.only(left: 10, right: 10),
+            );
+          },
+          itemBuilder: (BuildContext context, int index) {
+            // Log.d("itemBuilder index: $index");
+            String text = "文本$index";
+            return Container(
+              height: 60,
+              margin: const EdgeInsets.only(left: 10, right: 10),
+              color: Colors.green,
+              alignment: Alignment.center,
+              child: Text(text),
+            );
+          }),
+    );
   }
 
-  List<String> getList2(){
+  List<String> getList2() {
     List<String> list = [];
     for (int i = 0; i < 40; i++) {
       list.add("data:-$i");

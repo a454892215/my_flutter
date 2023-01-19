@@ -28,7 +28,7 @@ class Refresher extends StatefulWidget {
 
 class _State extends State<Refresher> with TickerProviderStateMixin {
   late ScrollController sc = widget.sc;
-  static double headerHeight = 120;
+  static double headerHeight = 180;
 
   late final ValueNotifier<double> notifier = ValueNotifier<double>(-headerHeight);
 
@@ -79,6 +79,8 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
           offset: Offset(0, notifier.value),
           child: Listener(
             onPointerMove: onPointerMove,
+            onPointerUp: onPointerUp,
+            onPointerCancel: onPointerCancel,
             child: widget.child,
           ),
         ),
@@ -91,6 +93,7 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
       height: headerHeight,
       color: Colors.orange,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Container(
             color: Colors.yellow,
@@ -112,26 +115,49 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
     );
   }
 
+  double max = 0;
+  double min = double.maxFinite;
+  double pixels = 0;
+
+  void onPointerUp(PointerUpEvent event) {
+    if (max > 0 && pixels >= max && notifier.value > -headerHeight) {
+      anim.update(-headerHeight, begin: notifier.value);
+      anim.controller.forward(from: 0);
+      Log.d("播放头部收回动画: ${anim.controller.value} ${anim.animation?.value}  ${notifier.value}");
+    }else{
+      Log.d("头部收回动画条件不满足：");
+    }
+  }
+
+  void onPointerCancel(PointerCancelEvent event) {
+    Log.d("========onPointerCancel======：");
+  }
+
   void onPointerMove(PointerMoveEvent e) {
     ScrollPosition position = sc.position;
-    var max = position.maxScrollExtent;
-    var min = position.minScrollExtent;
-    var pixels = position.pixels;
+    max = position.maxScrollExtent;
+    min = position.minScrollExtent;
+    pixels = position.pixels;
     double newValue = notifier.value + e.delta.dy;
     MyClampingScrollPhysics physics = sc.position.physics as MyClampingScrollPhysics;
-    if (pixels >= max && e.delta.dy > 0) {
-      // header 向下滑动
-      if (newValue > 0) newValue = 0;
-      notifier.value = newValue;
-      Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   min:$min   pixels:$pixels  newValue:$newValue ");
-    } else if (notifier.value <= 0 && notifier.value > -headerHeight && e.delta.dy < 0) {
-      // header 向上滑动
-      if (newValue < -headerHeight) newValue = -headerHeight;
-      physics.scrollEnable = false;
-      notifier.value = newValue;
-      Log.d("header 向上滑动 :  ${e.delta}  max:$max   min:$min   pixels:$pixels  newValue:$newValue physics:$physics");
+    //header scroll
+    if (pixels >= max) {
+      if (e.delta.dy > 0) {
+        // header 向下滑动
+        if (newValue > 0) newValue = 0;
+        notifier.value = newValue;
+        Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   min:$min   pixels:$pixels  newValue:$newValue ");
+      } else if (e.delta.dy < 0) {
+        // header 向上滑动
+        physics.scrollEnable = false;
+        if (newValue < -headerHeight) newValue = -headerHeight;
+        notifier.value = newValue;
+        Log.d("header 向上滑动 :  ${e.delta}  max:$max   min:$min  newValue:$newValue");
+      }
+    } else if (pixels <= min) {
     } else {
       physics.scrollEnable = true;
     }
+    Log.d("pixels:$pixels  max:$max");
   }
 }

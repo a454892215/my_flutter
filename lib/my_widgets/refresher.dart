@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../util/Log.dart';
 import 'comm_anim2.dart';
 import 'my_physics.dart';
+import 'dart:math' as math;
 
 void main() {}
 
@@ -71,24 +72,27 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
     );
   }
 
-  Column _buildContent() {
-    return Column(
-      children: [
-        _buildColumn(),
-        Transform.translate(
-          offset: Offset(0, notifier.value),
-          child: Listener(
-            onPointerMove: onPointerMove,
-            onPointerUp: onPointerUp,
-            onPointerCancel: onPointerCancel,
-            child: widget.child,
-          ),
+  ///  offset: Offset(0, notifier.value),
+  Widget _buildContent() {
+    return ClipRRect(
+      child: Transform.translate(
+        offset: Offset(0, notifier.value),
+        child: Column(
+          children: [
+            _buildHeader(),
+            Listener(
+              onPointerMove: onPointerMove,
+              onPointerUp: onPointerUp,
+              onPointerCancel: onPointerCancel,
+              child: widget.child,
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
-  Widget _buildColumn() {
+  Widget _buildHeader() {
     return Container(
       height: headerHeight,
       color: Colors.orange,
@@ -124,7 +128,7 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
       anim.update(-headerHeight, begin: notifier.value);
       anim.controller.forward(from: 0);
       Log.d("播放头部收回动画: ${anim.controller.value} ${anim.animation?.value}  ${notifier.value}");
-    }else{
+    } else {
       Log.d("头部收回动画条件不满足：");
     }
   }
@@ -144,9 +148,15 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
     if (pixels >= max) {
       if (e.delta.dy > 0) {
         // header 向下滑动
+        physics.scrollEnable = false;
+
+        /// scrolledHeaderY = 0;
+        double scrolledHeaderY = headerHeight + notifier.value;
+        double scrolledRate = scrolledHeaderY / headerHeight;
+        newValue = notifier.value + (e.delta.dy * (1 - scrolledRate));
         if (newValue > 0) newValue = 0;
         notifier.value = newValue;
-        Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   min:$min   pixels:$pixels  newValue:$newValue ");
+      //  Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   pixels:$pixels  newValue:$newValue  rate:$scrolledRate");
       } else if (e.delta.dy < 0) {
         // header 向上滑动
         physics.scrollEnable = false;

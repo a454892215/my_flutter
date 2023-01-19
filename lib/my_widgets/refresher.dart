@@ -27,19 +27,17 @@ class Refresher extends StatefulWidget {
 
 class _State extends State<Refresher> with TickerProviderStateMixin {
   late ScrollController sc = widget.sc;
+  static double headerHeight = 120;
 
-  late double curAnimValue = 0;
-  late final ValueNotifier<double> notifier = ValueNotifier<double>(curAnimValue);
+  late final ValueNotifier<double> notifier = ValueNotifier<double>(-headerHeight);
 
   late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
     ..init(200, this, 0, 1)
     ..addListener(onAnimUpdate);
   int state = 0;
-  double headerHeight = 120;
 
   void onAnimUpdate() {
-    curAnimValue = anim.animation?.value ?? 0;
-    notifier.value = curAnimValue;
+    notifier.value = anim.animation?.value ?? -headerHeight;
     if (anim.controller.isCompleted && state != 1) {
       state = 1;
     } else if (anim.controller.isDismissed && state != -1) {
@@ -59,11 +57,14 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
     return ValueListenableBuilder(
       valueListenable: notifier,
       builder: (a, b, c) {
-        print("===ValueListenableBuilder=${notifier.value}===");
         return SizedBox(
           width: widget.width,
           height: widget.height,
-          child: OverflowBox(alignment: Alignment.topLeft, maxHeight: widget.height * 3, child: _buildContent()),
+          child: OverflowBox(
+            alignment: Alignment.topLeft,
+            maxHeight: widget.height * 3,
+            child: _buildContent(),
+          ),
         );
       },
     );
@@ -71,11 +72,10 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
 
   Column _buildContent() {
     return Column(
-      //  mainAxisSize: MainAxisSize.min,
       children: [
         _buildColumn(),
         Transform.translate(
-          offset: Offset(0, -headerHeight),
+          offset: Offset(0, notifier.value),
           child: Listener(
             onPointerMove: onPointerMove,
             child: widget.child,
@@ -86,24 +86,28 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
   }
 
   Widget _buildColumn() {
-    return Column(
-      children: [
-        Container(
-          color: Colors.yellow,
-          height: 40,
-          width: widget.width,
-        ),
-        Container(
-          color: Colors.red,
-          height: 40,
-          width: widget.width,
-        ),
-        Container(
-          color: Colors.blue,
-          height: 40,
-          width: widget.width,
-        ),
-      ],
+    return Container(
+      height: headerHeight,
+      color: Colors.orange,
+      child: Column(
+        children: [
+          Container(
+            color: Colors.yellow,
+            height: 40,
+            width: widget.width,
+          ),
+          Container(
+            color: Colors.red,
+            height: 40,
+            width: widget.width,
+          ),
+          Container(
+            color: Colors.blue,
+            height: 40,
+            width: widget.width,
+          ),
+        ],
+      ),
     );
   }
 
@@ -112,8 +116,17 @@ class _State extends State<Refresher> with TickerProviderStateMixin {
     var max = position.maxScrollExtent;
     var min = position.minScrollExtent;
     var pixels = position.pixels;
-    if (pixels >= max || pixels <= min) {
-      Log.d("越界滑动状态 onTap:  ${e.delta}  max:$max   min:$min   pixels:$pixels");
+    double newValue = notifier.value + e.delta.dy;
+    if (pixels >= max && e.delta.dy > 0) {
+      // header 向下滑动
+      if (newValue > 0) newValue = 0;
+      notifier.value = newValue;
+      Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   min:$min   pixels:$pixels  newValue:$newValue ");
+    } else if (notifier.value <= 0 && notifier.value >= -headerHeight && e.delta.dy < 0) {
+      // header 向上滑动
+      if (newValue < -headerHeight) newValue = -headerHeight;
+      notifier.value = newValue;
+      Log.d("header 向上滑动 :  ${e.delta}  max:$max   min:$min   pixels:$pixels  newValue:$newValue ");
     }
   }
 }

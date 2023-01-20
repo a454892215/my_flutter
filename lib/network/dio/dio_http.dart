@@ -1,20 +1,29 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:fast_gbk/fast_gbk.dart';
 
 import '../../util/Log.dart';
 import '../http_inter.dart';
 
 class DioHttp implements HttpInter {
-  DioHttp() {
+  DioHttp({this.isGbk = false}) {
     init();
   }
 
   final Dio _dio = Dio();
+  final bool isGbk;
+
+  String gbkDecoder(List<int> responseBytes, RequestOptions options, ResponseBody responseBody) {
+    return gbk.decode(responseBytes);
+  }
 
   void init() {
     BaseOptions options = _dio.options;
     options.headers['Access-Control-Allow-Origin'] = '*';
+    if (isGbk) {
+      options.responseDecoder = gbkDecoder;
+    }
     // Log.d("==DioHttp===init==${options.headers}");
   }
 

@@ -1,3 +1,4 @@
+
 import 'package:dio/dio.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:my_flutter_lib_3/network/http_request.dart';
@@ -16,7 +17,7 @@ class WebParserController extends GetxController {
 
   Future<void> request(String url) async {
     Log.d("==========开始请求数据==========");
-    HttpUtil httpUtil = HttpUtil(httpInter: DioHttp());
+    HttpUtil httpUtil = HttpUtil(httpInter: DioHttp(isGbk: true));
     Response<dynamic> response = await httpUtil.get(url, null);
     var statusCode = response.statusCode;
     String data = response.data;

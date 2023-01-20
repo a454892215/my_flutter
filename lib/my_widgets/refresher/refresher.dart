@@ -16,9 +16,11 @@ class Refresher extends StatefulWidget {
     required this.sc,
     required this.height,
     required this.width,
-    this.onRefresh,
-    this.onLoadMore,
+    this.headerLoadEnable = true,
+    this.onHeaderLoad,
+    this.onFooterLoad,
     required this.controller,
+    // false表示头部为刷新功能 true表示头部为加载更多功能, 加载更多可能会自动偏移以自然显示出部分加载的新内容
     this.headerIsLoadMore = false,
   });
 
@@ -26,9 +28,10 @@ class Refresher extends StatefulWidget {
   final ScrollController sc;
   final double height;
   final double width;
-  final OnRefresh? onRefresh;
-  final OnLoadMore? onLoadMore;
+  final OnRefresh? onHeaderLoad;
+  final OnLoadMore? onFooterLoad;
   final bool headerIsLoadMore;
+  final bool headerLoadEnable;
   final RefresherController controller;
 
   @override
@@ -177,7 +180,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     //header scroll
     physics.scrollEnable = headerIsHidden();
     if (pixels >= max) {
-      handleHeaderScroll(e, newValue);
+      if (widget.headerLoadEnable) {
+        handleHeaderScroll(e, newValue);
+      }
     } else if (pixels <= min) {}
     // Log.d("pixels:$pixels  max:$max ");
   }
@@ -214,24 +219,14 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       // 释放加载 => 正在加载 或下拉加载状态不变，动画隐藏头
       if (curRefreshState == RefreshState.header_release_load) {
         curRefreshState = RefreshState.header_loading;
-        if (widget.onRefresh != null) {
-          widget.onRefresh!(this);
+        if (widget.onHeaderLoad != null) {
+          widget.onHeaderLoad!(this);
         }
       }
     } else if (switchType == 3) {
       // 正在加载->加载结束
       if (curRefreshState == RefreshState.header_loading) {
-        curRefreshState = RefreshState.header_load_finished;
-        notifier.value += 0.1; // 更新UI
-        // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
-        await Future.delayed(const Duration(milliseconds: 260));
-        if (widget.headerIsLoadMore && widget.controller.isHeaderOffsetOnLoadFinished) {
-          refreshFinishOffset = -headerHeight;
-          notifier.value -= 0.1; // 更新UI
-          sc.jumpTo(sc.offset + headerTriggerRefreshDistance);
-        }
-        await Future.delayed(const Duration(milliseconds: 40));
-        animUpdateHeader();
+        await onLoadFinished();
       }
     } else if (switchType == 4) {
       // 加载结束 -> 下拉加载
@@ -239,6 +234,20 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
         curRefreshState = RefreshState.header_pull_down_load;
       }
     }
+  }
+
+  Future<void> onLoadFinished() async {
+    curRefreshState = RefreshState.header_load_finished;
+    notifier.value += 0.1; // 更新UI
+    // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
+    await Future.delayed(const Duration(milliseconds: 260));
+    if (widget.headerIsLoadMore && widget.controller.isHeaderOffsetOnLoadFinished) {
+      refreshFinishOffset = -headerHeight;
+      notifier.value -= 0.1; // 更新UI
+      sc.jumpTo(sc.offset + headerTriggerRefreshDistance);
+    }
+    await Future.delayed(const Duration(milliseconds: 40));
+    animUpdateHeader();
   }
 
   void notifyRefreshFinish() {

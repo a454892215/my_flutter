@@ -61,24 +61,29 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               color: const Color(0xffa8a8a8),
               child: buildSmartRefresher(),
             ),
-            Refresher(
-                sc: sc,
-                height: refresherContentHeight,
-                width: refresherContentWidth,
-                onRefresh: (state) async {
-                  await Future.delayed(const Duration(milliseconds: 1000));
-                  addDataForList2(10);
-                  listView2Notifier.value++;
-                  state.notifyRefreshFinish();
-                },
-                onLoadMore: (state) {},
-                child: Container(
-                  height: refresherContentHeight,
-                  width: refresherContentWidth,
-                  color: const Color(0xffaeeeae),
-                  padding: const EdgeInsets.all(10),
-                  child: buildListView2(sc),
-                )),
+            Expanded(
+                child: LayoutBuilder(builder: (context,  constraint){
+                  Log.d("constraint : ${constraint.maxHeight}");
+                  refresherContentHeight = constraint.maxHeight;
+                  return Refresher(
+                      sc: sc,
+                      height: refresherContentHeight,
+                      width: refresherContentWidth,
+                      onRefresh: (state) async {
+                        await Future.delayed(const Duration(milliseconds: 1000));
+                        addDataForList2(10);
+                        listView2Notifier.value++;
+                        state.notifyRefreshFinish();
+                      },
+                      onLoadMore: (state) {},
+                      child: Container(
+                        height: refresherContentHeight,
+                        width: refresherContentWidth,
+                        color: const Color(0xffaeeeae),
+                        padding: const EdgeInsets.all(10),
+                        child: buildListView2(sc),
+                      ));
+                },)),
           ],
         ),
       ),
@@ -165,6 +170,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   var list2 = [];
   late final ValueNotifier<int> listView2Notifier = ValueNotifier<int>(0);
+
   /// 3. 带有分割线的 按需加载： ListView.separated
   Widget buildListView2(ScrollController sc) {
     return ValueListenableBuilder(

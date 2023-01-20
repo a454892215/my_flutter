@@ -48,12 +48,17 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   int state = 0;
   double headerTriggerRefreshDistance = headerIndicatorHeight;
 
+  /// 刷新结束后，瞬时偏移量，使部分新内容自然显示出来
+  double refreshFinishOffset = 0;
+
   void onAnimUpdate() {
     notifier.value = anim.animation?.value ?? -headerHeight;
     if (anim.controller.isCompleted && state != 1) {
       state = 1;
       if (curRefreshState == RefreshState.refresh_finished) {
+        // 刷新完成->头部收回（恢复状态）
         updateState(getScrolledHeaderY(), 4);
+        refreshFinishOffset = 0;
       }
     } else if (anim.controller.isDismissed && state != -1) {
       state = -1;
@@ -88,19 +93,26 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   ///  offset: Offset(0, notifier.value),
   Widget _buildContent() {
     return ClipRRect(
-      child: Transform.translate(
-        offset: Offset(0, notifier.value),
-        child: Column(
-          children: [
-            _buildHeader(),
-            Listener(
-              onPointerMove: onPointerMove,
-              onPointerUp: onPointerUp,
-              onPointerCancel: onPointerCancel,
-              child: widget.child,
-            ),
-          ],
-        ),
+      child: Stack(
+        alignment: Alignment.topLeft,
+        children: [
+          Positioned(
+              left: 0,
+              top: headerHeight,
+              child: Transform.translate(
+                offset: Offset(0, refreshFinishOffset != 0 ? refreshFinishOffset : notifier.value),
+                child: Listener(
+                  onPointerMove: onPointerMove,
+                  onPointerUp: onPointerUp,
+                  onPointerCancel: onPointerCancel,
+                  child: widget.child,
+                ),
+              )),
+          Transform.translate(
+            offset: Offset(0, notifier.value),
+            child: _buildHeader(),
+          ),
+        ],
       ),
     );
   }
@@ -133,8 +145,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       // 释放刷新 => 正在刷新 或下拉刷新状态不变，回到隐藏头
       updateState(getScrolledHeaderY(), 2);
       animUpdateHeader();
-    } else {
-      Log.d("头部收回动画条件不满足：");
     }
   }
 
@@ -213,7 +223,11 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
         curRefreshState = RefreshState.refresh_finished;
         notifier.value += 0.1; // 更新UI
         // 在次状态停顿200毫秒后隐藏头部，恢复下拉刷新状态
-        await Future.delayed(const Duration(milliseconds: 300));
+        await Future.delayed(const Duration(milliseconds: 250));
+        refreshFinishOffset = -headerHeight;
+        notifier.value -= 0.1; // 更新UI
+        sc.jumpTo(sc.offset + headerTriggerRefreshDistance);
+        await Future.delayed(const Duration(milliseconds: 40));
         animUpdateHeader();
       }
     } else if (switchType == 4) {

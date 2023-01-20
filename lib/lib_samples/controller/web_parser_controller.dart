@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:my_flutter_lib_3/network/http_request.dart';
-
-import '../../encode/gbk/convert.dart';
 import '../../network/dio/dio_http.dart';
 import '../../util/Log.dart';
 
@@ -22,10 +20,6 @@ class WebParserController extends GetxController {
     Response<dynamic> response = await httpUtil.get(url, null);
     var statusCode = response.statusCode;
     String data = response.data;
-    GbkEncoder gbkEncoder = const GbkEncoder();
-    List<int> byte = gbkEncoder.convert(data);
-    GbkDecoder gbkDecoder = const GbkDecoder();
-    data = gbkDecoder.convert(byte);
-    Log.d("statusCode:$statusCode    data:$data ");
+    Log.d("statusCode:$statusCode    data:$data byte:$data}");
   }
 }

@@ -167,11 +167,16 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     double newValue = notifier.value + e.delta.dy;
     MyClampingScrollPhysics physics = sc.position.physics as MyClampingScrollPhysics;
     //header scroll
+    if (headerIsHidden()) {
+      physics.scrollEnable = true;
+    } else {
+      physics.scrollEnable = false;
+    }
     if (pixels >= max) {
       double scrolledHeaderY = getScrolledHeaderY();
       if (e.delta.dy > 0) {
         // header 向下滑动
-        physics.scrollEnable = false;
+
         double scrolledRate = scrolledHeaderY / headerHeight;
         newValue = notifier.value + (e.delta.dy * (1 - scrolledRate));
         if (newValue > 0) newValue = 0;
@@ -179,18 +184,18 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
         //  Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   pixels:$pixels  newValue:$newValue  rate:$scrolledRate");
       } else if (e.delta.dy < 0) {
         // header 向上滑动
-        physics.scrollEnable = false;
         if (newValue < -headerHeight) newValue = -headerHeight;
         notifier.value = newValue;
         // Log.d("header 向上滑动 :  ${e.delta}  max:$max   min:$min  newValue:$newValue");
       }
       //头部触摸移动只有两种状态切换（下拉刷新，释放刷新）
       updateState(scrolledHeaderY, 1);
-    } else if (pixels <= min) {
-    } else {
-      physics.scrollEnable = true;
-    }
+    } else if (pixels <= min) {}
     // Log.d("pixels:$pixels  max:$max ");
+  }
+
+  bool headerIsHidden() {
+    return notifier.value <= -headerHeight;
   }
 
   Future<void> updateState(double scrolledHeaderY, int switchType) async {

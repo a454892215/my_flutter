@@ -167,11 +167,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     double newValue = notifier.value + e.delta.dy;
     MyClampingScrollPhysics physics = sc.position.physics as MyClampingScrollPhysics;
     //header scroll
-    if (headerIsHidden()) {
-      physics.scrollEnable = true;
-    } else {
-      physics.scrollEnable = false;
-    }
+    physics.scrollEnable = headerIsHidden();
     if (pixels >= max) {
       double scrolledHeaderY = getScrolledHeaderY();
       if (e.delta.dy > 0) {

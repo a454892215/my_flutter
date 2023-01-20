@@ -1,6 +1,6 @@
 enum RefreshState {
-  pull_down_refresh,
-  release_refresh,
-  refreshing,
-  refresh_finished,
+  header_pull_down_load,
+  header_release_load,
+  header_loading,
+  header_load_finished,
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
-
-import '../../util/Log.dart';
 import '../comm_anim2.dart';
 import '../my_physics.dart';
 import 'header_indicator_widget.dart';
@@ -18,16 +16,20 @@ class Refresher extends StatefulWidget {
     required this.sc,
     required this.height,
     required this.width,
-    required this.onRefresh,
-    required this.onLoadMore,
+    this.onRefresh,
+    this.onLoadMore,
+    required this.controller,
+    this.headerIsLoadMore = false,
   });
 
   final Widget child;
   final ScrollController sc;
   final double height;
   final double width;
-  final OnRefresh onRefresh;
-  final OnLoadMore onLoadMore;
+  final OnRefresh? onRefresh;
+  final OnLoadMore? onLoadMore;
+  final bool headerIsLoadMore;
+  final RefresherController controller;
 
   @override
   State<StatefulWidget> createState() {
@@ -48,15 +50,15 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   int state = 0;
   double headerTriggerRefreshDistance = headerIndicatorHeight;
 
-  /// 刷新结束后，瞬时偏移量，使部分新内容自然显示出来
+  /// 加载结束后，瞬时偏移量，使部分新内容自然显示出来
   double refreshFinishOffset = 0;
 
   void onAnimUpdate() {
     notifier.value = anim.animation?.value ?? -headerHeight;
     if (anim.controller.isCompleted && state != 1) {
       state = 1;
-      if (curRefreshState == RefreshState.refresh_finished) {
-        // 刷新完成->头部收回（恢复状态）
+      if (curRefreshState == RefreshState.header_load_finished) {
+        // 加载完成->头部收回（恢复状态）
         updateState(getScrolledHeaderY(), 4);
         refreshFinishOffset = 0;
       }
@@ -90,7 +92,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     );
   }
 
-  ///  offset: Offset(0, notifier.value),
   Widget _buildContent() {
     return ClipRRect(
       child: Stack(
@@ -104,7 +105,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
                 child: Listener(
                   onPointerMove: onPointerMove,
                   onPointerUp: onPointerUp,
-                  onPointerCancel: onPointerCancel,
                   child: widget.child,
                 ),
               )),
@@ -116,6 +116,8 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       ),
     );
   }
+
+  HeaderWidgetBuilder headerWidgetBuilder = HeaderWidgetBuilder();
 
   Widget _buildHeader() {
     return Container(
@@ -129,7 +131,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
             height: headerIndicatorHeight,
             width: widget.width,
             alignment: Alignment.center,
-            child: getHeaderWidget(curRefreshState),
+            child: headerWidgetBuilder.getHeaderWidget(curRefreshState),
           ),
         ],
       ),
@@ -142,16 +144,16 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   void onPointerUp(PointerUpEvent event) {
     if (max > 0 && pixels >= max && notifier.value > -headerHeight) {
-      // 释放刷新 => 正在刷新 或下拉刷新状态不变，回到隐藏头
+      // 释放加载 => 正在加载 或下拉加载状态不变，回到隐藏头
       updateState(getScrolledHeaderY(), 2);
       animUpdateHeader();
     }
   }
 
   void animUpdateHeader() {
-    if (curRefreshState == RefreshState.refreshing) {
+    if (curRefreshState == RefreshState.header_loading) {
       anim.update(-(headerHeight - headerTriggerRefreshDistance), begin: notifier.value);
-    } else if (curRefreshState == RefreshState.refresh_finished) {
+    } else if (curRefreshState == RefreshState.header_load_finished) {
       anim.update(-headerHeight, begin: notifier.value);
     } else {
       anim.update(-headerHeight, begin: notifier.value);
@@ -163,11 +165,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     return headerHeight + notifier.value;
   }
 
-  void onPointerCancel(PointerCancelEvent event) {
-    Log.d("========onPointerCancel======：");
-  }
-
-  RefreshState curRefreshState = RefreshState.pull_down_refresh;
+  RefreshState curRefreshState = RefreshState.header_pull_down_load;
 
   void onPointerMove(PointerMoveEvent e) {
     ScrollPosition position = sc.position;
@@ -179,25 +177,26 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     //header scroll
     physics.scrollEnable = headerIsHidden();
     if (pixels >= max) {
-      double scrolledHeaderY = getScrolledHeaderY();
-      if (e.delta.dy > 0) {
-        // header 向下滑动
-
-        double scrolledRate = scrolledHeaderY / headerHeight;
-        newValue = notifier.value + (e.delta.dy * (1 - scrolledRate));
-        if (newValue > 0) newValue = 0;
-        notifier.value = newValue;
-        //  Log.d("header 向下滑动 越界滑动状态 :  ${e.delta}  max:$max   pixels:$pixels  newValue:$newValue  rate:$scrolledRate");
-      } else if (e.delta.dy < 0) {
-        // header 向上滑动
-        if (newValue < -headerHeight) newValue = -headerHeight;
-        notifier.value = newValue;
-        // Log.d("header 向上滑动 :  ${e.delta}  max:$max   min:$min  newValue:$newValue");
-      }
-      //头部触摸移动只有两种状态切换（下拉刷新，释放刷新）
-      updateState(scrolledHeaderY, 1);
+      handleHeaderScroll(e, newValue);
     } else if (pixels <= min) {}
     // Log.d("pixels:$pixels  max:$max ");
+  }
+
+  void handleHeaderScroll(PointerMoveEvent e, double newValue) {
+    double scrolledHeaderY = getScrolledHeaderY();
+    if (e.delta.dy > 0) {
+      // header 向下滑动
+      double scrolledRate = scrolledHeaderY / headerHeight;
+      newValue = notifier.value + (e.delta.dy * (1 - scrolledRate));
+      if (newValue > 0) newValue = 0;
+      notifier.value = newValue;
+    } else if (e.delta.dy < 0) {
+      // header 向上滑动
+      if (newValue < -headerHeight) newValue = -headerHeight;
+      notifier.value = newValue;
+    }
+    //头部触摸移动只有两种状态切换（下拉加载，释放加载）
+    updateState(scrolledHeaderY, 1);
   }
 
   bool headerIsHidden() {
@@ -205,41 +204,50 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   Future<void> updateState(double scrolledHeaderY, int switchType) async {
-    if (switchType == 1 && curRefreshState != RefreshState.refreshing) {
+    if (switchType == 1 && curRefreshState != RefreshState.header_loading) {
       if (scrolledHeaderY >= headerTriggerRefreshDistance) {
-        curRefreshState = RefreshState.release_refresh;
+        curRefreshState = RefreshState.header_release_load;
       } else {
-        curRefreshState = RefreshState.pull_down_refresh;
+        curRefreshState = RefreshState.header_pull_down_load;
       }
     } else if (switchType == 2) {
-      // 释放刷新 => 正在刷新 或下拉刷新状态不变，动画隐藏头
-      if (curRefreshState == RefreshState.release_refresh) {
-        curRefreshState = RefreshState.refreshing;
-        widget.onRefresh(this);
+      // 释放加载 => 正在加载 或下拉加载状态不变，动画隐藏头
+      if (curRefreshState == RefreshState.header_release_load) {
+        curRefreshState = RefreshState.header_loading;
+        if (widget.onRefresh != null) {
+          widget.onRefresh!(this);
+        }
       }
     } else if (switchType == 3) {
-      // 正在刷新->刷新结束
-      if (curRefreshState == RefreshState.refreshing) {
-        curRefreshState = RefreshState.refresh_finished;
+      // 正在加载->加载结束
+      if (curRefreshState == RefreshState.header_loading) {
+        curRefreshState = RefreshState.header_load_finished;
         notifier.value += 0.1; // 更新UI
-        // 在次状态停顿200毫秒后隐藏头部，恢复下拉刷新状态
-        await Future.delayed(const Duration(milliseconds: 250));
-        refreshFinishOffset = -headerHeight;
-        notifier.value -= 0.1; // 更新UI
-        sc.jumpTo(sc.offset + headerTriggerRefreshDistance);
+        // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
+        await Future.delayed(const Duration(milliseconds: 260));
+        if (widget.headerIsLoadMore && widget.controller.isHeaderOffsetOnLoadFinished) {
+          refreshFinishOffset = -headerHeight;
+          notifier.value -= 0.1; // 更新UI
+          sc.jumpTo(sc.offset + headerTriggerRefreshDistance);
+        }
         await Future.delayed(const Duration(milliseconds: 40));
         animUpdateHeader();
       }
     } else if (switchType == 4) {
-      // 刷新结束 -> 下拉刷新
-      if (curRefreshState == RefreshState.refresh_finished) {
-        curRefreshState = RefreshState.pull_down_refresh;
+      // 加载结束 -> 下拉加载
+      if (curRefreshState == RefreshState.header_load_finished) {
+        curRefreshState = RefreshState.header_pull_down_load;
       }
     }
   }
 
   void notifyRefreshFinish() {
-    //  正在刷新->刷新结束
+    //  正在加载->加载结束
     updateState(getScrolledHeaderY(), 3);
   }
+}
+
+class RefresherController {
+  /// 如果加载跟多没有加载到更多的内容，或者加载的内容不足做偏移， 则可不做偏移
+  bool isHeaderOffsetOnLoadFinished = true;
 }

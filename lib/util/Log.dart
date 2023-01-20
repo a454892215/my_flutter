@@ -6,7 +6,7 @@ import '../env.dart';
 
 class Log {
   static const String tag = "LLpp:";
-  static const debugEnable = EnvironmentConfig.APP_ENV == 'debug';
+  static bool debugEnable = EnvironmentConfig.isDebug();
   static var logger = Logger(
     printer: MyLogPrinter(),
   );

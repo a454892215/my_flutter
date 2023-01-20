@@ -31,8 +31,8 @@ class DioHttp implements HttpInter {
   @override
   Future<dynamic> get(String url, param) async {
     try {
-      var response = await _dio.get(url, queryParameters: param);
-      return json.decode(response.data); // 把json字符串转为对象
+      return await _dio.get(url, queryParameters: param);
+      // json.decode(response.data); // 把json字符串转为对象
     } catch (e) {
       Log.e("$url $param => $e");
     }
@@ -41,8 +41,8 @@ class DioHttp implements HttpInter {
   @override
   Future<dynamic> post(String url, param) async {
     try {
-      var response = await _dio.post(url, data: param);
-      return json.decode(response.data); // 把json字符串转为对象
+      return await _dio.post(url, data: param);
+      // json.decode(response.data); // 把json字符串转为对象
     } catch (e) {
       Log.e("$url $param => $e");
     }

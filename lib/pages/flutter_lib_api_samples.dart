@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:my_flutter_lib_3/env.dart';
 import '../lib_samples/note01_picker.dart';
 import '../lib_samples/note02_screenshot_event.dart';
-import '../my_widgets/comm_widgets.dart';
+import '../lib_samples/note03_web_parser.dart';
+
 import '../util/Log.dart';
 
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
@@ -20,8 +19,7 @@ class LibApiSamplesPage extends StatefulWidget {
 }
 
 class Page2State extends State {
-
-@override
+  @override
   void initState() {
     super.initState();
     EnvironmentConfig.getAppInfo().then((value) => Log.i(value));
@@ -42,6 +40,7 @@ class Page2State extends State {
                 children: <Widget>[
                   MaterialButton(child: const Text("picker库用例"), onPressed: () => Get.to(() => const PickerSamplePage())),
                   MaterialButton(child: const Text("ScreenShotEvent用例"), onPressed: () => Get.to(() => const ScreenShotEventSamplePage())),
+                  MaterialButton(child: const Text("WebParserPage"), onPressed: () => Get.to(() => WebParserPage())),
                 ],
               )),
         ));

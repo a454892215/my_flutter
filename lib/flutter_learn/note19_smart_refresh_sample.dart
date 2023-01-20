@@ -80,7 +80,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                         height: refresherContentHeight,
                         width: refresherContentWidth,
                         color: const Color(0xffaeeeae),
-                        padding: const EdgeInsets.all(10),
+                     //   padding: const EdgeInsets.all(10),
                         child: buildListView2(sc),
                       ));
                 },)),

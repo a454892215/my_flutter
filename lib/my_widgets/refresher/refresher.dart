@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
+import '../../util/Log.dart';
 import '../comm_anim2.dart';
 import 'my_physics.dart';
 import 'header_indicator_widget.dart';
@@ -75,6 +76,15 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   @override
   void initState() {
     super.initState();
+    double lastOffset = 0;
+    sc.addListener(() {
+      double dY = sc.offset - lastOffset;
+      var isHasToBot = sc.position.extentAfter == 0; // 滚动到底部边界
+      if (isHasToBot && !isPressed) {
+        Log.d("dY:$dY");
+      }
+      lastOffset = sc.offset;
+    });
   }
 
   @override
@@ -95,6 +105,8 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     );
   }
 
+  bool isPressed = false;
+
   Widget _buildContent() {
     return ClipRRect(
       child: Stack(
@@ -108,6 +120,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
                 child: Listener(
                   onPointerMove: onPointerMove,
                   onPointerUp: onPointerUp,
+                  onPointerDown: (e) {
+                    isPressed = true;
+                  },
                   child: widget.child,
                 ),
               )),
@@ -146,6 +161,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   double pixels = 0;
 
   void onPointerUp(PointerUpEvent event) {
+    isPressed = false;
     if (max > 0 && pixels >= max && notifier.value > -headerHeight) {
       // 释放加载 => 正在加载 或下拉加载状态不变，回到隐藏头
       updateState(getScrolledHeaderY(), 2);

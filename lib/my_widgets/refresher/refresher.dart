@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
+import 'dart:math' as math;
 import '../../util/Log.dart';
 import '../comm_anim2.dart';
 import 'my_physics.dart';
@@ -51,6 +52,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
     ..init(200, this, 0, 1)
     ..addListener(onAnimUpdate);
+
   int state = 0;
   double headerTriggerRefreshDistance = headerIndicatorHeight;
 
@@ -85,7 +87,38 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     });
   }
 
+  late CommonTweenAnim<double> animFling = CommonTweenAnim<double>()..init(200, this, 0, 1);
+
   void onStartFling(double speed) {
+    int during = (speed * 3).toInt();
+    during = math.max(50, during);
+    during = math.min(250, during);
+    animFling.controller.stop();
+    animFling.init(during, this, 0, 1);
+    bool isIntoLoadingState = false;
+    animFling.addListener(() {
+      var animValue = animFling.animation?.value ?? 0;
+      double scrolledRatio = getScrolledHeaderY() / headerHeight;
+      animValue = animValue * math.pow((1 - scrolledRatio), 2);
+      notifier.value += animValue;
+      //  Log.d("fling animValue: $animValue  during:$during  speed:$speed");
+      RefreshState tarState = getTarHeaderState();
+      if (!isIntoLoadingState && tarState != curRefreshState) {
+        updateHeaderState(5);
+        if (curRefreshState == RefreshState.header_release_load) {
+          updateHeaderState(5); // 直接进入正在加载状态
+          isIntoLoadingState = true;
+          //  animFling.controller.stop();
+          // animUpdateHeader();
+          return;
+        }
+      }
+      if ((animValue == 0 && headerIsShowing()) || (animValue == 0 && isIntoLoadingState)) {
+        animUpdateHeader();
+      }
+    });
+    animFling.update(0, begin: speed);
+    animFling.controller.forward(from: 0);
     // Log.d("onStartFling speed:$speed");
   }
 
@@ -123,6 +156,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
                   onPointerMove: onPointerMove,
                   onPointerUp: onPointerUp,
                   onPointerDown: (e) {
+                    if (animFling.controller.isAnimating) {
+                      animFling.controller.stop();
+                    }
                     isPressed = true;
                   },
                   child: widget.child,
@@ -140,14 +176,12 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   HeaderWidgetBuilder headerWidgetBuilder = HeaderWidgetBuilder();
 
   Widget _buildHeader() {
-    return Container(
+    return SizedBox(
       height: headerHeight,
-      color: Colors.orange,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Container(
-            color: Colors.blue,
             height: headerIndicatorHeight,
             width: widget.width,
             alignment: Alignment.center,
@@ -160,7 +194,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
-    if(headerIsShowing()){
+    if (headerIsShowing()) {
       onStartFling(realTouchMoveDy);
     }
     if (isLoadingOrFinishedState()) {
@@ -171,9 +205,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       var tarHeaderState = getTarHeaderState();
       if (tarHeaderState != curRefreshState) {
         updateHeaderState(2);
-        if (curRefreshState == RefreshState.header_loading && widget.onHeaderLoad != null) {
-          widget.onHeaderLoad!(this);
-        }
       }
       animUpdateHeader();
     }
@@ -252,8 +283,8 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     double temValue = notifier.value;
     if (e.delta.dy > 0) {
       // header 向下滑动
-      double scrolledRate = scrolledHeaderY / headerHeight;
-      newValue = notifier.value + (e.delta.dy * (1 - scrolledRate));
+      double scrolledRatio = scrolledHeaderY / headerHeight;
+      newValue = notifier.value + (e.delta.dy * math.pow((1 - scrolledRatio), 2));
       if (newValue > 0) newValue = 0;
       notifier.value = newValue;
     } else if (e.delta.dy < 0) {
@@ -305,11 +336,22 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       if (curRefreshState == RefreshState.header_load_finished) {
         curRefreshState = RefreshState.header_pull_down_load;
       }
+    } else if (switchType == 5) {
+      // 下拉加载 -> 释放加载
+      if (curRefreshState == RefreshState.header_pull_down_load) {
+        curRefreshState = RefreshState.header_release_load;
+      } else if (curRefreshState == RefreshState.header_release_load) {
+        curRefreshState = RefreshState.header_loading;
+      }
     }
     if (curRefreshState == RefreshState.header_pull_down_load) {
       refreshFinishOffset = 0;
+    } else if (curRefreshState == RefreshState.header_loading) {
+      if (widget.onHeaderLoad != null) {
+        widget.onHeaderLoad!(this);
+      }
     }
-   // Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
+    Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
   }
 
   Future<void> onLoadFinished() async {

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 
-Color fontColor = Colors.white;
+Color fontColor = const Color(0xff9a9a9a);
 
 class HeaderWidgetBuilder {
   Widget getHeaderWidget(RefreshState curRefreshState) {

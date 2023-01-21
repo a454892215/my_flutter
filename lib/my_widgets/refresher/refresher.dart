@@ -301,7 +301,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (curRefreshState == RefreshState.header_pull_down_load) {
       refreshFinishOffset = 0;
     }
-    Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}");
+    Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
   }
 
   Future<void> onLoadFinished() async {

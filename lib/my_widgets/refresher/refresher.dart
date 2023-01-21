@@ -245,6 +245,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     double scrolledHeaderY = getScrolledHeaderY();
     if (e.delta.dy > 0) {
       // header 向下滑动
+      refreshFinishOffset = 0;
       double scrolledRate = scrolledHeaderY / headerHeight;
       newValue = notifier.value + (e.delta.dy * (1 - scrolledRate));
       if (newValue > 0) newValue = 0;

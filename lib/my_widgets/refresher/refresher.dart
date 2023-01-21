@@ -79,8 +79,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     double lastOffset = 0;
     sc.addListener(() {
       double dY = sc.offset - lastOffset;
-      var isHasToBot = sc.position.extentAfter == 0; // 滚动到底部边界
-      if (isHasToBot && !isPressed) {
+      if (isScrollToTop() && !isPressed) {
         onStartFling(dY);
       }
       lastOffset = sc.offset;
@@ -160,17 +159,41 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     );
   }
 
-  double max = 0;
-  double min = double.maxFinite;
-  double pixels = 0;
-
   void onPointerUp(PointerUpEvent event) {
     isPressed = false;
-    if (max > 0 && pixels >= max && notifier.value > -headerHeight) {
+    if (headerIsShowing()) {
       // 释放加载 => 正在加载 或下拉加载状态不变，回到隐藏头
       updateState(getScrolledHeaderY(), 2);
       animUpdateHeader();
     }
+  }
+
+  bool isScrollToTop() {
+    if (widget.headerIsLoadMore) {
+      return sc.position.extentAfter == 0;
+    } else {
+      return sc.position.extentBefore == 0;
+    }
+  }
+
+  bool isScrollToBot() {
+    if (widget.headerIsLoadMore) {
+      return sc.position.extentBefore == 0;
+    } else {
+      return sc.position.extentAfter == 0;
+    }
+  }
+
+  bool headerIsHidden() {
+    return notifier.value <= -headerHeight;
+  }
+
+  bool headerIsShowing() {
+    return notifier.value > -headerHeight;
+  }
+
+  double getScrolledHeaderY() {
+    return headerHeight + notifier.value;
   }
 
   void animUpdateHeader() {
@@ -184,17 +207,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     anim.controller.forward(from: 0);
   }
 
-  double getScrolledHeaderY() {
-    return headerHeight + notifier.value;
-  }
-
   RefreshState curRefreshState = RefreshState.header_pull_down_load;
 
   void onPointerMove(PointerMoveEvent e) {
-    ScrollPosition position = sc.position;
-    max = position.maxScrollExtent;
-    min = position.minScrollExtent;
-    pixels = position.pixels;
     double newValue = notifier.value + e.delta.dy;
     if (sc.position.physics is RefresherClampingScrollPhysics) {
       RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
@@ -203,11 +218,11 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       throw Exception("滚动Widget的physics必须是 RefresherClampingScrollPhysics");
     }
     //header scroll
-    if (pixels >= max) {
+    if (isScrollToTop()) {
       if (widget.headerLoadEnable) {
         handleHeaderScroll(e, newValue);
       }
-    } else if (pixels <= min) {}
+    } else if (isScrollToBot()) {}
     // Log.d("pixels:$pixels  max:$max ");
   }
 
@@ -226,10 +241,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     }
     //头部触摸移动只有两种状态切换（下拉加载，释放加载）
     updateState(scrolledHeaderY, 1);
-  }
-
-  bool headerIsHidden() {
-    return notifier.value <= -headerHeight;
   }
 
   Future<void> updateState(double scrolledHeaderY, int switchType) async {

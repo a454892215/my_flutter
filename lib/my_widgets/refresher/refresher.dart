@@ -63,7 +63,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       state = 1;
       if (curRefreshState == RefreshState.header_load_finished) {
         // 加载完成->头部收回（恢复状态）
-        updateState(4);
+        updateHeaderState(4);
       }
     } else if (anim.controller.isDismissed && state != -1) {
       state = -1;
@@ -86,7 +86,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   void onStartFling(double speed) {
-    // Log.d("onStartFling speed:$speed");
+     Log.d("onStartFling speed:$speed");
   }
 
   @override
@@ -160,6 +160,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
+    if(headerIsShowing()){
+      onStartFling(realTouchMoveDy);
+    }
     if (isLoadingOrFinishedState()) {
       return;
     }
@@ -167,7 +170,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       // 释放加载 => 正在加载 或下拉加载状态不变，回到隐藏头
       var tarHeaderState = getTarHeaderState();
       if (tarHeaderState != curRefreshState) {
-        updateState(2);
+        updateHeaderState(2);
         if (curRefreshState == RefreshState.header_loading && widget.onHeaderLoad != null) {
           widget.onHeaderLoad!(this);
         }
@@ -235,17 +238,18 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (isLoadingOrFinishedState()) {
       return;
     }
-    //header scroll
     if (isScrollToTop()) {
       if (widget.headerLoadEnable) {
-        handleHeaderScroll(e, newValue);
+        handleHeaderScroll(e, newValue, true);
       }
     } else if (isScrollToBot()) {}
-    // Log.d("pixels:$pixels  max:$max ");
   }
 
-  void handleHeaderScroll(PointerMoveEvent e, double newValue) {
+  double realTouchMoveDy = 0;
+
+  void handleHeaderScroll(PointerMoveEvent e, double newValue, bool isTouchMove) {
     double scrolledHeaderY = getScrolledHeaderY();
+    double temValue = notifier.value;
     if (e.delta.dy > 0) {
       // header 向下滑动
       double scrolledRate = scrolledHeaderY / headerHeight;
@@ -257,10 +261,11 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       if (newValue < -headerHeight) newValue = -headerHeight;
       notifier.value = newValue;
     }
+    realTouchMoveDy = notifier.value - temValue;
     //头部触摸移动只有两种状态切换（下拉加载，释放加载）
     RefreshState tarState = getTarHeaderState();
     if (tarState != curRefreshState) {
-      updateState(1);
+      updateHeaderState(1);
     }
   }
 
@@ -278,7 +283,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     return tarState;
   }
 
-  Future<void> updateState(int switchType) async {
+  Future<void> updateHeaderState(int switchType) async {
     if (switchType == 1) {
       if (curRefreshState == RefreshState.header_pull_down_load) {
         curRefreshState = RefreshState.header_release_load;
@@ -304,7 +309,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (curRefreshState == RefreshState.header_pull_down_load) {
       refreshFinishOffset = 0;
     }
-    Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
+   // Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
   }
 
   Future<void> onLoadFinished() async {
@@ -322,7 +327,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   void notifyRefreshFinish() {
     //  正在加载->加载结束
-    updateState(3);
+    updateHeaderState(3);
     onLoadFinished();
   }
 }

@@ -60,9 +60,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     notifier.value = anim.animation?.value ?? -headerHeight;
     if (anim.controller.isCompleted && state != 1) {
       state = 1;
-      if (curRefreshState == RefreshState.header_pull_down_load) {
-        refreshFinishOffset = 0;
-      }
       if (curRefreshState == RefreshState.header_load_finished) {
         // 加载完成->头部收回（恢复状态）
         updateState(getScrolledHeaderY(), 4);
@@ -280,6 +277,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       if (curRefreshState == RefreshState.header_load_finished) {
         curRefreshState = RefreshState.header_pull_down_load;
       }
+    }
+    if (curRefreshState == RefreshState.header_pull_down_load) {
+      refreshFinishOffset = 0;
     }
   }
 

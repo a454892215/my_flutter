@@ -136,4 +136,12 @@ class RefresherClampingScrollPhysics extends ClampingScrollPhysics {
     }
     return 0;
   }
+
+  @override
+  Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
+    if(!_scrollEnable){
+      return null;
+    }
+    return super.createBallisticSimulation(position, velocity);
+  }
 }

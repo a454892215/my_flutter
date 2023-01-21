@@ -196,6 +196,10 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     return headerHeight + notifier.value;
   }
 
+  bool isForbidAllScroll() {
+    return curRefreshState == RefreshState.header_loading || curRefreshState == RefreshState.header_load_finished;
+  }
+
   void animUpdateHeader() {
     if (curRefreshState == RefreshState.header_loading) {
       anim.update(-(headerHeight - headerTriggerRefreshDistance), begin: notifier.value);
@@ -214,8 +218,14 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (sc.position.physics is RefresherClampingScrollPhysics) {
       RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
       physics.scrollEnable = headerIsHidden();
+      if (isForbidAllScroll()) {
+        physics.scrollEnable = false;
+      }
     } else {
       throw Exception("滚动Widget的physics必须是 RefresherClampingScrollPhysics");
+    }
+    if (isForbidAllScroll()) {
+      return;
     }
     //header scroll
     if (isScrollToTop()) {

@@ -160,6 +160,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
+    if (isLoadingOrFinishedState()) {
+      return;
+    }
     if (headerIsShowing()) {
       // 释放加载 => 正在加载 或下拉加载状态不变，回到隐藏头
       var tarHeaderState = getTarHeaderState();
@@ -245,7 +248,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     double scrolledHeaderY = getScrolledHeaderY();
     if (e.delta.dy > 0) {
       // header 向下滑动
-      refreshFinishOffset = 0;
       double scrolledRate = scrolledHeaderY / headerHeight;
       newValue = notifier.value + (e.delta.dy * (1 - scrolledRate));
       if (newValue > 0) newValue = 0;

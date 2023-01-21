@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import '../comm_anim2.dart';
-import '../my_physics.dart';
+import 'my_physics.dart';
 import 'header_indicator_widget.dart';
 
 void main() {}
@@ -176,9 +176,13 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     min = position.minScrollExtent;
     pixels = position.pixels;
     double newValue = notifier.value + e.delta.dy;
-    MyClampingScrollPhysics physics = sc.position.physics as MyClampingScrollPhysics;
+    if (sc.position.physics is RefresherClampingScrollPhysics) {
+      RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
+      physics.scrollEnable = headerIsHidden();
+    } else {
+      throw Exception("滚动Widget的physics必须是 RefresherClampingScrollPhysics");
+    }
     //header scroll
-    physics.scrollEnable = headerIsHidden();
     if (pixels >= max) {
       if (widget.headerLoadEnable) {
         handleHeaderScroll(e, newValue);
@@ -226,6 +230,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     } else if (switchType == 3) {
       // 正在加载->加载结束
       if (curRefreshState == RefreshState.header_loading) {
+        curRefreshState = RefreshState.header_load_finished;
         await onLoadFinished();
       }
     } else if (switchType == 4) {
@@ -237,7 +242,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   Future<void> onLoadFinished() async {
-    curRefreshState = RefreshState.header_load_finished;
     notifier.value += 0.1; // 更新UI
     // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
     await Future.delayed(const Duration(milliseconds: 260));

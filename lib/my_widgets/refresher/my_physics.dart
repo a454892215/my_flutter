@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:math' as math;
 
-import '../util/Log.dart';
+import '../../util/Log.dart';
 
 const double kMinFlingVelocity = 50.0;
 
@@ -112,8 +112,8 @@ class MyBouncingScrollPhysics extends ScrollPhysics {
 }
 
 //ignore: must_be_immutable
-class MyClampingScrollPhysics extends ScrollPhysics {
-  MyClampingScrollPhysics({ScrollPhysics? parent}) : super(parent: parent);
+class RefresherClampingScrollPhysics extends ScrollPhysics {
+  RefresherClampingScrollPhysics({ScrollPhysics? parent}) : super(parent: parent);
   bool _scrollEnable = true;
 
   set scrollEnable(bool value) {
@@ -121,8 +121,8 @@ class MyClampingScrollPhysics extends ScrollPhysics {
   }
 
   @override
-  MyClampingScrollPhysics applyTo(ScrollPhysics? ancestor) {
-    return MyClampingScrollPhysics(parent: buildParent(ancestor));
+  RefresherClampingScrollPhysics applyTo(ScrollPhysics? ancestor) {
+    return RefresherClampingScrollPhysics(parent: buildParent(ancestor));
   }
 
   /// 处理触摸滑动

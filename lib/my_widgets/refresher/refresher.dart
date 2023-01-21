@@ -81,10 +81,14 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       double dY = sc.offset - lastOffset;
       var isHasToBot = sc.position.extentAfter == 0; // 滚动到底部边界
       if (isHasToBot && !isPressed) {
-        Log.d("dY:$dY");
+        onStartFling(dY);
       }
       lastOffset = sc.offset;
     });
+  }
+
+  void onStartFling(double speed) {
+    Log.d("onStartFling speed:$speed");
   }
 
   @override

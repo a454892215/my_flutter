@@ -86,7 +86,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   void onStartFling(double speed) {
-     Log.d("onStartFling speed:$speed");
+    // Log.d("onStartFling speed:$speed");
   }
 
   @override

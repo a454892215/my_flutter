@@ -73,7 +73,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                       headerIsLoadMore: true,
                       headerLoadEnable: true,
                       onHeaderLoad: (state) async {
-                        await Future.delayed(const Duration(milliseconds: 10000));
+                        await Future.delayed(const Duration(milliseconds: 2000));
                         addDataForList2(10);
                         listView2Notifier.value++;
                         state.notifyRefreshFinish();

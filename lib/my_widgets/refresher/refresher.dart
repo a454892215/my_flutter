@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
-import '../../util/Log.dart';
 import '../comm_anim2.dart';
 import 'my_physics.dart';
 import 'header_indicator_widget.dart';
@@ -61,10 +60,12 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     notifier.value = anim.animation?.value ?? -headerHeight;
     if (anim.controller.isCompleted && state != 1) {
       state = 1;
+      if (curRefreshState == RefreshState.header_pull_down_load) {
+        refreshFinishOffset = 0;
+      }
       if (curRefreshState == RefreshState.header_load_finished) {
         // 加载完成->头部收回（恢复状态）
         updateState(getScrolledHeaderY(), 4);
-        refreshFinishOffset = 0;
       }
     } else if (anim.controller.isDismissed && state != -1) {
       state = -1;
@@ -87,7 +88,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   void onStartFling(double speed) {
-    Log.d("onStartFling speed:$speed");
+    // Log.d("onStartFling speed:$speed");
   }
 
   @override

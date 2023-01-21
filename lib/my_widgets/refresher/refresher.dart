@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
+import '../../util/Log.dart';
 import '../comm_anim2.dart';
 import 'my_physics.dart';
 import 'header_indicator_widget.dart';
@@ -62,7 +63,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       state = 1;
       if (curRefreshState == RefreshState.header_load_finished) {
         // 加载完成->头部收回（恢复状态）
-        updateState(getScrolledHeaderY(), 4);
+        updateState(4);
       }
     } else if (anim.controller.isDismissed && state != -1) {
       state = -1;
@@ -157,11 +158,17 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     );
   }
 
-  void onPointerUp(PointerUpEvent event) {
+  Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
     if (headerIsShowing()) {
       // 释放加载 => 正在加载 或下拉加载状态不变，回到隐藏头
-      updateState(getScrolledHeaderY(), 2);
+      var tarHeaderState = getTarHeaderState();
+      if (tarHeaderState != curRefreshState) {
+        updateState(2);
+        if (curRefreshState == RefreshState.header_loading && widget.onHeaderLoad != null) {
+          widget.onHeaderLoad!(this);
+        }
+      }
       animUpdateHeader();
     }
   }
@@ -194,7 +201,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     return headerHeight + notifier.value;
   }
 
-  bool isForbidAllScroll() {
+  bool isLoadingOrFinishedState() {
     return curRefreshState == RefreshState.header_loading || curRefreshState == RefreshState.header_load_finished;
   }
 
@@ -216,13 +223,13 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (sc.position.physics is RefresherClampingScrollPhysics) {
       RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
       physics.scrollEnable = headerIsHidden();
-      if (isForbidAllScroll()) {
+      if (isLoadingOrFinishedState()) {
         physics.scrollEnable = false;
       }
     } else {
       throw Exception("滚动Widget的physics必须是 RefresherClampingScrollPhysics");
     }
-    if (isForbidAllScroll()) {
+    if (isLoadingOrFinishedState()) {
       return;
     }
     //header scroll
@@ -248,12 +255,29 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       notifier.value = newValue;
     }
     //头部触摸移动只有两种状态切换（下拉加载，释放加载）
-    updateState(scrolledHeaderY, 1);
+    RefreshState tarState = getTarHeaderState();
+    if (tarState != curRefreshState) {
+      updateState(1);
+    }
   }
 
-  Future<void> updateState(double scrolledHeaderY, int switchType) async {
-    if (switchType == 1 && curRefreshState != RefreshState.header_loading) {
-      if (scrolledHeaderY >= headerTriggerRefreshDistance) {
+  RefreshState getTarHeaderState() {
+    RefreshState tarState = curRefreshState;
+    if (curRefreshState == RefreshState.header_release_load && !isPressed) {
+      tarState = RefreshState.header_loading;
+    } else if (!isLoadingOrFinishedState()) {
+      if (getScrolledHeaderY() >= headerTriggerRefreshDistance) {
+        tarState = RefreshState.header_release_load;
+      } else {
+        tarState = RefreshState.header_pull_down_load;
+      }
+    }
+    return tarState;
+  }
+
+  Future<void> updateState(int switchType) async {
+    if (switchType == 1) {
+      if (curRefreshState == RefreshState.header_pull_down_load) {
         curRefreshState = RefreshState.header_release_load;
       } else {
         curRefreshState = RefreshState.header_pull_down_load;
@@ -262,15 +286,11 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       // 释放加载 => 正在加载 或下拉加载状态不变，动画隐藏头
       if (curRefreshState == RefreshState.header_release_load) {
         curRefreshState = RefreshState.header_loading;
-        if (widget.onHeaderLoad != null) {
-          widget.onHeaderLoad!(this);
-        }
       }
     } else if (switchType == 3) {
       // 正在加载->加载结束
       if (curRefreshState == RefreshState.header_loading) {
         curRefreshState = RefreshState.header_load_finished;
-        await onLoadFinished();
       }
     } else if (switchType == 4) {
       // 加载结束 -> 下拉加载
@@ -281,6 +301,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (curRefreshState == RefreshState.header_pull_down_load) {
       refreshFinishOffset = 0;
     }
+    Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}");
   }
 
   Future<void> onLoadFinished() async {
@@ -298,7 +319,8 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   void notifyRefreshFinish() {
     //  正在加载->加载结束
-    updateState(getScrolledHeaderY(), 3);
+    updateState(3);
+    onLoadFinished();
   }
 }
 

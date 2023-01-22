@@ -78,6 +78,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     sc.addListener(() {
       double dY = sc.offset - lastOffset;
       if (isScrollToTop() && !isPressed) {
+        // 头尾不可见
         onStartFling(dY);
       }
       lastOffset = sc.offset;
@@ -147,7 +148,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
             height: headerIndicatorHeight,
             width: widget.width,
             alignment: Alignment.center,
-            child: headerWidgetBuilder.getHeaderWidget(curRefreshState),
+            child: headerWidgetBuilder.getHeaderWidget(curRefreshState, widget.headerFnc),
           ),
         ],
       ),
@@ -157,18 +158,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
     if (headerIsShowing()) {
-      onStartFling(realTouchMoveDy);
-    }
-    if (isLoadingOrFinishedState()) {
-      return;
-    }
-    if (headerIsShowing()) {
-      // 释放加载 => 正在加载 或下拉加载状态不变，回到隐藏头
-      var tarHeaderState = getTarHeaderState();
-      if (tarHeaderState != curRefreshState) {
-        updateHeaderState(2);
-      }
-      animUpdateHeader();
+      onStartFling(lastRealTouchMoveDy);
     }
   }
 
@@ -245,7 +235,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
           }
         }
       }
-      // 此处可能是处于正在加载或者下拉刷新状态
+      // 此处可能是处于正在加载/加载完成或者下拉刷新状态
       if (animValue == 0 && headerIsShowing()) {
         animUpdateHeader();
       }
@@ -279,7 +269,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     } else if (isScrollToBot()) {}
   }
 
-  double realTouchMoveDy = 0;
+  double lastRealTouchMoveDy = 0;
 
   void handleHeaderTouchScroll(PointerMoveEvent e) {
     double tarScrollY = notifier.value + e.delta.dy;
@@ -296,7 +286,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       if (tarScrollY < -headerHeight) tarScrollY = -headerHeight;
       notifier.value = tarScrollY;
     }
-    realTouchMoveDy = notifier.value - temValue;
+    lastRealTouchMoveDy = notifier.value - temValue;
     // 反弹效果功能不需要更新状态
     if (widget.headerFnc == RefresherFunc.refresh || widget.headerFnc == RefresherFunc.load_more) {
       //头部触摸移动只有两种状态切换（下拉加载，释放加载）

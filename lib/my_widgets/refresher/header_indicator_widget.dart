@@ -5,7 +5,10 @@ import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 Color fontColor = const Color(0xff9a9a9a);
 
 class HeaderWidgetBuilder {
-  Widget getHeaderWidget(RefreshState curRefreshState) {
+  Widget getHeaderWidget(RefreshState curRefreshState, RefresherFunc func) {
+    if(func == RefresherFunc.bouncing || func == RefresherFunc.no_func){
+      return const SizedBox();
+    }
     if (curRefreshState == RefreshState.header_pull_down_load) {
       return _buildPullDownRefreshWidget();
     } else if (curRefreshState == RefreshState.header_release_load) {
@@ -25,7 +28,7 @@ class HeaderWidgetBuilder {
       children: [
         Icon(Icons.arrow_downward, color: fontColor, size: 20),
         const SizedBox(width: 6),
-        Text('下拉刷新', style: TextStyle(fontSize: 15, color: fontColor)),
+        Text('下拉加载.', style: TextStyle(fontSize: 15, color: fontColor)),
       ],
     );
   }
@@ -37,7 +40,7 @@ class HeaderWidgetBuilder {
       children: [
         Icon(Icons.arrow_upward, color: fontColor, size: 20),
         const SizedBox(width: 6),
-        Text('释放刷新', style: TextStyle(fontSize: 15, color: fontColor)),
+        Text('释放加载.', style: TextStyle(fontSize: 15, color: fontColor)),
       ],
     );
   }
@@ -49,7 +52,7 @@ class HeaderWidgetBuilder {
       children: [
         CupertinoActivityIndicator(color: fontColor),
         const SizedBox(width: 6),
-        Text('正在刷新...', style: TextStyle(fontSize: 15, color: fontColor)),
+        Text('正在加载...', style: TextStyle(fontSize: 15, color: fontColor)),
       ],
     );
   }
@@ -61,7 +64,7 @@ class HeaderWidgetBuilder {
       children: [
         Icon(Icons.done, color: fontColor, size: 20),
         const SizedBox(width: 6),
-        Text('刷新完成', style: TextStyle(fontSize: 15, color: fontColor)),
+        Text('加载完成.', style: TextStyle(fontSize: 15, color: fontColor)),
       ],
     );
   }

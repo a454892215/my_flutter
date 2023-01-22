@@ -71,7 +71,6 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                       height: refresherContentHeight,
                       width: refresherContentWidth,
                       controller: RefresherController(),
-                      headerIsLoadMore: true,
                       headerFnc: RefresherFunc.load_more,
                       onHeaderLoad: (state) async {
                         await Future.delayed(const Duration(milliseconds: 1000));

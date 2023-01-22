@@ -19,6 +19,7 @@ class Refresher extends StatefulWidget {
     required this.height,
     required this.width,
     this.headerFnc = RefresherFunc.refresh,
+    this.isReverseScroll = true,
     this.onHeaderLoad,
     this.onFooterLoad,
     required this.controller,
@@ -32,6 +33,7 @@ class Refresher extends StatefulWidget {
   final OnLoadMore? onFooterLoad;
   final RefresherFunc headerFnc;
   final RefresherController controller;
+  final bool isReverseScroll;
 
   @override
   State<StatefulWidget> createState() {
@@ -163,7 +165,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   bool isScrollToTop() {
-    if (widget.headerFnc == RefresherFunc.load_more) {
+    if (widget.isReverseScroll) {
       return sc.position.extentAfter == 0;
     } else {
       return sc.position.extentBefore == 0;
@@ -171,7 +173,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   bool isScrollToBot() {
-    if (widget.headerFnc == RefresherFunc.load_more) {
+    if (widget.isReverseScroll) {
       return sc.position.extentBefore == 0;
     } else {
       return sc.position.extentAfter == 0;

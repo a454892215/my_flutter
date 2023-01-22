@@ -70,6 +70,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                       sc: sc,
                       height: refresherContentHeight,
                       width: refresherContentWidth,
+                      isReverseScroll: true,
                       controller: RefresherController(),
                       headerFnc: RefresherFunc.bouncing,
                       onHeaderLoad: (state) async {

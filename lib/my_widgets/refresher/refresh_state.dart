@@ -4,3 +4,10 @@ enum RefreshState {
   header_loading,
   header_load_finished,
 }
+
+enum RefresherFunc {
+  load_more,
+  refresh,
+  bouncing,
+  def,
+}

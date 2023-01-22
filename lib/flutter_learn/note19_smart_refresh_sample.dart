@@ -5,6 +5,7 @@ import 'package:my_flutter_lib_3/my_widgets/refresher/refresher.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../my_widgets/refresher/my_physics.dart';
+import '../my_widgets/refresher/refresh_state.dart';
 import '../util/Log.dart';
 
 /// SmartRefresher 下拉刷新，和加载更多
@@ -71,7 +72,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                       width: refresherContentWidth,
                       controller: RefresherController(),
                       headerIsLoadMore: true,
-                      headerLoadEnable: true,
+                      headerFnc: RefresherFunc.load_more,
                       onHeaderLoad: (state) async {
                         await Future.delayed(const Duration(milliseconds: 1000));
                         addDataForList2(10);

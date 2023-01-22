@@ -18,12 +18,10 @@ class Refresher extends StatefulWidget {
     required this.sc,
     required this.height,
     required this.width,
-    this.headerLoadEnable = true,
+    this.headerFnc = RefresherFunc.refresh,
     this.onHeaderLoad,
     this.onFooterLoad,
     required this.controller,
-    // false表示头部为刷新功能 true表示头部为加载更多功能, 加载更多可能会自动偏移以自然显示出部分加载的新内容
-    this.headerIsLoadMore = false,
   });
 
   final Widget child;
@@ -32,8 +30,7 @@ class Refresher extends StatefulWidget {
   final double width;
   final OnRefresh? onHeaderLoad;
   final OnLoadMore? onFooterLoad;
-  final bool headerIsLoadMore;
-  final bool headerLoadEnable;
+  final RefresherFunc headerFnc;
   final RefresherController controller;
 
   @override
@@ -211,7 +208,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   bool isScrollToTop() {
-    if (widget.headerIsLoadMore) {
+    if (widget.headerFnc == RefresherFunc.load_more) {
       return sc.position.extentAfter == 0;
     } else {
       return sc.position.extentBefore == 0;
@@ -219,7 +216,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   bool isScrollToBot() {
-    if (widget.headerIsLoadMore) {
+    if (widget.headerFnc == RefresherFunc.load_more) {
       return sc.position.extentBefore == 0;
     } else {
       return sc.position.extentAfter == 0;
@@ -270,7 +267,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       return;
     }
     if (isScrollToTop()) {
-      if (widget.headerLoadEnable) {
+      if (widget.headerFnc == RefresherFunc.load_more || widget.headerFnc == RefresherFunc.refresh) {
         handleHeaderScroll(e, newValue, true);
       }
     } else if (isScrollToBot()) {}
@@ -358,7 +355,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     notifier.value += 0.1; // 更新UI
     // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
     await Future.delayed(const Duration(milliseconds: 260));
-    if (widget.headerIsLoadMore && widget.controller.isHeaderOffsetOnLoadFinished) {
+    if (widget.headerFnc == RefresherFunc.load_more && widget.controller.isHeaderOffsetOnLoadFinished) {
       refreshFinishOffset = -headerHeight;
       notifier.value -= 0.1; // 更新UI
       sc.jumpTo(sc.offset + headerTriggerRefreshDistance);

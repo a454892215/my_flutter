@@ -84,41 +84,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     });
   }
 
-  late CommonTweenAnim<double> animFling = CommonTweenAnim<double>()..init(200, this, 0, 1);
-
-  void onStartFling(double speed) {
-    int during = (speed * 3).toInt();
-    during = math.max(50, during);
-    during = math.min(250, during);
-    animFling.controller.stop();
-    animFling.init(during, this, 0, 1);
-    bool isIntoLoadingState = false;
-    animFling.addListener(() {
-      var animValue = animFling.animation?.value ?? 0;
-      double scrolledRatio = getScrolledHeaderY() / headerHeight;
-      animValue = animValue * math.pow((1 - scrolledRatio), 2);
-      notifier.value += animValue;
-      //  Log.d("fling animValue: $animValue  during:$during  speed:$speed");
-      RefreshState tarState = getTarHeaderState();
-      if (!isIntoLoadingState && tarState != curRefreshState) {
-        updateHeaderState(5);
-        if (curRefreshState == RefreshState.header_release_load) {
-          updateHeaderState(5); // 直接进入正在加载状态
-          isIntoLoadingState = true;
-          //  animFling.controller.stop();
-          // animUpdateHeader();
-          return;
-        }
-      }
-      if ((animValue == 0 && headerIsShowing()) || (animValue == 0 && isIntoLoadingState)) {
-        animUpdateHeader();
-      }
-    });
-    animFling.update(0, begin: speed);
-    animFling.controller.forward(from: 0);
-    // Log.d("onStartFling speed:$speed");
-  }
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -250,10 +215,53 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     anim.controller.forward(from: 0);
   }
 
+  late CommonTweenAnim<double> animFling = CommonTweenAnim<double>()..init(200, this, 0, 1);
+
+  void onStartFling(double speed) {
+    if (widget.headerFnc == RefresherFunc.no_func) {
+      return;
+    }
+    int during = (speed * 3).toInt();
+    during = math.max(50, during);
+    during = math.min(250, during);
+    animFling.controller.stop();
+    animFling.init(during, this, 0, 1);
+    bool isIntoLoadingState = false;
+    animFling.addListener(() {
+      var animValue = animFling.animation?.value ?? 0;
+      double scrolledRatio = getScrolledHeaderY() / headerHeight;
+      animValue = animValue * math.pow((1 - scrolledRatio), 2);
+      notifier.value += animValue;
+      //  Log.d("fling animValue: $animValue  during:$during  speed:$speed");
+      // 只有加载更多和刷新需要更新状态
+      if (widget.headerFnc == RefresherFunc.refresh || widget.headerFnc == RefresherFunc.load_more) {
+        RefreshState tarState = getTarHeaderState();
+        if (!isIntoLoadingState && tarState != curRefreshState) {
+          updateHeaderState(5);
+          if (curRefreshState == RefreshState.header_release_load) {
+            updateHeaderState(5); // 直接进入正在加载状态
+            isIntoLoadingState = true;
+            return;
+          }
+        }
+      }
+      // 此处可能是处于正在加载或者下拉刷新状态
+      if (animValue == 0 && headerIsShowing()) {
+        animUpdateHeader();
+      }
+    });
+    animFling.update(0, begin: speed);
+    animFling.controller.forward(from: 0);
+    // Log.d("onStartFling speed:$speed");
+  }
+
   RefreshState curRefreshState = RefreshState.header_pull_down_load;
 
   void onPointerMove(PointerMoveEvent e) {
-    double newValue = notifier.value + e.delta.dy;
+    if (widget.headerFnc == RefresherFunc.no_func) {
+      return;
+    }
+    // 以下处理三种功能，刷新，加载更多， 反弹效果
     if (sc.position.physics is RefresherClampingScrollPhysics) {
       RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
       physics.scrollEnable = headerIsHidden();
@@ -261,39 +269,41 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
         physics.scrollEnable = false;
       }
     } else {
-      throw Exception("滚动Widget的physics必须是 RefresherClampingScrollPhysics");
+      throw Exception("滚动 Widget 的 physics 必须是 RefresherClampingScrollPhysics ");
     }
     if (isLoadingOrFinishedState()) {
       return;
     }
     if (isScrollToTop()) {
-      if (widget.headerFnc == RefresherFunc.load_more || widget.headerFnc == RefresherFunc.refresh) {
-        handleHeaderScroll(e, newValue, true);
-      }
+      handleHeaderTouchScroll(e);
     } else if (isScrollToBot()) {}
   }
 
   double realTouchMoveDy = 0;
 
-  void handleHeaderScroll(PointerMoveEvent e, double newValue, bool isTouchMove) {
+  void handleHeaderTouchScroll(PointerMoveEvent e) {
+    double tarScrollY = notifier.value + e.delta.dy;
     double scrolledHeaderY = getScrolledHeaderY();
+    double scrolledRatio = scrolledHeaderY / headerHeight;
+    tarScrollY = notifier.value + (e.delta.dy * math.pow((1 - scrolledRatio), 2));
     double temValue = notifier.value;
+    // header 向下滑动
     if (e.delta.dy > 0) {
-      // header 向下滑动
-      double scrolledRatio = scrolledHeaderY / headerHeight;
-      newValue = notifier.value + (e.delta.dy * math.pow((1 - scrolledRatio), 2));
-      if (newValue > 0) newValue = 0;
-      notifier.value = newValue;
+      if (tarScrollY > 0) tarScrollY = 0;
+      notifier.value = tarScrollY;
     } else if (e.delta.dy < 0) {
       // header 向上滑动
-      if (newValue < -headerHeight) newValue = -headerHeight;
-      notifier.value = newValue;
+      if (tarScrollY < -headerHeight) tarScrollY = -headerHeight;
+      notifier.value = tarScrollY;
     }
     realTouchMoveDy = notifier.value - temValue;
-    //头部触摸移动只有两种状态切换（下拉加载，释放加载）
-    RefreshState tarState = getTarHeaderState();
-    if (tarState != curRefreshState) {
-      updateHeaderState(1);
+    // 反弹效果功能不需要更新状态
+    if (widget.headerFnc == RefresherFunc.refresh || widget.headerFnc == RefresherFunc.load_more) {
+      //头部触摸移动只有两种状态切换（下拉加载，释放加载）
+      RefreshState tarState = getTarHeaderState();
+      if (tarState != curRefreshState) {
+        updateHeaderState(1);
+      }
     }
   }
 

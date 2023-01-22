@@ -9,5 +9,5 @@ enum RefresherFunc {
   load_more,
   refresh,
   bouncing,
-  def,
+  no_func,
 }

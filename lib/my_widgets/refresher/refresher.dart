@@ -160,7 +160,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
     if (headerIsShowing()) {
-      onStartFling(lastRealTouchMoveDy);
+      onStartFling(lastRealTouchMoveDy * 8);
     }
   }
 
@@ -357,7 +357,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     notifier.value += 0.1; // 更新UI
     // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
     await Future.delayed(const Duration(milliseconds: 260));
-    if (widget.headerFnc == RefresherFunc.load_more && widget.controller.isHeaderOffsetOnLoadFinished) {
+    if (widget.headerFnc == RefresherFunc.load_more && widget.controller.isNeedHeaderOffsetOnLoadFinished) {
       refreshFinishOffset = -headerHeight;
       notifier.value -= 0.1; // 更新UI
       sc.jumpTo(sc.offset + headerTriggerRefreshDistance);
@@ -366,7 +366,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     animUpdateHeader();
   }
 
-  void notifyRefreshFinish() {
+  void notifyHeaderLoadFinish() {
     //  正在加载->加载结束
     updateHeaderState(3);
     onLoadFinished();
@@ -375,5 +375,5 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
 class RefresherController {
   /// 如果加载跟多没有加载到更多的内容，或者加载的内容不足做偏移， 则可不做偏移
-  bool isHeaderOffsetOnLoadFinished = true;
+  bool isNeedHeaderOffsetOnLoadFinished = true;
 }

@@ -72,12 +72,12 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                       width: refresherContentWidth,
                       isReverseScroll: true,
                       controller: RefresherController(),
-                      headerFnc: RefresherFunc.bouncing,
+                      headerFnc: RefresherFunc.load_more,
                       onHeaderLoad: (state) async {
                         await Future.delayed(const Duration(milliseconds: 1000));
                         addDataForList2(10);
                         listView2Notifier.value++;
-                        state.notifyRefreshFinish();
+                        state.notifyHeaderLoadFinish();
                       },
                       onFooterLoad: (state) {},
                       child: Container(

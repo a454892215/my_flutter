@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'dart:math' as math;
-import '../../util/Log.dart';
 import '../comm_anim2.dart';
 import 'my_physics.dart';
 import 'header_indicator_widget.dart';
@@ -350,7 +349,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
         widget.onHeaderLoad!(this);
       }
     }
-    Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
+   // Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
   }
 
   Future<void> onLoadFinished() async {

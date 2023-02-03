@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
+import 'package:my_flutter_lib_3/my_widgets/refresher/refresher_cv.dart';
 import 'dart:math' as math;
 import '../../util/Log.dart';
 import '../comm_anim2.dart';
@@ -43,23 +44,22 @@ class Refresher extends StatefulWidget {
 
 class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin {
   late ScrollController sc = widget.sc;
-  static double headerHeight = 180;
-  static double headerIndicatorHeight = 60;
+  RefresherParam param = RefresherParam();
 
-  late final ValueNotifier<double> notifier = ValueNotifier<double>(-headerHeight);
+  late final ValueNotifier<double> notifier = ValueNotifier<double>(-param.headerHeight);
 
   late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
     ..init(200, this, 0, 1)
     ..addListener(onAnimUpdate);
 
   int state = 0;
-  double headerTriggerRefreshDistance = headerIndicatorHeight;
+
 
   /// 加载结束后，瞬时偏移量，使部分新内容自然显示出来
   double refreshFinishOffset = 0;
 
   void onAnimUpdate() {
-    notifier.value = anim.animation?.value ?? -headerHeight;
+    notifier.value = anim.animation?.value ?? -param.headerHeight;
     if (anim.controller.isCompleted && state != 1) {
       state = 1;
       if (curRefreshState == RefreshState.header_load_finished) {
@@ -114,7 +114,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
         children: [
           Positioned(
               left: 0,
-              top: headerHeight,
+              top: param.headerHeight,
               child: Transform.translate(
                 offset: Offset(0, refreshFinishOffset != 0 ? refreshFinishOffset : notifier.value),
                 child: Listener(
@@ -142,12 +142,12 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   Widget _buildHeader() {
     return SizedBox(
-      height: headerHeight,
+      height: param.headerHeight,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Container(
-            height: headerIndicatorHeight,
+            height: param.headerIndicatorHeight,
             width: widget.width,
             alignment: Alignment.center,
             child: headerWidgetBuilder.getHeaderWidget(curRefreshState, widget.headerFnc),
@@ -181,15 +181,15 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   bool headerIsHidden() {
-    return notifier.value <= -headerHeight;
+    return notifier.value <= -param.headerHeight;
   }
 
   bool headerIsShowing() {
-    return notifier.value > -headerHeight;
+    return notifier.value > -param.headerHeight;
   }
 
   double getScrolledHeaderY() {
-    return headerHeight + notifier.value;
+    return param.headerHeight + notifier.value;
   }
 
   bool isLoadingOrFinishedState() {
@@ -198,11 +198,11 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   void animUpdateHeader() {
     if (curRefreshState == RefreshState.header_loading) {
-      anim.update(-(headerHeight - headerTriggerRefreshDistance), begin: notifier.value);
+      anim.update(-(param.headerHeight - param.headerTriggerRefreshDistance), begin: notifier.value);
     } else if (curRefreshState == RefreshState.header_load_finished) {
-      anim.update(-headerHeight, begin: notifier.value);
+      anim.update(-param.headerHeight, begin: notifier.value);
     } else {
-      anim.update(-headerHeight, begin: notifier.value);
+      anim.update(-param.headerHeight, begin: notifier.value);
     }
     anim.controller.forward(from: 0);
   }
@@ -221,7 +221,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     bool isIntoLoadingState = false;
     animFling.addListener(() {
       var animValue = animFling.animation?.value ?? 0;
-      double scrolledRatio = getScrolledHeaderY() / headerHeight;
+      double scrolledRatio = getScrolledHeaderY() / param.headerHeight;
       animValue = animValue * math.pow((1 - scrolledRatio), 2);
       notifier.value += animValue;
       //  Log.d("fling animValue: $animValue  during:$during  speed:$speed");
@@ -276,7 +276,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   void handleHeaderTouchScroll(PointerMoveEvent e) {
     double tarScrollY = notifier.value + e.delta.dy;
     double scrolledHeaderY = getScrolledHeaderY();
-    double scrolledRatio = scrolledHeaderY / headerHeight;
+    double scrolledRatio = scrolledHeaderY / param.headerHeight;
     tarScrollY = notifier.value + (e.delta.dy * math.pow((1 - scrolledRatio), 2));
     double temValue = notifier.value;
     // header 向下滑动
@@ -285,7 +285,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       notifier.value = tarScrollY;
     } else if (e.delta.dy < 0) {
       // header 向上滑动
-      if (tarScrollY < -headerHeight) tarScrollY = -headerHeight;
+      if (tarScrollY < -param.headerHeight) tarScrollY = -param.headerHeight;
       notifier.value = tarScrollY;
     }
     lastRealTouchMoveDy = notifier.value - temValue;
@@ -304,7 +304,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (curRefreshState == RefreshState.header_release_load && !isPressed) {
       tarState = RefreshState.header_loading;
     } else if (!isLoadingOrFinishedState()) {
-      if (getScrolledHeaderY() >= headerTriggerRefreshDistance) {
+      if (getScrolledHeaderY() >= param.headerTriggerRefreshDistance) {
         tarState = RefreshState.header_release_load;
       } else {
         tarState = RefreshState.header_pull_down_load;
@@ -350,7 +350,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
         widget.onHeaderLoad!(this);
       }
     }
-    Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
+   // Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
   }
 
   Future<void> onLoadFinished() async {
@@ -358,9 +358,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
     await Future.delayed(const Duration(milliseconds: 260));
     if (widget.headerFnc == RefresherFunc.load_more && widget.controller.isNeedHeaderOffsetOnLoadFinished) {
-      refreshFinishOffset = -headerHeight;
+      refreshFinishOffset = -param.headerHeight;
       notifier.value -= 0.1; // 更新UI
-      sc.jumpTo(sc.offset + headerTriggerRefreshDistance);
+      sc.jumpTo(sc.offset + param.headerTriggerRefreshDistance);
     }
     await Future.delayed(const Duration(milliseconds: 40));
     animUpdateHeader();

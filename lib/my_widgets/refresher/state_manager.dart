@@ -49,4 +49,18 @@ class StateManager {
     }
     // Log.d("curRefreshState: ${curRefreshState.name} : ${curRefreshState.index}  switchType:$switchType ");
   }
+
+  RefreshState getTarHeaderState() {
+    RefreshState tarState = curRefreshState;
+    if (curRefreshState == RefreshState.header_release_load && !state.isPressed) {
+      tarState = RefreshState.header_loading;
+    } else if (!state.isLoadingOrFinishedState()) {
+      if (state.getScrolledHeaderY() >= param.headerTriggerRefreshDistance) {
+        tarState = RefreshState.header_release_load;
+      } else {
+        tarState = RefreshState.header_pull_down_load;
+      }
+    }
+    return tarState;
+  }
 }

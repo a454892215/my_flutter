@@ -225,7 +225,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       //  Log.d("fling animValue: $animValue  during:$during  speed:$speed");
       // 只有加载更多和刷新需要更新状态
       if (widget.headerFnc == RefresherFunc.refresh || widget.headerFnc == RefresherFunc.load_more) {
-        RefreshState tarState = getTarHeaderState();
+        RefreshState tarState = stateManager.getTarHeaderState();
         if (!isIntoLoadingState && tarState != stateManager.curRefreshState) {
           stateManager.updateHeaderState(5);
           if (stateManager.curRefreshState == RefreshState.header_release_load) {
@@ -288,28 +288,14 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     // 反弹效果功能不需要更新状态
     if (widget.headerFnc == RefresherFunc.refresh || widget.headerFnc == RefresherFunc.load_more) {
       //头部触摸移动只有两种状态切换（下拉加载，释放加载）
-      RefreshState tarState = getTarHeaderState();
+      RefreshState tarState = stateManager.getTarHeaderState();
       if (tarState != stateManager.curRefreshState) {
         stateManager.updateHeaderState(1);
       }
     }
   }
 
-  RefreshState getTarHeaderState() {
-    RefreshState tarState = stateManager.curRefreshState;
-    if (stateManager.curRefreshState == RefreshState.header_release_load && !isPressed) {
-      tarState = RefreshState.header_loading;
-    } else if (!isLoadingOrFinishedState()) {
-      if (getScrolledHeaderY() >= param.headerTriggerRefreshDistance) {
-        tarState = RefreshState.header_release_load;
-      } else {
-        tarState = RefreshState.header_pull_down_load;
-      }
-    }
-    return tarState;
-  }
-
-  Future<void> onLoadFinished() async {
+  Future<void> onHeaderLoadFinished() async {
     notifier.value += 0.1; // 更新UI
     // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
     await Future.delayed(const Duration(milliseconds: 260));
@@ -325,7 +311,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   void notifyHeaderLoadFinish() {
     //  正在加载->加载结束
     stateManager.updateHeaderState(3);
-    onLoadFinished();
+    onHeaderLoadFinished();
   }
 }
 

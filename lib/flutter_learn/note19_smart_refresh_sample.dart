@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher.dart';
-import 'package:my_flutter_lib_3/util/toast_util.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../my_widgets/refresher/my_physics.dart';
@@ -58,38 +57,37 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
         child: Column(
           children: [
             Container(
-              height: 250,
+              height: 300,
               padding: const EdgeInsets.all(10),
               color: const Color(0xffa8a8a8),
               child: buildSmartRefresher(),
             ),
-            Expanded(child: LayoutBuilder(
-              builder: (context, constraint) {
-                Log.d("constraint : ${constraint.maxHeight}");
-                refresherContentHeight = constraint.maxHeight;
-                return Refresher(
-                    sc: sc,
-                    height: refresherContentHeight,
-                    width: refresherContentWidth,
-                    isReverseScroll: true,
-                    controller: RefresherController(),
-                    headerFnc: RefresherFunc.load_more,
-                    onHeaderLoad: (state) async {
-                      await Future.delayed(const Duration(milliseconds: 1000));
-                      addDataForList2(20);
-                      listView2Notifier.value++;
-                      state.notifyRefreshFinish();
-                    },
-                    onFooterLoad: (state) {},
-                    child: Container(
+            Expanded(
+                child: LayoutBuilder(builder: (context,  constraint){
+                  Log.d("constraint : ${constraint.maxHeight}");
+                  refresherContentHeight = constraint.maxHeight;
+                  return Refresher(
+                      sc: sc,
                       height: refresherContentHeight,
                       width: refresherContentWidth,
-                      color: const Color(0xffaeeeae),
-                      //   padding: const EdgeInsets.all(10),
-                      child: buildListView2(sc),
-                    ));
-              },
-            )),
+                      isReverseScroll: true,
+                      controller: RefresherController(),
+                      headerFnc: RefresherFunc.load_more,
+                      onHeaderLoad: (state) async {
+                        await Future.delayed(const Duration(milliseconds: 1000));
+                        addDataForList2(10);
+                        listView2Notifier.value++;
+                        state.notifyHeaderLoadFinish();
+                      },
+                      onFooterLoad: (state) {},
+                      child: Container(
+                        height: refresherContentHeight,
+                        width: refresherContentWidth,
+                        color: const Color(0xffaeeeae),
+                     //   padding: const EdgeInsets.all(10),
+                        child: buildListView2(sc),
+                      ));
+                },)),
           ],
         ),
       ),
@@ -197,26 +195,14 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               itemBuilder: (BuildContext context, int index) {
                 // Log.d("itemBuilder index: $index");
                 String text = "文本$index";
-                return GestureDetector(
-                  child: Container(
-                    height: getItemHeight(index),
-                    color: Colors.green,
-                    alignment: Alignment.center,
-                    child: Text(text),
-                  ),
-                  onTap: (){
-                    toast('index: $index');
-                   // sc.jumpTo()
-                  },
+                return Container(
+                  height: 60,
+                  color: Colors.green,
+                  alignment: Alignment.center,
+                  child: Text(text),
                 );
               });
         });
-  }
-
-  //
-  double getItemHeight(int index) {
-    int mod = index % 3 + 1;
-    return 40 + mod * 15;
   }
 
   void addDataForList2(int size) {

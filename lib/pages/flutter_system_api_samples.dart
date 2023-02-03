@@ -60,7 +60,7 @@ class Page1State extends State {
       RouterButton(params: ["/CustomScrollViewSample2Page", "去-CustomScrollViewSample2Page-页面"]),
       RouterButton(params: ["/ListViewSamplePage", "去-ListViewSamplePage-页面"]),
       RouterButton(params: ["/GridViewSamplePage", "去-GridViewSamplePage-页面"]),
-     // RouterButton(params: ["/RefreshSamplePage", "去-RefreshSamplePage-页面"]),
+      // RouterButton(params: ["/RefreshSamplePage", "去-RefreshSamplePage-页面"]),
       RouterButton(params: ["/SmartRefreshSamplePage", "去-SmartRefreshSamplePage-页面"]),
       RouterButton(params: ["/AnimationSamplePage", "去-AnimationSamplePage-页面"]),
       RouterButton(params: ["/TweenAnimationBuilderTestPage", "去-TweenAnimationBuilderTestPage-页面"]),
@@ -87,8 +87,12 @@ class Page1State extends State {
 
   List<Widget> getList2() {
     return [
-      CupertinoButton(onPressed: () => Get.to(() => const CupertinoPickerTestPage()), color: Colors.blue, child: const Text("CupertinoPicker-用例")),
-      CupertinoButton(onPressed: () => Get.to(() => const AsyncTestPage()), color: Colors.blue, child: const Text("flutter 异步测试-用例")),
+      _buildRouterButton(const CupertinoPickerTestPage(), "CupertinoPicker-用例"),
+      _buildRouterButton(const AsyncTestPage(), "flutter 异步测试-用例"),
     ];
+  }
+
+  CupertinoButton _buildRouterButton(Widget tar, String title) {
+    return CupertinoButton(onPressed: () => Get.to(() => tar), color: Colors.grey, padding: const EdgeInsets.all(0), child: Text(title));
   }
 }

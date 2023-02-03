@@ -241,7 +241,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (MathU.abs(speed) > 100) {
       speed = MathU.mode(speed) * 100;
     }
-    int during = (speed * 3).toInt();
+    int during = (MathU.abs(speed) * 3).toInt();
     during = math.max(50, during);
     during = math.min(250, during);
     animFling.controller.stop();

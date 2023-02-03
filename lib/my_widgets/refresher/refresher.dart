@@ -4,6 +4,7 @@ import 'package:my_flutter_lib_3/my_widgets/refresher/refresher_param.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/state_manager.dart';
 import 'dart:math' as math;
 import '../comm_anim2.dart';
+import 'footer_indicator_widget.dart';
 import 'my_physics.dart';
 import 'header_indicator_widget.dart';
 
@@ -131,12 +132,17 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
             offset: Offset(0, notifier.value),
             child: _buildHeader(),
           ),
+          // Transform.translate(
+          //   offset: Offset(0, 0),
+          //   child: _buildFooter(),
+          // ),
         ],
       ),
     );
   }
 
   HeaderWidgetBuilder headerWidgetBuilder = HeaderWidgetBuilder();
+  FooterWidgetBuilder footerWidgetBuilder = FooterWidgetBuilder();
 
   Widget _buildHeader() {
     return SizedBox(
@@ -149,6 +155,24 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
             width: widget.width,
             alignment: Alignment.center,
             child: headerWidgetBuilder.getHeaderWidget(stateManager.curRefreshState, widget.headerFnc),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter() {
+    return SizedBox(
+      height: param.footerHeight,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            height: param.footerIndicatorHeight,
+            width: widget.width,
+            color: Colors.blue,
+            alignment: Alignment.center,
+            child: footerWidgetBuilder.getFooterWidget(stateManager.curRefreshState, widget.headerFnc),
           ),
         ],
       ),

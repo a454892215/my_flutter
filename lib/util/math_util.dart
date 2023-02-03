@@ -12,4 +12,18 @@ class MathU {
     }
     return value;
   }
+
+  static int mode(num v) {
+    if (v > 0) {
+      return 1;
+    } else if (v < 0) {
+      return -1;
+    }
+    return 0;
+  }
+
+  static num abs(num v) {
+    if(v < 0) return -v;
+    return v;
+  }
 }

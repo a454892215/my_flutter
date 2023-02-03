@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher_param.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/state_manager.dart';
 import 'dart:math' as math;
+import '../../util/Log.dart';
+import '../../util/math_util.dart';
 import '../comm_anim2.dart';
 import 'footer_indicator_widget.dart';
 import 'my_physics.dart';
@@ -234,6 +237,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   void onStartFling(double speed) {
     if (widget.headerFnc == RefresherFunc.no_func) {
       return;
+    }
+    if (MathU.abs(speed) > 100) {
+      speed = MathU.mode(speed) * 100;
     }
     int during = (speed * 3).toInt();
     during = math.max(50, during);

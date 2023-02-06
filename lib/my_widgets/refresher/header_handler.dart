@@ -21,7 +21,7 @@ class HeaderHandler {
   void handleHeaderTouchScroll(PointerMoveEvent e) {
     var param = state.param;
     double tarScrollY = notifier.value + e.delta.dy;
-    double scrolledHeaderY = state.getScrolledHeaderY();
+    double scrolledHeaderY = getScrolledHeaderY();
     double scrolledRatio = scrolledHeaderY / state.param.headerHeight;
     tarScrollY = notifier.value + (e.delta.dy * math.pow((1 - scrolledRatio), 2));
     double temValue = notifier.value;
@@ -61,7 +61,7 @@ class HeaderHandler {
     var stateManager = state.stateManager;
     animFling.addListener(() {
       var animValue = animFling.animation?.value ?? 0;
-      double scrolledRatio = state.getScrolledHeaderY() / state.param.headerHeight;
+      double scrolledRatio = getScrolledHeaderY() / state.param.headerHeight;
       animValue = animValue * math.pow((1 - scrolledRatio), 2);
       notifier.value += animValue;
       //  Log.d("fling animValue: $animValue  during:$during  speed:$speed");
@@ -78,7 +78,7 @@ class HeaderHandler {
         }
       }
       // 此处可能是处于正在加载/加载完成或者下拉刷新状态
-      if (animValue == 0 && state.headerIsShowing()) {
+      if (animValue == 0 && headerIsShowing()) {
         animUpdateHeader();
       }
     });
@@ -110,5 +110,22 @@ class HeaderHandler {
       state.anim.update(-state.param.headerHeight, begin: notifier.value);
     }
     state.anim.controller.forward(from: 0);
+  }
+
+
+  bool headerIsHidden() {
+    return notifier.value <= -state.param.headerHeight;
+  }
+
+  bool headerIsShowing() {
+    return notifier.value > -state.param.headerHeight;
+  }
+
+  double getScrolledHeaderY() {
+    return state.param.headerHeight + notifier.value;
+  }
+
+  bool isLoadingOrFinishedState() {
+    return state.stateManager.curRefreshState == RefreshState.header_loading || state.stateManager.curRefreshState == RefreshState.header_load_finished;
   }
 }

@@ -52,7 +52,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
     ..init(200, this, 0, 1)
     ..addListener(onAnimUpdate);
-
+  late CommonTweenAnim<double> animFling = CommonTweenAnim<double>()..init(200, this, 0, 1);
   int state = 0;
 
   late StateManager stateManager = StateManager(widget, param, this);
@@ -182,7 +182,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
-    if (headerIsShowing()) {
+    if (headerHandler.headerIsShowing()) {
       headerHandler.onStartHeaderFling(headerHandler.lastRealTouchMoveDy * 8);
     }
   }
@@ -203,24 +203,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     }
   }
 
-  bool headerIsHidden() {
-    return notifier.value <= -param.headerHeight;
-  }
-
-  bool headerIsShowing() {
-    return notifier.value > -param.headerHeight;
-  }
-
-  double getScrolledHeaderY() {
-    return param.headerHeight + notifier.value;
-  }
-
-  bool isLoadingOrFinishedState() {
-    return stateManager.curRefreshState == RefreshState.header_loading || stateManager.curRefreshState == RefreshState.header_load_finished;
-  }
-
-  late CommonTweenAnim<double> animFling = CommonTweenAnim<double>()..init(200, this, 0, 1);
-
   void onPointerMove(PointerMoveEvent e) {
     if (widget.headerFnc == RefresherFunc.no_func) {
       return;
@@ -228,14 +210,14 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     // 以下处理三种功能，刷新，加载更多， 反弹效果
     if (sc.position.physics is RefresherClampingScrollPhysics) {
       RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
-      physics.scrollEnable = headerIsHidden();
-      if (isLoadingOrFinishedState()) {
+      physics.scrollEnable = headerHandler.headerIsHidden();
+      if (headerHandler.isLoadingOrFinishedState()) {
         physics.scrollEnable = false;
       }
     } else {
       throw Exception("滚动 Widget 的 physics 必须是 RefresherClampingScrollPhysics ");
     }
-    if (isLoadingOrFinishedState()) {
+    if (headerHandler.isLoadingOrFinishedState()) {
       return;
     }
     if (isScrollToTop()) {

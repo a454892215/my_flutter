@@ -54,8 +54,8 @@ class StateManager {
     RefreshState tarState = curRefreshState;
     if (curRefreshState == RefreshState.header_release_load && !state.isPressed) {
       tarState = RefreshState.header_loading;
-    } else if (!state.isLoadingOrFinishedState()) {
-      if (state.getScrolledHeaderY() >= param.headerTriggerRefreshDistance) {
+    } else if (!state.headerHandler.isLoadingOrFinishedState()) {
+      if (state.headerHandler.getScrolledHeaderY() >= param.headerTriggerRefreshDistance) {
         tarState = RefreshState.header_release_load;
       } else {
         tarState = RefreshState.header_pull_down_load;

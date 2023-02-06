@@ -10,14 +10,36 @@ class HeaderHandler {
   final ValueNotifier<double> notifier;
   final RefreshWidgetState state;
   late Refresher widget;
-  late CommonTweenAnim<double> animFling;
+
+  late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
+    ..init(200, state, 0, 1)
+    ..addListener(onAnimUpdate);
+
+  late CommonTweenAnim<double> animFling = CommonTweenAnim<double>()..init(200, state, 0, 1);
 
   HeaderHandler(this.notifier, this.state) {
     widget = state.widget;
-    animFling = state.animFling;
+  }
+
+  int animState = 0;
+
+  void onAnimUpdate() {
+    notifier.value = anim.animation?.value ?? -state.param.headerHeight;
+    if (anim.controller.isCompleted && animState != 1) {
+      animState = 1;
+      if (state.stateManager.curRefreshState == RefreshState.header_load_finished) {
+        // 加载完成->头部收回（恢复状态）
+        state.stateManager.updateHeaderState(4);
+      }
+    } else if (anim.controller.isDismissed && animState != -1) {
+      animState = -1;
+    } else {
+      animState = 0;
+    }
   }
 
   double lastRealTouchMoveDy = 0;
+
   void handleHeaderTouchScroll(PointerMoveEvent e) {
     var param = state.param;
     double tarScrollY = notifier.value + e.delta.dy;
@@ -100,18 +122,16 @@ class HeaderHandler {
     animUpdateHeader();
   }
 
-
   void animUpdateHeader() {
     if (state.stateManager.curRefreshState == RefreshState.header_loading) {
-      state.anim.update(-(state.param.headerHeight - state.param.headerTriggerRefreshDistance), begin: notifier.value);
+      anim.update(-(state.param.headerHeight - state.param.headerTriggerRefreshDistance), begin: notifier.value);
     } else if (state.stateManager.curRefreshState == RefreshState.header_load_finished) {
-      state.anim.update(-state.param.headerHeight, begin: notifier.value);
+      anim.update(-state.param.headerHeight, begin: notifier.value);
     } else {
-      state.anim.update(-state.param.headerHeight, begin: notifier.value);
+      anim.update(-state.param.headerHeight, begin: notifier.value);
     }
-    state.anim.controller.forward(from: 0);
+    anim.controller.forward(from: 0);
   }
-
 
   bool headerIsHidden() {
     return notifier.value <= -state.param.headerHeight;
@@ -126,6 +146,7 @@ class HeaderHandler {
   }
 
   bool isLoadingOrFinishedState() {
-    return state.stateManager.curRefreshState == RefreshState.header_loading || state.stateManager.curRefreshState == RefreshState.header_load_finished;
+    return state.stateManager.curRefreshState == RefreshState.header_loading ||
+        state.stateManager.curRefreshState == RefreshState.header_load_finished;
   }
 }

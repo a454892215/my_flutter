@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher_param.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/state_manager.dart';
-import '../comm_anim2.dart';
 import 'footer_indicator_widget.dart';
 import 'header_handler.dart';
 import 'my_physics.dart';
@@ -49,29 +48,8 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   late final ValueNotifier<double> notifier = ValueNotifier<double>(-param.headerHeight);
 
-  late CommonTweenAnim<double> anim = CommonTweenAnim<double>()
-    ..init(200, this, 0, 1)
-    ..addListener(onAnimUpdate);
-  late CommonTweenAnim<double> animFling = CommonTweenAnim<double>()..init(200, this, 0, 1);
-  int state = 0;
-
   late StateManager stateManager = StateManager(widget, param, this);
   late HeaderHandler headerHandler = HeaderHandler(notifier, this);
-
-  void onAnimUpdate() {
-    notifier.value = anim.animation?.value ?? -param.headerHeight;
-    if (anim.controller.isCompleted && state != 1) {
-      state = 1;
-      if (stateManager.curRefreshState == RefreshState.header_load_finished) {
-        // 加载完成->头部收回（恢复状态）
-        stateManager.updateHeaderState(4);
-      }
-    } else if (anim.controller.isDismissed && state != -1) {
-      state = -1;
-    } else {
-      state = 0;
-    }
-  }
 
   @override
   void initState() {
@@ -121,8 +99,8 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
                   onPointerMove: onPointerMove,
                   onPointerUp: onPointerUp,
                   onPointerDown: (e) {
-                    if (animFling.controller.isAnimating) {
-                      animFling.controller.stop();
+                    if (headerHandler.animFling.controller.isAnimating) {
+                      headerHandler.animFling.controller.stop();
                     }
                     isPressed = true;
                   },
@@ -187,22 +165,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     }
   }
 
-  bool isScrollToTop() {
-    if (widget.isReverseScroll) {
-      return sc.position.extentAfter == 0;
-    } else {
-      return sc.position.extentBefore == 0;
-    }
-  }
-
-  bool isScrollToBot() {
-    if (widget.isReverseScroll) {
-      return sc.position.extentBefore == 0;
-    } else {
-      return sc.position.extentAfter == 0;
-    }
-  }
-
   void onPointerMove(PointerMoveEvent e) {
     if (widget.headerFnc == RefresherFunc.no_func) {
       return;
@@ -223,6 +185,22 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (isScrollToTop()) {
       headerHandler.handleHeaderTouchScroll(e);
     } else if (isScrollToBot()) {}
+  }
+
+  bool isScrollToTop() {
+    if (widget.isReverseScroll) {
+      return sc.position.extentAfter == 0;
+    } else {
+      return sc.position.extentBefore == 0;
+    }
+  }
+
+  bool isScrollToBot() {
+    if (widget.isReverseScroll) {
+      return sc.position.extentBefore == 0;
+    } else {
+      return sc.position.extentAfter == 0;
+    }
   }
 
   void notifyHeaderLoadFinish() {

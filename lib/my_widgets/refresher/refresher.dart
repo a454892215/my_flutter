@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher_param.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/state_manager.dart';
+import '../../util/Log.dart';
+import 'footer_handler.dart';
 import 'footer_indicator_widget.dart';
 import 'header_handler.dart';
 import 'my_physics.dart';
@@ -50,6 +52,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   late StateManager stateManager = StateManager(widget, param, this);
   late HeaderHandler headerHandler = HeaderHandler(notifier, this);
+  late FooterHandler footerHandler = FooterHandler(notifier, this);
 
   @override
   void initState() {
@@ -111,10 +114,14 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
             offset: Offset(0, notifier.value),
             child: _buildHeader(),
           ),
-          // Transform.translate(
-          //   offset: Offset(0, 0),
-          //   child: _buildFooter(),
-          // ),
+          Positioned(
+            left: 0,
+            top: param.headerHeight + widget.height,
+            child: Transform.translate(
+              offset: Offset(0, notifier.value),
+              child: _buildFooter(),
+            ),
+          )
         ],
       ),
     );
@@ -160,31 +167,42 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
-    if (headerHandler.headerIsShowing()) {
+    if (headerHandler.isShowing()) {
       headerHandler.onStartHeaderFling(headerHandler.lastRealTouchMoveDy * 8);
     }
   }
 
   void onPointerMove(PointerMoveEvent e) {
-    if (widget.headerFnc == RefresherFunc.no_func) {
-      return;
-    }
-    // 以下处理三种功能，刷新，加载更多， 反弹效果
     if (sc.position.physics is RefresherClampingScrollPhysics) {
       RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
-      physics.scrollEnable = headerHandler.headerIsHidden();
+      physics.scrollEnable = headerHandler.isHidden() || footerHandler.isHidden();
+      // 如果头部隐藏了 并且可以向下滚，则 true
+      // 如果脚部隐藏了 并且可以向上滚，则 true
+      if (headerHandler.isShowing() || footerHandler.isShowing()) {
+        physics.scrollEnable = false;
+      }
+      if(footerHandler.isHidden() && e.delta.dy > 0 && !isScrollToTop()){
+        physics.scrollEnable = true;
+      }
       if (headerHandler.isLoadingOrFinishedState()) {
         physics.scrollEnable = false;
       }
     } else {
       throw Exception("滚动 Widget 的 physics 必须是 RefresherClampingScrollPhysics ");
     }
-    if (headerHandler.isLoadingOrFinishedState()) {
-      return;
-    }
     if (isScrollToTop()) {
+      if (widget.headerFnc == RefresherFunc.no_func) {
+        return;
+      }
+      // 以下处理三种功能，刷新，加载更多， 反弹效果
+      if (headerHandler.isLoadingOrFinishedState()) {
+        return;
+      }
       headerHandler.handleHeaderTouchScroll(e);
-    } else if (isScrollToBot()) {}
+    } else if (isScrollToBot()) {
+      footerHandler.handleFooterTouchScroll(e);
+      // Log.d("======= dy:${e.delta.dy}");
+    }
   }
 
   bool isScrollToTop() {

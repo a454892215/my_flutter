@@ -165,7 +165,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
           return Container(
             height: 60,
             margin: const EdgeInsets.only(left: 10, right: 10),
-            color: Colors.green,
+            color: const Color(0xffb9e8b9),
             alignment: Alignment.center,
             child: Text(text),
           );
@@ -197,7 +197,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                 String text = "文本$index";
                 return Container(
                   height: 60,
-                  color: Colors.green,
+                  color: const Color(0xffb9e8b9),
                   alignment: Alignment.center,
                   child: Text(text),
                 );

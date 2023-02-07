@@ -62,32 +62,38 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               color: const Color(0xffa8a8a8),
               child: buildSmartRefresher(),
             ),
-            Expanded(
-                child: LayoutBuilder(builder: (context,  constraint){
-                  Log.d("constraint : ${constraint.maxHeight}");
-                  refresherContentHeight = constraint.maxHeight;
-                  return Refresher(
-                      sc: sc,
+            Expanded(child: LayoutBuilder(
+              builder: (context, constraint) {
+                Log.d("constraint : ${constraint.maxHeight}");
+                refresherContentHeight = constraint.maxHeight;
+                return Refresher(
+                    sc: sc,
+                    height: refresherContentHeight,
+                    width: refresherContentWidth,
+                    isReverseScroll: true,
+                    controller: RefresherController(),
+                    headerFnc: RefresherFunc.load_more,
+                    onHeaderLoad: (state) async {
+                      await Future.delayed(const Duration(milliseconds: 1000));
+                      addDataForList2(10);
+                      listView2Notifier.value++;
+                      state.notifyHeaderLoadFinish();
+                    },
+                    onFooterLoad: (state) async {
+                      await Future.delayed(const Duration(milliseconds: 1000));
+                      refreshDataForList2(8);
+                      listView2Notifier.value++;
+                      state.notifyHeaderLoadFinish();
+                    },
+                    child: Container(
                       height: refresherContentHeight,
                       width: refresherContentWidth,
-                      isReverseScroll: true,
-                      controller: RefresherController(),
-                      headerFnc: RefresherFunc.load_more,
-                      onHeaderLoad: (state) async {
-                        await Future.delayed(const Duration(milliseconds: 1000));
-                        addDataForList2(10);
-                        listView2Notifier.value++;
-                        state.notifyHeaderLoadFinish();
-                      },
-                      onFooterLoad: (state) {},
-                      child: Container(
-                        height: refresherContentHeight,
-                        width: refresherContentWidth,
-                        color: const Color(0xffaeeeae),
-                     //   padding: const EdgeInsets.all(10),
-                        child: buildListView2(sc),
-                      ));
-                },)),
+                      color: const Color(0xffaeeeae),
+                      //   padding: const EdgeInsets.all(10),
+                      child: buildListView2(sc),
+                    ));
+              },
+            )),
           ],
         ),
       ),
@@ -206,6 +212,13 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   }
 
   void addDataForList2(int size) {
+    for (int i = 0; i < size; i++) {
+      list2.add("data");
+    }
+  }
+
+  void refreshDataForList2(int size) {
+    list2.clear();
     for (int i = 0; i < size; i++) {
       list2.add("data");
     }

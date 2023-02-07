@@ -3,7 +3,6 @@ import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher.dart';
 import 'dart:math' as math;
 
-import '../../util/Log.dart';
 import '../../util/math_util.dart';
 import '../comm_anim2.dart';
 
@@ -58,6 +57,7 @@ class FooterHandler {
       notifier.value = tarScrollY;
     }
     lastRealTouchMoveDy = notifier.value - temValue;
+    state.stateManager.updateFooterState(1);
   }
 
   void onStartFling(double speed) {
@@ -71,7 +71,13 @@ class FooterHandler {
     during = math.max(50, during);
     during = math.min(250, during);
     startFlingScroll(during, speed, 0, () {
-      startResetPosAnim(200, null);
+      // 速度为0的时候更新下状态
+      state.stateManager.updateFooterState(2);
+      if (state.stateManager.curFooterRefreshState == RefreshState.footer_pull_up_load) {
+        startResetPosAnim(200, null);
+      } else if (state.stateManager.curFooterRefreshState == RefreshState.footer_loading) {
+        animToLoadingPos(200, null);
+      }
     });
   }
 
@@ -106,16 +112,32 @@ class FooterHandler {
     animFling.controller.forward(from: 0);
   }
 
+  void animToLoadingPos(int during, VoidCallback? onAnimEnd) {
+    animFling.controller.stop();
+    animFling.init(during, state, notifier.value, -state.param.headerHeight - state.param.footerIndicatorHeight);
+    animFling.addListener(() {
+      var animValue = animFling.animation?.value;
+      if (animValue != null) {
+        notifier.value = animValue;
+      }
+      if (animFling.controller.isCompleted && onAnimEnd != null) {
+        onAnimEnd();
+      }
+    });
+    animFling.controller.forward(from: 0);
+  }
+
   Future<void> onFooterLoadFinished() async {
     notifier.value += 0.1; // 更新UI
-    // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
+    // 在此状态停顿200毫秒后隐藏头部，恢复下拉加载状态
     await Future.delayed(const Duration(milliseconds: 260));
-    if (widget.headerFnc == RefresherFunc.load_more && widget.controller.isNeedHeaderOffsetOnLoadFinished) {
-      state.param.refreshFinishOffset = -state.param.headerHeight;
+    if (widget.footerFnc == RefresherFunc.load_more && widget.controller.isNeedFooterOffsetOnLoadFinished) {
+      state.param.refreshFinishOffset = -state.param.footerHeight;
       notifier.value -= 0.1; // 更新UI
-      state.sc.jumpTo(state.sc.offset + state.param.headerTriggerRefreshDistance);
+      state.sc.jumpTo(state.sc.offset + state.param.footerTriggerRefreshDistance);
     }
     await Future.delayed(const Duration(milliseconds: 40));
+    state.stateManager.updateFooterState(4);
   }
 
   bool isHidden() {

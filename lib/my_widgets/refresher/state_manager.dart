@@ -65,18 +65,40 @@ class StateManager {
     return tarState;
   }
 
-  RefreshState computeNextFooterStateByCurState(int condition) {
-    RefreshState tarState = curHeaderRefreshState;
+  RefreshState _computeNextFooterStateByCurState(int condition) {
+    RefreshState tarState = curFooterRefreshState;
+    var footerHandler = state.footerHandler;
     if (condition == 1) {
+      // 触摸显示出footer
+      if (footerHandler.getScrolledFooterDistance() > param.footerIndicatorHeight) {
+        tarState = RefreshState.footer_release_load;
+      } else {
+        tarState = RefreshState.footer_pull_up_load;
+      }
       curFooterRefreshState = tarState;
+      // 手指释放
+    } else if (condition == 2) {
+      if (footerHandler.getScrolledFooterDistance() > param.footerIndicatorHeight) {
+        tarState = RefreshState.footer_loading; // fling条件下可以从footer_pull_up_load直接进入footer_loading
+      } else {
+        tarState = RefreshState.footer_pull_up_load;
+      }
+    } else if (condition == 3) {
+      tarState = RefreshState.footer_load_finished;
+    } else if (condition == 4) {
+      tarState = RefreshState.footer_pull_up_load;
     }
     return tarState;
   }
 
-  void updateFooterState(int condition, RefreshState tarState) async {
+  void updateFooterState(int condition) {
+    var tarState = _computeNextFooterStateByCurState(condition);
     if (curFooterRefreshState == tarState) return;
-    if (condition == 1) {
-      curFooterRefreshState = tarState;
+    curFooterRefreshState = tarState;
+    if (curFooterRefreshState == RefreshState.footer_loading) {
+      if (widget.onFooterLoad != null) {
+        widget.onFooterLoad!(state);
+      }
     }
   }
 }

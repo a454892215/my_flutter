@@ -11,8 +11,8 @@ import 'header_indicator_widget.dart';
 
 void main() {}
 
-typedef OnRefresh = void Function(RefreshWidgetState state);
-typedef OnLoadMore = void Function(RefreshWidgetState state);
+typedef OnHeaderStartLoad = void Function(RefreshWidgetState state);
+typedef OnFooterStartLoad = void Function(RefreshWidgetState state);
 
 class Refresher extends StatefulWidget {
   const Refresher({
@@ -33,8 +33,8 @@ class Refresher extends StatefulWidget {
   final ScrollController sc;
   final double height;
   final double width;
-  final OnRefresh? onHeaderLoad;
-  final OnLoadMore? onFooterLoad;
+  final OnHeaderStartLoad? onHeaderLoad;
+  final OnFooterStartLoad? onFooterLoad;
   final RefresherFunc headerFnc;
   final RefresherFunc footerFnc;
   final RefresherController controller;
@@ -65,7 +65,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       if (isScrollToTop() && !isPressed) {
         // 头尾不可见
         headerHandler.onStartFling(dY);
-      }else if(isScrollToBot() && !isPressed){
+      } else if (isScrollToBot() && !isPressed) {
         footerHandler.onStartFling(dY);
       }
       lastOffset = sc.offset;
@@ -97,8 +97,8 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       child: Stack(
         alignment: Alignment.topLeft,
         children: [
-          Builder(builder: (_){
-        ///    Log.d("refreshFinishOffset: ${param.refreshFinishOffset}");
+          Builder(builder: (_) {
+            ///    Log.d("refreshFinishOffset: ${param.refreshFinishOffset}");
             return const SizedBox();
           }),
           Positioned(
@@ -176,10 +176,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     isPressed = false;
     if (headerHandler.isShowing()) {
       headerHandler.onStartFling(headerHandler.lastRealTouchMoveDy * 8);
-    }else if(footerHandler.isShowing()){
+    } else if (footerHandler.isShowing()) {
       footerHandler.onStartFling(footerHandler.lastRealTouchMoveDy * 8);
     }
-
   }
 
   void onPointerMove(PointerMoveEvent e) {
@@ -189,13 +188,12 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       if (headerHandler.isShowing() || footerHandler.isShowing()) {
         physics.scrollEnable = false;
       }
-      if(footerHandler.isHidden() && e.delta.dy > 0 && !isScrollToTop()){
+      if (footerHandler.isHidden() && e.delta.dy > 0 && !isScrollToTop()) {
         physics.scrollEnable = true;
       }
       if (headerHandler.isLoadingOrFinishedState()) {
         physics.scrollEnable = false;
       }
-
     } else {
       throw Exception("滚动 Widget 的 physics 必须是 RefresherClampingScrollPhysics ");
     }
@@ -235,9 +233,16 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     stateManager.updateHeaderState(3);
     headerHandler.onHeaderLoadFinished();
   }
+
+  void notifyFooterLoadFinish() {
+    //  正在加载->加载结束
+    stateManager.updateFooterState(3);
+    footerHandler.onFooterLoadFinished();
+  }
 }
 
 class RefresherController {
   /// 如果加载跟多没有加载到更多的内容，或者加载的内容不足做偏移， 则可不做偏移
   bool isNeedHeaderOffsetOnLoadFinished = true;
+  bool isNeedFooterOffsetOnLoadFinished = true;
 }

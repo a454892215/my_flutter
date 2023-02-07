@@ -21,7 +21,7 @@ class Refresher extends StatefulWidget {
     required this.sc,
     required this.height,
     required this.width,
-    this.headerFnc = RefresherFunc.refresh,
+    this.headerFnc = RefresherFunc.load_more,
     this.footerFnc = RefresherFunc.bouncing,
     this.isReverseScroll = true,
     this.onHeaderLoad,

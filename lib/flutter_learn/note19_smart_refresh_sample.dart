@@ -73,6 +73,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                     isReverseScroll: true,
                     controller: RefresherController(),
                     headerFnc: RefresherFunc.load_more,
+                    footerFnc: RefresherFunc.refresh,
                     onHeaderLoad: (state) async {
                       await Future.delayed(const Duration(milliseconds: 1000));
                       addDataForList2(10);
@@ -83,7 +84,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                       await Future.delayed(const Duration(milliseconds: 1000));
                       refreshDataForList2(8);
                       listView2Notifier.value++;
-                      state.notifyHeaderLoadFinish();
+                      state.notifyFooterLoadFinish();
                     },
                     child: Container(
                       height: refresherContentHeight,

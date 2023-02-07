@@ -74,7 +74,7 @@ class FooterHandler {
       // 速度为0的时候更新下状态
       state.stateManager.updateFooterState(2);
       if (state.stateManager.curFooterRefreshState == RefreshState.footer_pull_up_load) {
-        startResetPosAnim(200, null);
+        animResetPos(200, null);
       } else if (state.stateManager.curFooterRefreshState == RefreshState.footer_loading) {
         animToLoadingPos(200, null);
       }
@@ -97,7 +97,7 @@ class FooterHandler {
     animFling.controller.forward(from: 0);
   }
 
-  void startResetPosAnim(int during, VoidCallback? onAnimEnd) {
+  void animResetPos(int during, VoidCallback? onAnimEnd) {
     animFling.controller.stop();
     animFling.init(during, state, notifier.value, notifier.value + getScrolledFooterDistance());
     animFling.addListener(() {
@@ -137,7 +137,7 @@ class FooterHandler {
       state.sc.jumpTo(state.sc.offset + state.param.footerTriggerRefreshDistance);
     }
     await Future.delayed(const Duration(milliseconds: 40));
-    state.stateManager.updateFooterState(4);
+    animResetPos(200, () => state.stateManager.updateFooterState(4));
   }
 
   bool isHidden() {

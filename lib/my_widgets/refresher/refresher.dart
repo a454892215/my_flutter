@@ -98,7 +98,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
         alignment: Alignment.topLeft,
         children: [
           Builder(builder: (_){
-            Log.d("refreshFinishOffset: ${param.refreshFinishOffset}");
+        ///    Log.d("refreshFinishOffset: ${param.refreshFinishOffset}");
             return const SizedBox();
           }),
           Positioned(
@@ -196,6 +196,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       if (headerHandler.isLoadingOrFinishedState()) {
         physics.scrollEnable = false;
       }
+
     } else {
       throw Exception("滚动 Widget 的 physics 必须是 RefresherClampingScrollPhysics ");
     }

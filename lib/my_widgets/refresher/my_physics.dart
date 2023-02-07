@@ -113,11 +113,7 @@ class MyBouncingScrollPhysics extends ScrollPhysics {
 //ignore: must_be_immutable
 class RefresherClampingScrollPhysics extends ClampingScrollPhysics {
   RefresherClampingScrollPhysics({ScrollPhysics? parent}) : super(parent: parent);
-  bool _scrollEnable = true;
-
-  set scrollEnable(bool value) {
-    _scrollEnable = value;
-  }
+  bool scrollEnable = true;
 
   @override
   RefresherClampingScrollPhysics applyTo(ScrollPhysics? ancestor) {
@@ -131,7 +127,7 @@ class RefresherClampingScrollPhysics extends ClampingScrollPhysics {
       Log.e(" 滚动数据异常");
     }
     if (position.outOfRange) {}
-    if (_scrollEnable) {
+    if (scrollEnable) {
       return offset;
     }
     return 0;
@@ -139,7 +135,7 @@ class RefresherClampingScrollPhysics extends ClampingScrollPhysics {
 
   @override
   Simulation? createBallisticSimulation(ScrollMetrics position, double velocity) {
-    if(!_scrollEnable){
+    if(!scrollEnable){
       return null;
     }
     return super.createBallisticSimulation(position, velocity);

@@ -82,7 +82,7 @@ class FooterHandler {
     during = math.max(50, during);
     during = math.min(250, during);
     startFlingScroll(during, speed, 0, () {
-      startResetPoaAnim(200, null);
+      startResetPosAnim(200, null);
     });
     // Log.d("onStartFling speed:$speed");
   }
@@ -103,7 +103,7 @@ class FooterHandler {
     animFling.controller.forward(from: 0);
   }
 
-  void startResetPoaAnim(int during, VoidCallback? onAnimEnd) {
+  void startResetPosAnim(int during, VoidCallback? onAnimEnd) {
     animFling.controller.stop();
     animFling.init(during, state, notifier.value, notifier.value + getScrolledFooterDistance());
     animFling.addListener(() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher_param.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/state_manager.dart';
+import '../../util/Log.dart';
 import 'footer_handler.dart';
 import 'footer_indicator_widget.dart';
 import 'header_handler.dart';
@@ -96,6 +97,10 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       child: Stack(
         alignment: Alignment.topLeft,
         children: [
+          Builder(builder: (_){
+            Log.d("refreshFinishOffset: ${param.refreshFinishOffset}");
+            return const SizedBox();
+          }),
           Positioned(
               left: 0,
               top: param.headerHeight,
@@ -182,8 +187,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (sc.position.physics is RefresherClampingScrollPhysics) {
       RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
       physics.scrollEnable = headerHandler.isHidden() || footerHandler.isHidden();
-      // 如果头部隐藏了 并且可以向下滚，则 true
-      // 如果脚部隐藏了 并且可以向上滚，则 true
       if (headerHandler.isShowing() || footerHandler.isShowing()) {
         physics.scrollEnable = false;
       }

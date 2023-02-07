@@ -28,7 +28,7 @@ class FooterHandler {
     notifier.value = anim.animation?.value ?? -state.param.headerHeight;
     if (anim.controller.isCompleted && animState != 1) {
       animState = 1;
-      if (state.stateManager.curRefreshState == RefreshState.header_load_finished) {
+      if (state.stateManager.curHeaderRefreshState == RefreshState.header_load_finished) {
         // 加载完成->头部收回（恢复状态）
         state.stateManager.updateHeaderState(4);
       }
@@ -58,14 +58,6 @@ class FooterHandler {
       notifier.value = tarScrollY;
     }
     lastRealTouchMoveDy = notifier.value - temValue;
-    // 反弹效果功能不需要更新状态
-    // if (state.widget.headerFnc == RefresherFunc.refresh || state.widget.headerFnc == RefresherFunc.load_more) {
-    //   //头部触摸移动只有两种状态切换（下拉加载，释放加载）
-    //   RefreshState tarState = state.stateManager.getTarHeaderState();
-    //   if (tarState != state.stateManager.curRefreshState) {
-    //     state.stateManager.updateHeaderState(1);
-    //   }
-    // }
   }
 
   void onStartFling(double speed) {
@@ -75,14 +67,12 @@ class FooterHandler {
     if (MathU.abs(speed) > 100) {
       speed = MathU.mode(speed) * 100;
     }
-    Log.d("onStartFling  speed:$speed ");
     int during = (MathU.abs(speed) * 3).toInt();
     during = math.max(50, during);
     during = math.min(250, during);
     startFlingScroll(during, speed, 0, () {
       startResetPosAnim(200, null);
     });
-    // Log.d("onStartFling speed:$speed");
   }
 
   void startFlingScroll(int during, double beginSpeed, double endSpeed, VoidCallback? onAnimEnd) {
@@ -126,18 +116,6 @@ class FooterHandler {
       state.sc.jumpTo(state.sc.offset + state.param.headerTriggerRefreshDistance);
     }
     await Future.delayed(const Duration(milliseconds: 40));
-    animUpdateFooter();
-  }
-
-  void animUpdateFooter() {
-    if (state.stateManager.curRefreshState == RefreshState.header_loading) {
-      anim.update(-(state.param.headerHeight - state.param.headerTriggerRefreshDistance), begin: notifier.value);
-    } else if (state.stateManager.curRefreshState == RefreshState.header_load_finished) {
-      anim.update(-state.param.headerHeight, begin: notifier.value);
-    } else {
-      anim.update(-state.param.headerHeight, begin: notifier.value);
-    }
-    anim.controller.forward(from: 0);
   }
 
   bool isHidden() {
@@ -159,7 +137,7 @@ class FooterHandler {
   }
 
   bool isLoadingOrFinishedState() {
-    return state.stateManager.curRefreshState == RefreshState.footer_loading ||
-        state.stateManager.curRefreshState == RefreshState.footer_load_finished;
+    return state.stateManager.curHeaderRefreshState == RefreshState.footer_loading ||
+        state.stateManager.curHeaderRefreshState == RefreshState.footer_load_finished;
   }
 }

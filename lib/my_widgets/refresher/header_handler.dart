@@ -27,7 +27,7 @@ class HeaderHandler {
     notifier.value = anim.animation?.value ?? -state.param.headerHeight;
     if (anim.controller.isCompleted && animState != 1) {
       animState = 1;
-      if (state.stateManager.curRefreshState == RefreshState.header_load_finished) {
+      if (state.stateManager.curHeaderRefreshState == RefreshState.header_load_finished) {
         // 加载完成->头部收回（恢复状态）
         state.stateManager.updateHeaderState(4);
       }
@@ -61,7 +61,7 @@ class HeaderHandler {
     if (state.widget.headerFnc == RefresherFunc.refresh || state.widget.headerFnc == RefresherFunc.load_more) {
       //头部触摸移动只有两种状态切换（下拉加载，释放加载）
       RefreshState tarState = state.stateManager.getTarHeaderState();
-      if (tarState != state.stateManager.curRefreshState) {
+      if (tarState != state.stateManager.curHeaderRefreshState) {
         state.stateManager.updateHeaderState(1);
       }
     }
@@ -90,9 +90,9 @@ class HeaderHandler {
       // 只有加载更多和刷新需要更新状态
       if (widget.headerFnc == RefresherFunc.refresh || widget.headerFnc == RefresherFunc.load_more) {
         RefreshState tarState = state.stateManager.getTarHeaderState();
-        if (!isIntoLoadingState && tarState != stateManager.curRefreshState) {
+        if (!isIntoLoadingState && tarState != stateManager.curHeaderRefreshState) {
           stateManager.updateHeaderState(5);
-          if (stateManager.curRefreshState == RefreshState.header_release_load) {
+          if (stateManager.curHeaderRefreshState == RefreshState.header_release_load) {
             stateManager.updateHeaderState(5); // 直接进入正在加载状态
             isIntoLoadingState = true;
             return;
@@ -123,9 +123,9 @@ class HeaderHandler {
   }
 
   void animUpdateHeader() {
-    if (state.stateManager.curRefreshState == RefreshState.header_loading) {
+    if (state.stateManager.curHeaderRefreshState == RefreshState.header_loading) {
       anim.update(-(state.param.headerHeight - state.param.headerTriggerRefreshDistance), begin: notifier.value);
-    } else if (state.stateManager.curRefreshState == RefreshState.header_load_finished) {
+    } else if (state.stateManager.curHeaderRefreshState == RefreshState.header_load_finished) {
       anim.update(-state.param.headerHeight, begin: notifier.value);
     } else {
       anim.update(-state.param.headerHeight, begin: notifier.value);
@@ -146,7 +146,7 @@ class HeaderHandler {
   }
 
   bool isLoadingOrFinishedState() {
-    return state.stateManager.curRefreshState == RefreshState.header_loading ||
-        state.stateManager.curRefreshState == RefreshState.header_load_finished;
+    return state.stateManager.curHeaderRefreshState == RefreshState.header_loading ||
+        state.stateManager.curHeaderRefreshState == RefreshState.header_load_finished;
   }
 }

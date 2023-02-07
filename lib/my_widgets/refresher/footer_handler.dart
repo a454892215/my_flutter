@@ -42,22 +42,20 @@ class FooterHandler {
   double lastRealTouchMoveDy = 0;
 
   void handleFooterTouchScroll(PointerMoveEvent e) {
+    var param = state.param;
     double tarScrollY = notifier.value + e.delta.dy;
     if (e.delta.dy < 0 && isShowing()) {
       double scrolledRatio = getScrolledFooterDistance() / state.param.footerHeight;
       tarScrollY = notifier.value + (e.delta.dy * math.pow((1 - scrolledRatio), 2));
     }
     double temValue = notifier.value;
-    // header 向下滑动
+    // header 向下滑动 要避免把header滑出
     if (e.delta.dy > 0) {
-      // if (tarScrollY > 0) tarScrollY = 0;
+      if (tarScrollY > -param.headerHeight) tarScrollY = -param.headerHeight;
       notifier.value = tarScrollY;
-      Log.d("向下滑动  tarScrollY:$tarScrollY ");
     } else if (e.delta.dy < 0) {
       // header 向上滑动
-      // if (tarScrollY < -param.headerHeight) tarScrollY = -param.headerHeight;
       notifier.value = tarScrollY;
-      //  Log.d("向上滑动  tarScrollY:$tarScrollY ");
     }
     lastRealTouchMoveDy = notifier.value - temValue;
     // 反弹效果功能不需要更新状态

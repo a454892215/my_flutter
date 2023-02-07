@@ -64,4 +64,19 @@ class StateManager {
     }
     return tarState;
   }
+
+  RefreshState computeNextFooterStateByCurState(int condition) {
+    RefreshState tarState = curHeaderRefreshState;
+    if (condition == 1) {
+      curFooterRefreshState = tarState;
+    }
+    return tarState;
+  }
+
+  void updateFooterState(int condition, RefreshState tarState) async {
+    if (curFooterRefreshState == tarState) return;
+    if (condition == 1) {
+      curFooterRefreshState = tarState;
+    }
+  }
 }

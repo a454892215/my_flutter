@@ -159,7 +159,7 @@ class FooterHandler {
   }
 
   bool isLoadingOrFinishedState() {
-    return state.stateManager.curHeaderRefreshState == RefreshState.footer_loading ||
-        state.stateManager.curHeaderRefreshState == RefreshState.footer_load_finished;
+    return state.stateManager.curFooterRefreshState == RefreshState.footer_loading ||
+        state.stateManager.curFooterRefreshState == RefreshState.footer_load_finished;
   }
 }

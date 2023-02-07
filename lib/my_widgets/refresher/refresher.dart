@@ -197,16 +197,28 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     } else {
       throw Exception("滚动 Widget 的 physics 必须是 RefresherClampingScrollPhysics ");
     }
+
+    //不足一屏幕
+    if (isScrollToTop() && isScrollToBot()) {
+
+    }
     if (isScrollToTop()) {
       if (widget.headerFnc == RefresherFunc.no_func) {
         return;
       }
-      // 以下处理三种功能，刷新，加载更多， 反弹效果
       if (headerHandler.isLoadingOrFinishedState()) {
         return;
       }
       headerHandler.handleHeaderTouchScroll(e);
-    } else if (isScrollToBot()) {
+    }
+
+    if (isScrollToBot()) {
+      if (widget.footerFnc == RefresherFunc.no_func) {
+        return;
+      }
+      if (footerHandler.isLoadingOrFinishedState()) {
+        return;
+      }
       footerHandler.handleFooterTouchScroll(e);
       // Log.d("======= dy:${e.delta.dy}");
     }

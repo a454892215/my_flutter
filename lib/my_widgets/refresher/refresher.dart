@@ -181,6 +181,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     }
   }
 
+  // 当前的处理对象：1 表示头部  -1 表示脚部
+  int curHandleObj = 0;
+
   void onPointerMove(PointerMoveEvent e) {
     if (sc.position.physics is RefresherClampingScrollPhysics) {
       RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
@@ -197,21 +200,34 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     } else {
       throw Exception("滚动 Widget 的 physics 必须是 RefresherClampingScrollPhysics ");
     }
+    eventDispatch(e);
+  }
 
-    //不足一屏幕
-    if (isScrollToTop() && isScrollToBot()) {
-
-    }
-    if (isScrollToTop()) {
-      if (widget.headerFnc == RefresherFunc.no_func) {
-        return;
-      }
-      if (headerHandler.isLoadingOrFinishedState()) {
-        return;
-      }
-      headerHandler.handleHeaderTouchScroll(e);
+  void eventDispatch(PointerMoveEvent e) {
+    if (headerHandler.isHidden() && curHandleObj == 1) {
+      curHandleObj == 0;
     }
 
+    if (footerHandler.isHidden() && curHandleObj == -1) {
+      curHandleObj == 0;
+    }
+    if (curHandleObj == 0) {
+      // 向下
+      if (e.delta.dy > 0) {
+        curHandleObj = 1;
+      } else if (e.delta.dy < 0) {
+        curHandleObj = -1;
+      }
+    }
+    Log.d("分发结果 curHandleObj：$curHandleObj");
+    if (curHandleObj == 1) {
+      handleHeaderTouchScroll(e);
+    } else if (curHandleObj == -1) {
+      handleFooterTouchScroll(e);
+    }
+  }
+
+  void handleFooterTouchScroll(PointerMoveEvent e) {
     if (isScrollToBot()) {
       if (widget.footerFnc == RefresherFunc.no_func) {
         return;
@@ -221,6 +237,18 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       }
       footerHandler.handleFooterTouchScroll(e);
       // Log.d("======= dy:${e.delta.dy}");
+    }
+  }
+
+  void handleHeaderTouchScroll(PointerMoveEvent e) {
+    if (isScrollToTop()) {
+      if (widget.headerFnc == RefresherFunc.no_func) {
+        return;
+      }
+      if (headerHandler.isLoadingOrFinishedState()) {
+        return;
+      }
+      headerHandler.handleHeaderTouchScroll(e);
     }
   }
 

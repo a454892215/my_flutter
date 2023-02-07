@@ -30,7 +30,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     for (int i = 0; i < 20; i++) {
       list.add("data:-$i");
     }
-    addDataForList2(40);
+    addDataForList2(8);
   }
 
   @override

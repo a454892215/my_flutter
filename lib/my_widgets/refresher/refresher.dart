@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher_param.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/state_manager.dart';
-import '../../util/Log.dart';
 import 'footer_handler.dart';
 import 'footer_indicator_widget.dart';
 import 'header_handler.dart';
@@ -22,6 +21,7 @@ class Refresher extends StatefulWidget {
     required this.height,
     required this.width,
     this.headerFnc = RefresherFunc.refresh,
+    this.footerFnc = RefresherFunc.bouncing,
     this.isReverseScroll = true,
     this.onHeaderLoad,
     this.onFooterLoad,
@@ -35,6 +35,7 @@ class Refresher extends StatefulWidget {
   final OnRefresh? onHeaderLoad;
   final OnLoadMore? onFooterLoad;
   final RefresherFunc headerFnc;
+  final RefresherFunc footerFnc;
   final RefresherController controller;
   final bool isReverseScroll;
 
@@ -62,7 +63,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       double dY = sc.offset - lastOffset;
       if (isScrollToTop() && !isPressed) {
         // 头尾不可见
-        headerHandler.onStartHeaderFling(dY);
+        headerHandler.onStartFling(dY);
+      }else if(isScrollToBot() && !isPressed){
+        footerHandler.onStartFling(dY);
       }
       lastOffset = sc.offset;
     });
@@ -168,8 +171,11 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
     if (headerHandler.isShowing()) {
-      headerHandler.onStartHeaderFling(headerHandler.lastRealTouchMoveDy * 8);
+      headerHandler.onStartFling(headerHandler.lastRealTouchMoveDy * 8);
+    }else if(footerHandler.isShowing()){
+      footerHandler.onStartFling(footerHandler.lastRealTouchMoveDy * 8);
     }
+
   }
 
   void onPointerMove(PointerMoveEvent e) {

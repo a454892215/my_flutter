@@ -67,7 +67,7 @@ class HeaderHandler {
     }
   }
 
-  void onStartHeaderFling(double speed) {
+  void onStartFling(double speed) {
     if (widget.headerFnc == RefresherFunc.no_func) {
       return;
     }

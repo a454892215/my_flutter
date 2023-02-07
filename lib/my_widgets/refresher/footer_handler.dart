@@ -57,7 +57,7 @@ class FooterHandler {
       // header 向上滑动
       // if (tarScrollY < -param.headerHeight) tarScrollY = -param.headerHeight;
       notifier.value = tarScrollY;
-    //  Log.d("向上滑动  tarScrollY:$tarScrollY ");
+      //  Log.d("向上滑动  tarScrollY:$tarScrollY ");
     }
     lastRealTouchMoveDy = notifier.value - temValue;
     // 反弹效果功能不需要更新状态
@@ -81,18 +81,41 @@ class FooterHandler {
     int during = (MathU.abs(speed) * 3).toInt();
     during = math.max(50, during);
     during = math.min(250, during);
+    startFlingScroll(during, speed, 0, () {
+      startResetPoaAnim(200, null);
+    });
+    // Log.d("onStartFling speed:$speed");
+  }
+
+  void startFlingScroll(int during, double beginSpeed, double endSpeed, VoidCallback? onAnimEnd) {
     animFling.controller.stop();
     animFling.init(during, state, 0, 1);
     animFling.addListener(() {
       var animValue = animFling.animation?.value ?? 0;
-      double scrolledRatio = getScrolledFooterDistance() / state.param.headerHeight;
+      double scrolledRatio = getScrolledFooterDistance() / state.param.footerHeight;
       animValue = animValue * math.pow((1 - scrolledRatio), 2);
       notifier.value += animValue;
-      Log.d("onStartFling  animValue:$animValue ");
+      if (animFling.controller.isCompleted && onAnimEnd != null) {
+        onAnimEnd();
+      }
     });
-    animFling.update(0, begin: speed);
+    animFling.update(endSpeed, begin: beginSpeed);
     animFling.controller.forward(from: 0);
-    // Log.d("onStartFling speed:$speed");
+  }
+
+  void startResetPoaAnim(int during, VoidCallback? onAnimEnd) {
+    animFling.controller.stop();
+    animFling.init(during, state, notifier.value, notifier.value + getScrolledFooterDistance());
+    animFling.addListener(() {
+      var animValue = animFling.animation?.value;
+      if (animValue != null) {
+        notifier.value = animValue;
+      }
+      if (animFling.controller.isCompleted && onAnimEnd != null) {
+        onAnimEnd();
+      }
+    });
+    animFling.controller.forward(from: 0);
   }
 
   Future<void> onFooterLoadFinished() async {

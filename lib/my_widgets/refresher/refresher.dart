@@ -176,7 +176,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     if (headerHandler.isShowing()) {
       headerHandler.onStartFling(headerHandler.lastRealTouchMoveDy * 8);
     } else if (footerHandler.isShowing()) {
-      footerHandler.onStartFling(footerHandler.lastRealTouchMoveDy * 8);
+      footerHandler.onStartFling(-footerHandler.lastRealTouchMoveDy * 8);
     }
   }
 

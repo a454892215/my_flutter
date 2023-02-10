@@ -3,6 +3,7 @@ import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher.dart';
 import 'dart:math' as math;
 
+import '../../util/Log.dart';
 import '../../util/math_util.dart';
 import '../comm_anim2.dart';
 
@@ -48,14 +49,10 @@ class FooterHandler {
       tarScrollY = notifier.value + (e.delta.dy * math.pow((1 - scrolledRatio), 2));
     }
     double temValue = notifier.value;
-    // header 向下滑动 要避免把header滑出
-    if (e.delta.dy > 0) {
-      if (tarScrollY > -param.headerHeight) tarScrollY = -param.headerHeight;
-      notifier.value = tarScrollY;
-    } else if (e.delta.dy < 0) {
-      // header 向上滑动
-      notifier.value = tarScrollY;
+    if (tarScrollY > -param.headerHeight) {
+      tarScrollY = -param.headerHeight; // 避免把header滑出
     }
+    notifier.value = tarScrollY;
     lastRealTouchMoveDy = notifier.value - temValue;
     state.stateManager.updateFooterState(1);
   }
@@ -63,6 +60,10 @@ class FooterHandler {
   void onStartFling(double speed) {
     if (widget.headerFnc == RefresherFunc.no_func) {
       return;
+    }
+    if (speed < 0) {
+      Log.e("speed < 0 ");
+      speed = 0;
     }
     if (MathU.abs(speed) > 100) {
       speed = MathU.mode(speed) * 100;
@@ -88,7 +89,7 @@ class FooterHandler {
       var animValue = animFling.animation?.value ?? 0;
       double scrolledRatio = getScrolledFooterDistance() / state.param.footerHeight;
       animValue = animValue * math.pow((1 - scrolledRatio), 2);
-      notifier.value += animValue;
+      notifier.value -= animValue;
       if (animFling.controller.isCompleted && onAnimEnd != null) {
         onAnimEnd();
       }
@@ -104,6 +105,9 @@ class FooterHandler {
       var animValue = animFling.animation?.value;
       if (animValue != null) {
         notifier.value = animValue;
+        if (notifier.value > -state.param.headerHeight) {
+          Log.i("头部被滚出来了2: ${notifier.value}");
+        }
       }
       if (animFling.controller.isCompleted && onAnimEnd != null) {
         onAnimEnd();

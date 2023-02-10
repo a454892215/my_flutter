@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher_param.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/state_manager.dart';
-import '../../util/Log.dart';
 import 'footer_handler.dart';
 import 'footer_indicator_widget.dart';
 import 'header_handler.dart';
@@ -181,9 +180,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     }
   }
 
-  // 当前的处理对象：1 表示头部  -1 表示脚部
-  int curHandleObj = 0;
-
   void onPointerMove(PointerMoveEvent e) {
     if (sc.position.physics is RefresherClampingScrollPhysics) {
       RefresherClampingScrollPhysics physics = sc.position.physics as RefresherClampingScrollPhysics;
@@ -204,25 +200,13 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   void eventDispatch(PointerMoveEvent e) {
-    if (headerHandler.isHidden() && curHandleObj == 1) {
-      curHandleObj == 0;
-    }
-
-    if (footerHandler.isHidden() && curHandleObj == -1) {
-      curHandleObj == 0;
-    }
-    if (curHandleObj == 0) {
-      // 向下
-      if (e.delta.dy > 0) {
-        curHandleObj = 1;
-      } else if (e.delta.dy < 0) {
-        curHandleObj = -1;
-      }
-    }
-    Log.d("分发结果 curHandleObj：$curHandleObj");
-    if (curHandleObj == 1) {
+    if (headerHandler.isShowing()) {
       handleHeaderTouchScroll(e);
-    } else if (curHandleObj == -1) {
+    } else if (footerHandler.isShowing()) {
+      handleFooterTouchScroll(e);
+    } else if (e.delta.dy > 0) {
+      handleHeaderTouchScroll(e);
+    } else if (e.delta.dy < 0) {
       handleFooterTouchScroll(e);
     }
   }

@@ -114,7 +114,7 @@ class HeaderHandler {
     // 在次状态停顿200毫秒后隐藏头部，恢复下拉加载状态
     await Future.delayed(const Duration(milliseconds: 260));
     if (widget.headerFnc == RefresherFunc.load_more && widget.controller.isNeedHeaderOffsetOnLoadFinished) {
-      state.param.refreshFinishOffset = -state.param.headerHeight;
+      state.param.loadFinishOffset = -state.param.headerHeight;
       notifier.value -= 0.1; // 更新UI
       state.sc.jumpTo(state.sc.offset + state.param.headerTriggerRefreshDistance);
     }

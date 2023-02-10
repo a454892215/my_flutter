@@ -132,7 +132,7 @@ class FooterHandler {
     // 在此状态停顿200毫秒后隐藏头部，恢复下拉加载状态
     await Future.delayed(const Duration(milliseconds: 260));
     if (widget.footerFnc == RefresherFunc.load_more && widget.controller.isNeedFooterOffsetOnLoadFinished) {
-      state.param.refreshFinishOffset = -state.param.footerHeight;
+      state.param.loadFinishOffset = -state.param.footerHeight;
       notifier.value -= 0.1; // 更新UI
       state.sc.jumpTo(state.sc.offset + state.param.footerTriggerRefreshDistance);
     }

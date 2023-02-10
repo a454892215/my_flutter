@@ -104,7 +104,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
               left: 0,
               top: param.headerHeight,
               child: Transform.translate(
-                offset: Offset(0, param.refreshFinishOffset != 0 ? param.refreshFinishOffset : notifier.value),
+                offset: Offset(0, param.loadFinishOffset != 0 ? param.loadFinishOffset : notifier.value),
                 child: Listener(
                   onPointerMove: onPointerMove,
                   onPointerUp: onPointerUp,

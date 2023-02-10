@@ -42,7 +42,7 @@ class StateManager {
       }
     }
     if (curHeaderRefreshState == RefreshState.header_pull_down_load) {
-      param.refreshFinishOffset = 0;
+      param.loadFinishOffset = 0;
     } else if (curHeaderRefreshState == RefreshState.header_loading) {
       if (widget.onHeaderLoad != null) {
         widget.onHeaderLoad!(state);
@@ -99,6 +99,8 @@ class StateManager {
       if (widget.onFooterLoad != null) {
         widget.onFooterLoad!(state);
       }
+    }else if(curFooterRefreshState == RefreshState.footer_pull_up_load){
+      param.loadFinishOffset = 0;
     }
   }
 }

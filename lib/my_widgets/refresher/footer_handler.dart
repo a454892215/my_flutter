@@ -105,9 +105,6 @@ class FooterHandler {
       var animValue = animFling.animation?.value;
       if (animValue != null) {
         notifier.value = animValue;
-        if (notifier.value > -state.param.headerHeight) {
-          Log.i("头部被滚出来了2: ${notifier.value}");
-        }
       }
       if (animFling.controller.isCompleted && onAnimEnd != null) {
         onAnimEnd();
@@ -141,7 +138,7 @@ class FooterHandler {
       state.sc.jumpTo(state.sc.offset + state.param.footerTriggerRefreshDistance);
     }
     await Future.delayed(const Duration(milliseconds: 40));
-    animResetPos(200, () => state.stateManager.updateFooterState(4));
+    animResetPos(20, () => state.stateManager.updateFooterState(4));
   }
 
   bool isHidden() {

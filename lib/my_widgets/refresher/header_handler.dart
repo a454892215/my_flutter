@@ -3,6 +3,7 @@ import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher.dart';
 import 'dart:math' as math;
 
+import '../../util/Log.dart';
 import '../../util/math_util.dart';
 import '../comm_anim2.dart';
 
@@ -71,11 +72,14 @@ class HeaderHandler {
     if (widget.headerFnc == RefresherFunc.no_func) {
       return;
     }
+    if (speed < 0) {
+       Log.e("异常  speed < 0 ?? ");
+    }
     if (MathU.abs(speed) > 100) {
       speed = MathU.mode(speed) * 100;
     }
     int during = (MathU.abs(speed) * 3).toInt();
-    during = math.max(50, during);
+    during = math.max(20, during);
     during = math.min(250, during);
     animFling.controller.stop();
     animFling.init(during, state, 0, 1);

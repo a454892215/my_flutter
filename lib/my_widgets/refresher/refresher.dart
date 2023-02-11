@@ -63,7 +63,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       double dY = sc.offset - lastOffset;
       if (isScrollToTop() && !isPressed) {
         // 头尾不可见
-        headerHandler.onStartFling(dY);
+        headerHandler.onStartFling(-dY);
       } else if (isScrollToBot() && !isPressed) {
         footerHandler.onStartFling(dY);
       }
@@ -174,7 +174,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
     if (headerHandler.isShowing()) {
-      headerHandler.onStartFling(headerHandler.lastRealTouchMoveDy * 8);
+      var speed = footerHandler.lastRealTouchMoveDy * 8;
+      speed = speed < 0 ? 0 : speed;
+      headerHandler.onStartFling(speed);
     } else if (footerHandler.isShowing()) {
       footerHandler.onStartFling(-footerHandler.lastRealTouchMoveDy * 8);
     }

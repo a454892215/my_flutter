@@ -13,7 +13,7 @@ class RenderBoxPage1 extends StatefulWidget {
   }
 }
 
-class _SamplePageState extends State with SingleTickerProviderStateMixin {
+class _SamplePageState extends State {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

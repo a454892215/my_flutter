@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresh_state.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/refresher_param.dart';
 import 'package:my_flutter_lib_3/my_widgets/refresher/state_manager.dart';
+import '../../util/Log.dart';
 import 'footer_handler.dart';
 import 'footer_indicator_widget.dart';
 import 'header_handler.dart';
@@ -61,7 +62,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     double lastOffset = 0;
     sc.addListener(() {
       double dY = sc.offset - lastOffset;
-      if(widget.isReverseScroll) dY = -dY;
+      if (widget.isReverseScroll) dY = -dY;
       if (isScrollToTop() && !isPressed) {
         // 头尾不可见
         headerHandler.onStartFling(-dY);
@@ -174,6 +175,10 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
 
   Future<void> onPointerUp(PointerUpEvent event) async {
     isPressed = false;
+    if (headerHandler.isLoadingOrFinishedState() || footerHandler.isLoadingOrFinishedState()) {
+      Log.d("LoadingOrFinished...");
+      return;
+    }
     if (headerHandler.isShowing()) {
       headerHandler.onStartFling(footerHandler.lastRealTouchMoveDy * 8);
     } else if (footerHandler.isShowing()) {
@@ -191,7 +196,7 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
       if (footerHandler.isHidden() && e.delta.dy > 0 && !isScrollToTop()) {
         physics.scrollEnable = true;
       }
-      if (headerHandler.isLoadingOrFinishedState()) {
+      if (headerHandler.isLoadingOrFinishedState() || footerHandler.isLoadingOrFinishedState()) {
         physics.scrollEnable = false;
       }
     } else {
@@ -201,6 +206,9 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   }
 
   void eventDispatch(PointerMoveEvent e) {
+    if (headerHandler.isLoadingOrFinishedState() || footerHandler.isLoadingOrFinishedState()) {
+      return;
+    }
     if (headerHandler.isShowing()) {
       handleHeaderTouchScroll(e);
     } else if (footerHandler.isShowing()) {
@@ -215,9 +223,6 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
   void handleFooterTouchScroll(PointerMoveEvent e) {
     if (isScrollToBot()) {
       if (widget.footerFnc == RefresherFunc.no_func) {
-        return;
-      }
-      if (footerHandler.isLoadingOrFinishedState()) {
         return;
       }
       footerHandler.handleFooterTouchScroll(e);

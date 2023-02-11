@@ -25,8 +25,8 @@ class Page2State extends State {
             child: ListView(
               shrinkWrap: true,
               children: const <RouterButton>[
-                RouterButton(params: ["/SystemApiSampleListPage", "系统api用例"]),
-                RouterButton(params: ["/LibApiSamplesPage", "第三方库api用例"]),
+                RouterButton(params: ["/SystemApiSampleListPage", "api用例1"]),
+                RouterButton(params: ["/LibApiSamplesPage", "api用例2"]),
               ],
             )));
   }

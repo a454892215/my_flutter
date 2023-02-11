@@ -13,7 +13,7 @@ Widget getMaterialApp() {
   /// 使用 GetMaterialApp 取代MaterialApp 以方便使用Get.to(_SecondPage()) 导航页面
   return GetMaterialApp(
     debugShowCheckedModeBanner: false,
-    showPerformanceOverlay:true, // CPU/UI性能监控
+    // showPerformanceOverlay:true, // CPU/UI性能监控
     enableLog: false,
 
     /// title 只对Android生效，ios种，任务视图名称取的是 Info.pList 文件中的CFBundleDisplayName或CFBundleName

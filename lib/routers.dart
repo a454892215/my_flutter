@@ -20,6 +20,8 @@ import 'flutter_learn/note32_screen_adapter.dart';
 import 'flutter_learn/note33_widget_binding_observe.dart';
 import 'flutter_learn/note34_route_aware.dart';
 import 'flutter_learn/note35_exception.dart';
+import 'flutter_learn/note36_cupertinoPicker.dart';
+import 'flutter_learn/note37_async_test.dart';
 import 'flutter_learn/other/note211_will_pos_scope.dart';
 import 'flutter_learn/note06_chexobx_radio_sample.dart';
 import 'flutter_learn/note07_form_sample.dart';
@@ -90,5 +92,7 @@ Map<String, GetPageBuilder> routers = {
   '/ScreenAdapterTestPage': () => const ScreenAdapterTestPage(),
   '/WidgetsBindingObserverTestPage': () => const WidgetsBindingObserverTestPage(),
   '/RouteAwareTestPage': () => const RouteAwareTestPage(),
+  '/CupertinoPickerTestPage': () => const CupertinoPickerTestPage(),
+  '/AsyncTestPage': () => const AsyncTestPage(),
   '/ExceptionTestPage': () => const ExceptionTestPage(),
 };

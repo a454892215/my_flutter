@@ -41,3 +41,5 @@
 19. flutter channel 分支名 切换到指定分支
 20. flutter screenshot 截屏 默认是在home目录下 -o 指定目录
 21. flutter test –start-paused 运行flutter单元测试 并会等待调试器的连接
+
+flutter run --release 以release模式运行安装app

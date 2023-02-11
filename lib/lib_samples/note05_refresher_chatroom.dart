@@ -16,20 +16,17 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    refreshDataForList(8);
+    refreshDataForList(20);
   }
+
+  final bool isReverseScroll = true;
+  final ScrollController sc = ScrollController();
 
   @override
   Widget build(BuildContext context) {
-    return buildScaffold();
-  }
-
-  ScrollController sc = ScrollController();
-
-  Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("SmartRefresher-聊天室模式"),
+        title: const Text("SmartRefresher-正常模式"),
       ),
       body: Container(
         color: Colors.grey[200],
@@ -43,7 +40,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                     sc: sc,
                     height: refresherContentHeight,
                     width: refresherContentWidth,
-                    isReverseScroll: true,
+                    isReverseScroll: isReverseScroll,
                     controller: RefresherController(),
                     headerFnc: RefresherFunc.load_more,
                     footerFnc: RefresherFunc.refresh,
@@ -63,7 +60,6 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                       height: refresherContentHeight,
                       width: refresherContentWidth,
                       color: const Color(0xffaeeeae),
-                      //   padding: const EdgeInsets.all(10),
                       child: buildListView2(sc),
                     ));
               },
@@ -86,7 +82,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
               itemCount: list2.length,
               physics: RefresherClampingScrollPhysics(),
               shrinkWrap: false,
-              reverse: true,
+              reverse: isReverseScroll,
               controller: sc,
               separatorBuilder: (BuildContext context, int index) {
                 return Container(

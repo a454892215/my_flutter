@@ -72,12 +72,8 @@ class HeaderHandler {
     if (widget.headerFnc == RefresherFunc.no_func) {
       return;
     }
-    if (speed < 0) {
-       Log.e("异常  speed < 0 ?? ");
-    }
-    if (MathU.abs(speed) > 100) {
-      speed = MathU.mode(speed) * 100;
-    }
+    speed = speed < 0 ? 0 : speed;
+    if (speed > 100) speed = 100;
     int during = (MathU.abs(speed) * 3).toInt();
     during = math.max(20, during);
     during = math.min(250, during);

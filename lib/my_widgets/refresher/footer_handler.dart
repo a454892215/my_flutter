@@ -61,15 +61,10 @@ class FooterHandler {
     if (widget.headerFnc == RefresherFunc.no_func) {
       return;
     }
-    if (speed < 0) {
-      Log.e("speed < 0 ");
-      speed = 0;
-    }
-    if (MathU.abs(speed) > 100) {
-      speed = MathU.mode(speed) * 100;
-    }
+    speed = speed < 0 ? 0 : speed;
+    if (speed > 100) speed = 100;
     int during = (MathU.abs(speed) * 3).toInt();
-    during = math.max(50, during);
+    during = math.max(20, during);
     during = math.min(250, during);
     startFlingScroll(during, speed, 0, () {
       // 速度为0的时候更新下状态

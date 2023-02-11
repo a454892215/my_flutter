@@ -3,8 +3,8 @@ import 'package:my_flutter_lib_3/my_widgets/refresher/refresher.dart';
 import '../my_widgets/refresher/my_physics.dart';
 import '../my_widgets/refresher/refresh_state.dart';
 
-class RefresherCharRoomPage extends StatefulWidget {
-  const RefresherCharRoomPage({super.key});
+class RefresherChatRoomPage extends StatefulWidget {
+  const RefresherChatRoomPage({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -26,7 +26,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("SmartRefresher-正常模式"),
+        title: const Text("SmartRefresher-ChatRoom模式"),
       ),
       body: Container(
         color: Colors.grey[200],

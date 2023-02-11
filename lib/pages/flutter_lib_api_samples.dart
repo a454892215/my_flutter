@@ -43,7 +43,7 @@ class Page2State extends State {
                   MaterialButton(child: const Text("ScreenShotEvent用例"), onPressed: () => Get.to(() => const ScreenShotEventSamplePage())),
                   MaterialButton(child: const Text("WebParserPage"), onPressed: () => Get.to(() => WebParserPage())),
                   MaterialButton(child: const Text("refresher-正常模式"), onPressed: () => Get.to(() => const RefresherNormalSamplePage())),
-                  MaterialButton(child: const Text("refresher-聊天室模式"), onPressed: () => Get.to(() => const RefresherCharRoomPage())),
+                  MaterialButton(child: const Text("refresher-聊天室模式"), onPressed: () => Get.to(() => const RefresherChatRoomPage())),
                 ],
               )),
         ));

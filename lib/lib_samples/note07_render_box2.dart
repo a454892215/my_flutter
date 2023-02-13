@@ -31,7 +31,7 @@ class _SamplePageState extends State {
           child: Align(
             alignment: Alignment.topLeft,
             child: MyLeftRightGroupWidget(
-              children: const [Text("ga-ga-1"), Text("ga-ga-2")],
+              children: const [Text("ga-ga-1"), Text("ga-ga-2"), Text("ga-ga-2")],
             ),
           ),
         ),
@@ -44,7 +44,7 @@ class MyLeftRightGroupWidget extends MultiChildRenderObjectWidget {
   MyLeftRightGroupWidget({
     Key? key,
     required List<Widget> children,
-  })  : assert(children.length == 2, "只能传两个children"),
+  })  :
         super(key: key, children: children);
 
   @override
@@ -70,6 +70,7 @@ class RenderLeftRight extends RenderBox
     final BoxConstraints constraints = this.constraints;
     Log.d("performLayout childCount: $childCount   maxWidth:${constraints.maxWidth}");
     List<RenderBox> childList = getChildrenAsList();
+    assert(childList.length == 2);
     RenderBox leftChild = childList[0];
 
     /// 1. 对子组件进行layout, 测量出其大小

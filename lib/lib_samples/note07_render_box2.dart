@@ -70,7 +70,7 @@ class RenderLeftRight extends RenderBox
     final BoxConstraints constraints = this.constraints;
     Log.d("performLayout childCount: $childCount   maxWidth:${constraints.maxWidth}");
     List<RenderBox> childList = getChildrenAsList();
-    assert(childList.length == 2);
+    Log.d(":");
     RenderBox leftChild = childList[0];
 
     /// 1. 对子组件进行layout, 测量出其大小

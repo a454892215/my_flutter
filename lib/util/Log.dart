@@ -6,10 +6,19 @@ import '../env.dart';
 
 class Log {
   static const String tag = "LLpp:";
+  static bool isDebug = false;
   static bool debugEnable = EnvironmentConfig.isDebug();
   static var logger = Logger(
     printer: MyLogPrinter(),
   );
+
+  static bool isDebugMode() {
+    assert(() {
+      isDebug = true;
+      return true;
+    }());
+    return isDebug;
+  }
 
   static void d(dynamic msg) {
     if (debugEnable) {
@@ -34,7 +43,7 @@ class Log {
     var traceList = StackTrace.current.toString().replaceAll(RegExp(r"(\s\s\s\s)+"), "    ").split("\n");
     String pre = traceList[0];
     String traceInfo = '未定位到调用位置';
-    int end = traceList.length > 6 ? 6: traceList.length;
+    int end = traceList.length > 6 ? 6 : traceList.length;
     for (int i = 1; i < end; i++) {
       var cur = traceList[i];
       if (pre.contains("Log.") && !cur.contains("Log.")) {

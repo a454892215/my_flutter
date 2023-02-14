@@ -30,6 +30,10 @@ class Log {
     _print(Level.info, msg);
   }
 
+  static void w(dynamic msg) {
+    _print(Level.error, msg);
+  }
+
   static void e(dynamic msg) {
     _print(Level.error, msg);
   }

@@ -155,26 +155,14 @@ class AppInitController extends GetxController with WidgetsBindingObserver {
   @override
   void didChangePlatformBrightness() {
     Log.d("当前系统主题模式改变");
-    syncSystemThemeMode();
+    syncSystemThemeMode(context);
   }
 
   @override
   void onReady() {
     super.onReady();
-    syncSystemThemeMode();
+    syncSystemThemeMode(context);
     printEnv();
-  }
-
-  void syncSystemThemeMode() {
-    Brightness brightness = MediaQuery.platformBrightnessOf(context);
-    Log.d("当前系统主题模式： themeMode: ${brightness.name}");
-    if (brightness == Brightness.light) {
-      changeSink(SkinType.bright, isFromSystem: true);
-    } else if (brightness == Brightness.dark) {
-      changeSink(SkinType.black, isFromSystem: true);
-    } else {
-      Log.e("未知的系统主题模式");
-    }
   }
 
   Future<void> printEnv() async {

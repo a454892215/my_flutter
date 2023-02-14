@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:my_flutter_lib_3/util/Log.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'globe_exception_catch.dart';
 import 'material_apps.dart';
@@ -25,6 +26,7 @@ Widget getRootWidget() {
     enableBallisticLoad: false, // 可以通过惯性滑动触发加载更多
     enableBallisticRefresh: false,
     child: Builder(builder: (context){
+      Log.d("===根页面重构？===Builder========");
       return getMaterialApp(context);
     })
   );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/lib_samples/skin/skin_manager.dart';
+import 'package:my_flutter_lib_3/util/toast_util.dart';
 
 class ChangeSkinPage extends StatefulWidget {
   const ChangeSkinPage({super.key});
@@ -12,6 +13,14 @@ class ChangeSkinPage extends StatefulWidget {
 
 class MyState extends State {
   @override
+  void initState() {
+    super.initState();
+    addOnSystemThemeChangeListener(() {
+      setState((){});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -21,6 +30,7 @@ class MyState extends State {
         child: GestureDetector(
           onTap: () {
             switchSink();
+            toast("click");
             setState(() {});
           },
           child: Container(

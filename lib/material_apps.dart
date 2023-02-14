@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:my_flutter_lib_3/lib_samples/skin/skin_manager.dart';
 import 'package:my_flutter_lib_3/pages/err_page.dart';
 import 'package:my_flutter_lib_3/routers.dart';
 import 'package:my_flutter_lib_3/util/Log.dart';
@@ -9,7 +10,7 @@ import 'navigator/observer.dart';
 
 RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
-Widget getMaterialApp() {
+Widget getMaterialApp(BuildContext context) {
   /// 使用 GetMaterialApp 取代MaterialApp 以方便使用Get.to(_SecondPage()) 导航页面
   return GetMaterialApp(
     debugShowCheckedModeBanner: false,
@@ -29,7 +30,7 @@ Widget getMaterialApp() {
     /// routes 路由配置：对象是Map<String, WidgetBuilder>
     // routes: [], 这种方式配置路由，defaultTransition 不能生效
     getPages: routers.entries.map((e) => GetPage(name: e.key, page: e.value)).toList(),
-    initialBinding: AppInitBinding(),
+    initialBinding: AppInitBinding(context),
 
     /// 配置404页面: 如果路由不存在则跳到该页面
     onGenerateRoute: (RouteSettings settings) {
@@ -128,25 +129,56 @@ TextButtonThemeData textButtonTheme = const TextButtonThemeData(
 /// 5. MaterialApp种配置默认页面的三种方式，1.home  2.initialRoute(需要和routes配合使用)， 3. routes种的/
 
 class AppInitBinding extends Bindings {
+  AppInitBinding(this.context);
+
+  final BuildContext context;
+
   @override
   void dependencies() {
-    Get.put(AppInitController());
+    Get.put(AppInitController(context));
   }
 }
 
-class AppInitController extends GetxController {
+class AppInitController extends GetxController with WidgetsBindingObserver {
+  AppInitController(this.context);
+
+  final BuildContext context;
 
   @override
   void onInit() {
     /// 强制竖屏
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
   }
+
   @override
-  Future<void> onReady() async {
+  void didChangePlatformBrightness() {
+    Log.d("当前系统主题模式改变");
+    syncSystemThemeMode();
+  }
+
+  @override
+  void onReady() {
     super.onReady();
+    syncSystemThemeMode();
+    printEnv();
+  }
+
+  void syncSystemThemeMode() {
+    Brightness brightness = MediaQuery.platformBrightnessOf(context);
+    Log.d("当前系统主题模式： themeMode: ${brightness.name}");
+    if (brightness == Brightness.light) {
+      changeSink(SkinType.bright, isFromSystem: true);
+    } else if (brightness == Brightness.dark) {
+      changeSink(SkinType.black, isFromSystem: true);
+    } else {
+      Log.e("未知的系统主题模式");
+    }
+  }
+
+  Future<void> printEnv() async {
     var appInfo = await EnvironmentConfig.getAppInfo();
     Log.i(EnvironmentConfig.getEnvInfo() + appInfo);
-
   }
 }

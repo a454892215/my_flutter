@@ -18,13 +18,19 @@ class MyState extends State {
         title: const Text("换肤-示例"),
       ),
       body: Align(
-        child: Container(
-          width: 200,
-          height: 200,
-          color: skin().bgColor1(),
-          child: Text(
-            "你好哇",
-            style: TextStyle(color: skin().textColor1()),
+        child: GestureDetector(
+          onTap: () {
+            switchSink();
+            setState(() {});
+          },
+          child: Container(
+            width: 200,
+            height: 200,
+            color: skin().bgColor1(),
+            child: Text(
+              "你好哇",
+              style: TextStyle(color: skin().textColor1()),
+            ),
           ),
         ),
       ),

@@ -18,6 +18,15 @@ BaseSkin skin() {
   return globalSkin.getSkin();
 }
 
+void changeSink(SkinType type) {
+  globalSkin.changeSink(type);
+}
+
+void switchSink() {
+  SkinType type = globalSkin._curSkinType == SkinType.bright ? SkinType.black : SkinType.bright;
+  globalSkin.changeSink(type);
+}
+
 BaseSkin _brightSkin = BrightSkin();
 BaseSkin _blackSkin = BlackSkin();
 

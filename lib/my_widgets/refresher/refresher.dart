@@ -258,14 +258,16 @@ class RefreshWidgetState extends State<Refresher> with TickerProviderStateMixin 
     }
   }
 
-  void notifyHeaderLoadFinish() {
+  void notifyHeaderLoadFinish({isNeedOffset = true}) {
+    widget.controller.isNeedHeaderOffsetOnLoadFinished = isNeedOffset;
     //  正在加载->加载结束
     stateManager.updateHeaderState(3);
     headerHandler.onHeaderLoadFinished();
   }
 
-  void notifyFooterLoadFinish() {
+  void notifyFooterLoadFinish({isNeedOffset = true}) {
     //  正在加载->加载结束
+    widget.controller.isNeedFooterOffsetOnLoadFinished = isNeedOffset;
     stateManager.updateFooterState(3);
     footerHandler.onFooterLoadFinished();
   }

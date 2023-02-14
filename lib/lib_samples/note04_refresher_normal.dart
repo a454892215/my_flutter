@@ -52,9 +52,10 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                     },
                     onFooterLoad: (state) async {
                       await Future.delayed(const Duration(milliseconds: 1000));
-                      loadMoreDataForList(10);
+                      int newDataSize = list2.length <= 70 ? 10 : 0;
+                      loadMoreDataForList(newDataSize);
                       listView2Notifier.value++;
-                      state.notifyFooterLoadFinish();
+                      state.notifyFooterLoadFinish(isNeedOffset: newDataSize > 0);
                     },
                     child: Container(
                       height: refresherContentHeight,

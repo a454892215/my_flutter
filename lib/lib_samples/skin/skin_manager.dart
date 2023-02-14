@@ -44,7 +44,7 @@ void switchSink() {
   _skin.changeSink(type);
 }
 
-void addOnSystemThemeChangeListener(Callback onSystemThemeChangeListener) {
+void setOnSystemThemeChangeListener(Callback? onSystemThemeChangeListener) {
   _skin.onSystemThemeChangeListener = onSystemThemeChangeListener;
 }
 

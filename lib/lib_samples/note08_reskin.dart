@@ -15,9 +15,16 @@ class MyState extends State {
   @override
   void initState() {
     super.initState();
-    addOnSystemThemeChangeListener(() {
+    setOnSystemThemeChangeListener(() async {
+      await Future.delayed(const Duration(milliseconds: 1000));
       setState((){});
     });
+  }
+
+  @override
+  void dispose() {
+    setOnSystemThemeChangeListener(null);
+    super.dispose();
   }
 
   @override

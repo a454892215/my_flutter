@@ -29,7 +29,7 @@ class FlutterChain {
         onRunApp();
       },
       (error, stack) {
-        printError(error, stack, simple: simple);
+        printError(error, stack);
       },
     );
     FlutterError.onError = (FlutterErrorDetails details) async {
@@ -37,16 +37,18 @@ class FlutterChain {
     };
   }
 
-  static printError(error, stack, {bool simple = true}) {
-    debugLog(error.toString(), isShowTime: false, showLine: true, isDescription: true);
+  static printError(error, stack, {bool simple = false}) {
     String errorStr = "";
     if (simple) {
       errorStr = _parseFlutterStack(Trace.from(stack));
     } else {
       errorStr = Trace.from(stack).toString();
     }
+    errorStr = errorStr.trim().replaceAll("\n", " ");
     if (errorStr.isNotEmpty) {
-      debugLog(errorStr, isShowTime: false, showLine: true, isDescription: false);
+      var content = "$error => $errorStr";
+      String log = "${DateTime.now()}:  $content";
+      debugPrint(log);
     }
   }
 
@@ -66,89 +68,6 @@ class FlutterChain {
       }
     }
     return result;
-  }
-}
-
-///
-/// print message when debug.
-///
-/// `maxLength` takes effect when `isDescription = true`, You can edit it based on your console width
-///
-/// `isDescription` means you're about to print a long text
-///
-/// debugLog(
-///   "1234567890",
-///   isDescription: true,
-///   maxLength: 1,
-/// );
-///  ------
-///  | 1  |
-///  | 2  |
-///  | 3  |
-///  | 4  |
-///  | 5  |
-///  | 6  |
-///  | 7  |
-///  | 8  |
-///  | 9  |
-///  | 0  |
-///  ------
-///
-
-void debugLog(Object obj, {bool isShowTime = false, bool showLine = true, int maxLength = 100, bool isDescription = true}) {
-  bool isDebug = false;
-  assert(isDebug = true);
-
-  if (isDebug) {
-    String slice = obj.toString();
-    if (isDescription) {
-      if (obj.toString().length > maxLength) {
-        List<String> objSlice = [];
-        for (int i = 0;
-            i < (obj.toString().length % maxLength == 0 ? obj.toString().length / maxLength : obj.toString().length / maxLength + 1);
-            i++) {
-          if (maxLength * i > obj.toString().length) {
-            break;
-          }
-          objSlice.add(
-              obj.toString().substring(maxLength * i, maxLength * (i + 1) > obj.toString().length ? obj.toString().length : maxLength * (i + 1)));
-        }
-        slice = "\n";
-        for (var element in objSlice) {
-          slice += "$element\n";
-        }
-      }
-    }
-    _print(slice, showLine: showLine, isShowTime: isShowTime);
-  }
-}
-
-_print(String content, {bool isShowTime = true, bool showLine = false}) {
-  String log = isShowTime ? "${DateTime.now()}:  $content" : content;
-  if (showLine) {
-    var logSlice = log.split("\n");
-    int maxLength = _getMaxLength(logSlice) + 3;
-    String line = "-";
-    for (int i = 0; i < maxLength + 1; i++) {
-      line = "$line-";
-    }
-    debugPrint(line);
-    for (var log in logSlice) {
-      if (log.isEmpty) {
-        continue;
-      }
-      int gapLength = maxLength - log.length;
-      if (gapLength > 0) {
-        String space = " ";
-        for (int i = 0; i < gapLength - 3; i++) {
-          space = "$space ";
-        }
-        debugPrint("| $log$space |");
-      }
-    }
-    debugPrint(line);
-  } else {
-    debugPrint(log);
   }
 }
 

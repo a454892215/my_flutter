@@ -29,12 +29,24 @@ class GlobeExceptionHandler {
     var errorMsg = 'exception: ${details.exceptionAsString()} \r\n${details.stack.toString()}';
     String splitMark = '    ';
     List<String> errInfoList = errorMsg.split(splitMark);
+ //   errInfoList = filterLog(errInfoList);
+
     if (errInfoList.length > 101) {
       errInfoList = errInfoList.sublist(0, 101);
     }
     errorMsg = errInfoList.join(splitMark);
     appendLogToLocal(errorMsg);
     Log.e("Not catch Exception type: $type: lineNum:${errInfoList.length}  $errorMsg");
+  }
+
+  List<String> filterLog(List<String> logList) {
+    List<String> ls = [];
+    for (String item in logList) {
+      if (!item.contains("package:flutter")) {
+        ls.add(item);
+      }
+    }
+    return ls;
   }
 
   Future<File> getLogFile() async {
@@ -77,11 +89,11 @@ class GlobeExceptionHandler {
     File logFile = await getLogFile();
     double mb = await logFile.length() / 1024 / 1024;
     String log = await logFile.readAsString();
-    if(log.length > 1){
+    if (log.length > 1) {
       List<String> logList = log.split(sepMark);
       var num = logList.length - 1;
       Log.d("异常log文件大小是：${mb.toStringAsFixed(2)}MB 异常log数目是：$num");
-    }else{
+    } else {
       Log.d("本地无缓存异常log...");
     }
   }

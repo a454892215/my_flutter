@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:my_flutter_lib_3/util/execute_timer.dart';
 import 'package:my_flutter_lib_3/util/toast_util.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MaterialApp(
@@ -87,11 +86,19 @@ class _State extends State<ExceptionTestPage> {
                           width: 200,
                           height: 200,
                           decoration: const BoxDecoration(color: Colors.red),
-                          child: Stack(children:  [
-                            const Positioned(top: 0,child: Text("data", style: TextStyle(color: Color(0xffffffff)),),),
-                         //   if(list!.length == 1) const SizedBox(),
-                            Obx(()=> const SizedBox()),
-                          ],),
+                          child: Stack(
+                            children: [
+                              const Positioned(
+                                top: 0,
+                                child: Text(
+                                  "data",
+                                  style: TextStyle(color: Color(0xffffffff)),
+                                ),
+                              ),
+                              //   if(list!.length == 1) const SizedBox(),
+                              Obx(() => const SizedBox()),
+                            ],
+                          ),
                         ),
                       );
                     });

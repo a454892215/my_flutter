@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:my_flutter_lib_3/util/execute_timer.dart';
 import 'package:my_flutter_lib_3/util/toast_util.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,7 +58,7 @@ class _State extends State<ExceptionTestPage> {
                 timer.printExeTime();
               }),
           CupertinoButton(
-              child: const Text("flutter UI渲染异常"),
+              child: const Text("flutter UI渲染异常1"),
               onPressed: () {
                 showDialog(
                     context: context,
@@ -69,6 +70,28 @@ class _State extends State<ExceptionTestPage> {
                           height: 200,
                           color: Colors.green,
                           decoration: const BoxDecoration(color: Colors.red),
+                        ),
+                      );
+                    });
+              }),
+          CupertinoButton(
+              child: const Text("flutter UI渲染异常2"),
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      List? list = null;
+                      return Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: const BoxDecoration(color: Colors.red),
+                          child: Stack(children:  [
+                            const Positioned(top: 0,child: Text("data", style: TextStyle(color: Color(0xffffffff)),),),
+                         //   if(list!.length == 1) const SizedBox(),
+                            Obx(()=> const SizedBox()),
+                          ],),
                         ),
                       );
                     });

@@ -169,7 +169,7 @@ class MyHomePageState extends State<MyHomePage> {
   showPicker(BuildContext context) async {
     Picker picker = Picker(
         adapter: PickerDataAdapter<String>(
-            pickerdata: const JsonDecoder().convert(PickerData)),
+            pickerData: const JsonDecoder().convert(PickerData)),
         changeToFirst: false,
         textAlign: TextAlign.left,
         textStyle: TextStyle(color: Colors.blue, fontFamily: _fontFamily),
@@ -185,7 +185,7 @@ class MyHomePageState extends State<MyHomePage> {
   showPickerModal(BuildContext context) async {
     final result = await Picker(
         adapter: PickerDataAdapter<String>(
-            pickerdata: const JsonDecoder().convert(PickerData)),
+            pickerData: const JsonDecoder().convert(PickerData)),
         changeToFirst: true,
         hideHeader: false,
         selectedTextStyle: const TextStyle(color: Colors.blue),
@@ -265,7 +265,7 @@ class MyHomePageState extends State<MyHomePage> {
   showPickerDialog(BuildContext context) {
     Picker(
         adapter: PickerDataAdapter<String>(
-            pickerdata: const JsonDecoder().convert(PickerData)),
+            pickerData: const JsonDecoder().convert(PickerData)),
         hideHeader: true,
         title: const Text("Select Data"),
         selectedTextStyle: const TextStyle(color: Colors.blue),
@@ -278,7 +278,7 @@ class MyHomePageState extends State<MyHomePage> {
   showPickerArray(BuildContext context) {
     Picker(
         adapter: PickerDataAdapter<String>(
-          pickerdata: const JsonDecoder().convert(PickerData2),
+          pickerData: const JsonDecoder().convert(PickerData2),
           isArray: true,
         ),
         hideHeader: true,

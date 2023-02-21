@@ -29,7 +29,7 @@ class GlobeExceptionHandler {
     var errorMsg = 'exception: ${details.exceptionAsString()} \r\n${details.stack.toString()}';
     String splitMark = '    ';
     List<String> errInfoList = errorMsg.split(splitMark);
- //   errInfoList = filterLog(errInfoList);
+    errInfoList = filterLog(errInfoList);
 
     if (errInfoList.length > 101) {
       errInfoList = errInfoList.sublist(0, 101);

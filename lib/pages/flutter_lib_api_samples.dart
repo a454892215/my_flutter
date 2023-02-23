@@ -10,6 +10,7 @@ import '../lib_samples/note06_render_box1.dart';
 import '../lib_samples/note07_render_box2.dart';
 import '../lib_samples/note08_reskin.dart';
 import '../lib_samples/note09_InheritedWidget.dart';
+import '../lib_samples/note10_wrap.dart';
 import '../util/Log.dart';
 
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
@@ -52,6 +53,7 @@ class Page2State extends State {
                   MaterialButton(child: const Text("RenderBoxPage1"), onPressed: () => Get.to(() => const RenderBoxPage1())),
                   MaterialButton(child: const Text("换肤"), onPressed: () => Get.to(() => const ChangeSkinPage())),
                   MaterialButton(child: const Text("InheritedWidgetPage"), onPressed: () => Get.to(() => const InheritedWidgetPage())),
+                  MaterialButton(child: const Text("WrapTestPage"), onPressed: () => Get.to(() => const WrapTestPage())),
                 ],
               )),
         ));

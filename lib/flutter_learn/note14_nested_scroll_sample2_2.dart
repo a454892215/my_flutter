@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../my_widgets/nested_scroll_widget.dart';
 
 /// 1. 只有下面的List可以滑动了，头部才能滑动隐藏
@@ -53,21 +52,25 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
             ],
           ),
         ),
-        sliverListWidget: SliverList(
-          delegate: SliverChildBuilderDelegate(
-              (context, listIndex) => Container(
-                    height: 50,
-                    color: Colors.primaries[(listIndex) % Colors.primaries.length],
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.only(bottom: 4),
-                    child: Text(
-                      '$listIndex',
-                      style: const TextStyle(color: Colors.black, fontSize: 10),
-                    ),
-                  ),
-              childCount: 20),
-        ),
+        sliverListWidget: buildSliverList(),
       ),
+    );
+  }
+
+  SliverList buildSliverList() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+          (context, listIndex) => Container(
+                height: 50,
+                color: Colors.primaries[(listIndex) % Colors.primaries.length],
+                alignment: Alignment.center,
+                margin: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                  '$listIndex',
+                  style: const TextStyle(color: Colors.black, fontSize: 10),
+                ),
+              ),
+          childCount: 20),
     );
   }
 }

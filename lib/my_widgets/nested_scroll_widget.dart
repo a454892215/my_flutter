@@ -6,7 +6,7 @@ class NestedScrollWidget extends StatefulWidget {
     this.topTitle,
     this.bottomTitle,
     required this.background,
-    required this.listWidget,
+    required this.sliverListWidget,
     this.expandedHeight = 180,
     this.collapsedHeight = 30,
     this.toolbarHeight = 30,
@@ -15,7 +15,7 @@ class NestedScrollWidget extends StatefulWidget {
   final Widget? topTitle;
   final Widget? bottomTitle;
   final Widget background;
-  final Widget listWidget;
+  final Widget sliverListWidget;
   final double expandedHeight;
   final double collapsedHeight;
   final double toolbarHeight;
@@ -55,7 +55,7 @@ class MyState extends State<NestedScrollWidget> {
           ),
         ),
         // const SliverPadding(padding: EdgeInsets.only(top: 10)),
-        widget.listWidget,
+        widget.sliverListWidget,
       ],
     );
   }

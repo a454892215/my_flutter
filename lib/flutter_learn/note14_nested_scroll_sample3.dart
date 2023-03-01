@@ -13,8 +13,8 @@ String summary = '''
 9. SliverFixedExtentList 用法示例 
 ''';
 
-class NestedScrollViewSamplePage2 extends StatefulWidget {
-  const NestedScrollViewSamplePage2({super.key});
+class NestedScrollViewSamplePage3 extends StatefulWidget {
+  const NestedScrollViewSamplePage3({super.key});
 
   @override
   State<StatefulWidget> createState() {

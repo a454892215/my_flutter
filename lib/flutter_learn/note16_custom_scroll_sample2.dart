@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../util/ui_utils.dart';
 /// 1. 只有下面的List可以滑动了，头部才能滑动隐藏
-class CustomScrollViewSample2Page extends StatefulWidget {
-  const CustomScrollViewSample2Page({super.key});
+class NestedScrollViewSamplePage2 extends StatefulWidget {
+  const NestedScrollViewSamplePage2({super.key});
 
   @override
   State<StatefulWidget> createState() {

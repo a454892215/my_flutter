@@ -36,6 +36,7 @@ class PopWindow {
     if (entry == null) {
       entry = OverlayEntry(
           builder: (context) => PopPage(
+                key: UniqueKey(),
                 popWindow: this,
                 contentHeight: contentHeight,
                 child: child,
@@ -136,7 +137,7 @@ class MyState extends State<PopPage> with TickerProviderStateMixin, RouteAware {
   }
 
   void dismiss() {
-    if(state == 1){
+    if (state == 1) {
       anim.controller.reverse();
     }
   }

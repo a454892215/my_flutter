@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_flutter_lib_3/util/toast_util.dart';
 
 import '../my_widgets/comm_widgets.dart';
-import '../util/Log.dart';
 
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
 /// 1. StatelessWidget 无动态变化属性的页面
@@ -58,10 +57,10 @@ class Page1State extends State {
       ["/ContainerSamplePage", "去-ContainerSamplePage-页面"],
       ["/LinearLayoutSamplePage", "去-LinearLayoutSamplePage-页面"],
       ["/SingleChildScrollViewSamplePage", "去-SingleChildScrollViewSamplePage-页面"],
-      ["/NestedScrollViewSamplePage", "去-NestedScrollViewSamplePage-页面"],
-      ["/NestedScrollViewSamplePage2", "去-NestedScrollViewSamplePage2-页面"],
+      ["/NestedScrollViewSamplePage", "去-嵌套滚动页面1-页面"],
+      ["/NestedScrollViewSamplePage2", "去-嵌套滚动页面2-页面"],
+      ["/NestedScrollViewSamplePage3", "去-嵌套滚动页面3-页面"],
       ["/CustomScrollViewSamplePage", "去-CustomScrollViewSamplePage-页面"],
-      ["/CustomScrollViewSample2Page", "去-CustomScrollViewSample2Page-页面"],
       ["/ListViewSamplePage", "去-ListViewSamplePage-页面"],
       ["/GridViewSamplePage", "去-GridViewSamplePage-页面"],
       ["/SmartRefreshSamplePage", "去-SmartRefreshSamplePage-页面"],

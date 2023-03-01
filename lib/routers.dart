@@ -30,8 +30,8 @@ import 'flutter_learn/note09_imge_sample_page.dart';
 import 'flutter_learn/note10_container_sample.dart';
 import 'flutter_learn/note11_linear_layout_sample.dart';
 import 'flutter_learn/note12_scroll_sample.dart';
-import 'flutter_learn/note13_nested_scroll_sample.dart';
-import 'flutter_learn/note14_nested_scroll_sample2.dart';
+import 'flutter_learn/note13_nested_scroll_sample1.dart';
+import 'flutter_learn/note14_nested_scroll_sample3.dart';
 import 'flutter_learn/note15_custom_scroll_sample.dart';
 import 'flutter_learn/note17_2_grid_view_sample.dart';
 import 'flutter_learn/note17_list_view_sample.dart';
@@ -68,9 +68,9 @@ Map<String, GetPageBuilder> routers = {
   '/LinearLayoutSamplePage': () => const LinearLayoutSamplePage(),
   '/SingleChildScrollViewSamplePage': () => const SingleChildScrollViewSamplePage(),
   '/NestedScrollViewSamplePage': () => const NestedScrollViewSamplePage(),
-  '/NestedScrollViewSamplePage2': () => const NestedScrollViewSamplePage2(),
+  '/NestedScrollViewSamplePage3': () => const NestedScrollViewSamplePage3(),
   '/CustomScrollViewSamplePage': () => const CustomScrollViewSamplePage(),
-  '/CustomScrollViewSample2Page': () => const CustomScrollViewSample2Page(),
+  '/NestedScrollViewSamplePage2': () => const NestedScrollViewSamplePage2(),
   '/ListViewSamplePage': () => const ListViewSamplePage(),
   '/GridViewSamplePage': () => const GridViewSamplePage(),
   '/RefreshSamplePage': () => const RefreshSamplePage(),

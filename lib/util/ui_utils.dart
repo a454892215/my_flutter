@@ -8,23 +8,6 @@ class UIUtil {
     return SizedBox(width: 0, height: height);
   }
 
-  static SliverAppBar buildSliverAppBar(
-      [Widget? title, Widget? flexibleSpace, double expandedHeight = 180, bool pinned = true]) {
-    return SliverAppBar(
-      pinned: pinned,
-      floating: true,
-      expandedHeight: expandedHeight,
-      title: title,
-      flexibleSpace: flexibleSpace,
-    );
-  }
-
-  static SliverList buildSliverList(WidgetCreate widgetCreate, int count) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) => widgetCreate(context, index), childCount: count),
-    );
-  }
-
   static Container buildContainer(int listIndex) {
     return Container(
       height: 50,

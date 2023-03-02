@@ -332,7 +332,7 @@ class Sample4 extends StatelessWidget {
   }
 }
 
-Widget buildSliverList([int count = 5]) {
+Widget buildSliverList([int count = 50]) {
   return SliverFixedExtentList(
     delegate: SliverChildBuilderDelegate(
       (ctx, index) {

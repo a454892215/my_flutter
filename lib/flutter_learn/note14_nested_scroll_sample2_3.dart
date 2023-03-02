@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import '../util/Log.dart';
 
 /// 1. 只有下面的List可以滑动了，头部才能滑动隐藏
-class EasyRefreshSamplePage extends StatefulWidget {
-  const EasyRefreshSamplePage({super.key});
+class EasyRefreshSample2Page extends StatefulWidget {
+  const EasyRefreshSample2Page({super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -23,6 +23,8 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   EasyRefreshController refreshController = EasyRefreshController();
 
+  bool isRequestDataBefore = true;
+
   Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(title: const Text("EasyRefresh 示例")),
@@ -37,22 +39,18 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                 width: double.infinity,
                 height: 180,
                 color: Colors.blue,
-                    alignment: Alignment.bottomLeft,
-                    child: const Text("标题栏"),
+                alignment: Alignment.bottomLeft,
+                child: const Text("标题栏"),
               )),
               SliverList(
-                delegate: SliverChildBuilderDelegate(
-                    (context, listIndex) => Container(
-                          height: 50,
-                          color: Colors.primaries[(listIndex) % Colors.primaries.length],
-                          alignment: Alignment.center,
-                          margin: const EdgeInsets.only(bottom: 4),
-                          child: Text(
-                            '$listIndex',
-                            style: const TextStyle(color: Colors.black, fontSize: 10),
-                          ),
-                        ),
-                    childCount: listSize),
+                delegate: SliverChildBuilderDelegate((context, listIndex) {
+                  if (listSize == 0 && isRequestDataBefore) {
+                    return buildWidgetBeforeRequestData();
+                  } else if (listSize == 0) {
+                    return buildEmptyWidget();
+                  }
+                  return buildNormalItem(listIndex);
+                }, childCount: listSize + 1),
               ),
             ],
 
@@ -64,26 +62,43 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
             header: ClassicalHeader(),
             footer: ClassicalFooter(),
             firstRefresh: true,
-            firstRefreshWidget: listSize == 0
-                ? Container(
-                    width: 200,
-                    height: 200,
-                    alignment: Alignment.center,
-                    child: const Text("第一次刷新..."),
-                  )
-                : null,
+            firstRefreshWidget: null,
 
             /// 2. 注意，无数据返回null 否则不能显示正常数据
-            emptyWidget: listSize == 0
-                ? Container(
-                    width: 200,
-                    height: 200,
-                    alignment: Alignment.center,
-                    child: const Text("暂无数据..."),
-                  )
-                : null,
+            emptyWidget: null,
           );
         }),
+      ),
+    );
+  }
+
+  Container buildEmptyWidget() {
+    return Container(
+      width: 200,
+      height: 200,
+      alignment: Alignment.center,
+      child: const Text("暂无数据..."),
+    );
+  }
+
+  Container buildWidgetBeforeRequestData() {
+    return Container(
+      width: 200,
+      height: 200,
+      alignment: Alignment.center,
+      child: const Text("第一次进入请求数据前的样式..."),
+    );
+  }
+
+  Container buildNormalItem(int listIndex) {
+    return Container(
+      height: 50,
+      color: Colors.primaries[(listIndex) % Colors.primaries.length],
+      alignment: Alignment.center,
+      margin: const EdgeInsets.only(bottom: 4),
+      child: Text(
+        '$listIndex',
+        style: const TextStyle(color: Colors.black, fontSize: 10),
       ),
     );
   }
@@ -98,6 +113,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
     if (requestDataCount.value >= 1) {
       listSize = 10;
     }
+    isRequestDataBefore = false;
     requestDataCount.value++;
     refreshController.finishRefresh();
   }

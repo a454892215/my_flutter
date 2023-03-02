@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_flutter_lib_3/env.dart';
 import '../flutter_learn/note14_nested_scroll_sample2_2.dart';
+import '../flutter_learn/note14_nested_scroll_sample2_3.dart';
 import '../lib_samples/note01_picker.dart';
 import '../lib_samples/note02_screenshot_event.dart';
 import '../lib_samples/note03_web_parser.dart';
@@ -55,7 +56,8 @@ class Page2State extends State {
                   MaterialButton(child: const Text("换肤"), onPressed: () => Get.to(() => const ChangeSkinPage())),
                   MaterialButton(child: const Text("InheritedWidgetPage"), onPressed: () => Get.to(() => const InheritedWidgetPage())),
                   MaterialButton(child: const Text("WrapTestPage"), onPressed: () => Get.to(() => const WrapTestPage())),
-                  MaterialButton(child: const Text("EasyRefreshSamplePage"), onPressed: () => Get.to(() => const EasyRefreshSamplePage())),
+                  MaterialButton(child: const Text("EasyRefreshSamplePage-异常嵌套头模式"), onPressed: () => Get.to(() => const EasyRefreshSamplePage())),
+                  MaterialButton(child: const Text("EasyRefreshSample2Page-正常嵌套头模式"), onPressed: () => Get.to(() => const EasyRefreshSample2Page())),
                 ],
               )),
         ));

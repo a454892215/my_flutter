@@ -23,8 +23,6 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   EasyRefreshController refreshController = EasyRefreshController();
 
-  // late final ValueNotifier<int> notifier = ValueNotifier<int>(0);
-
   Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(title: const Text("EasyRefresh 示例")),
@@ -34,29 +32,14 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
           return EasyRefresh.custom(
             ///1.  注意  slivers中 无法触发 Obx 和 ValueListenableBuilder的刷新机制 ？？？
             slivers: <Widget>[
-              SliverAppBar(
-                // 收起的过渡颜色
-                // backgroundColor: Colors.white,
-                title: null,
-                // 去掉主标题栏左右间距
-                titleSpacing: 0,
-                leading: const SizedBox(),
-                pinned: true,
-                floating: true,
-                bottom: const PreferredSize(preferredSize: Size(0, 0), child: SizedBox()),
-                expandedHeight: 180,
-                toolbarHeight: 0,
-                collapsedHeight: 0,
-                leadingWidth: 0,
-                //  collapsedHeight >= toolbarHeight
-                flexibleSpace: FlexibleSpaceBar(
-                  titlePadding: const EdgeInsets.all(0),
-                  expandedTitleScale: 1,
-                  collapseMode: CollapseMode.parallax,
-                  title: const Text("子标题", style: TextStyle(fontSize: 13)),
-                  background: Container(color: Colors.blue),
-                ),
-              ),
+              SliverToBoxAdapter(
+                  child: Container(
+                width: double.infinity,
+                height: 180,
+                color: Colors.blue,
+                    alignment: Alignment.bottomLeft,
+                    child: const Text("标题栏"),
+              )),
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                     (context, listIndex) => Container(
@@ -69,7 +52,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
                             style: const TextStyle(color: Colors.black, fontSize: 10),
                           ),
                         ),
-                    childCount: listSize),
+                    childCount: listSize + 1),
               ),
             ],
 
@@ -110,7 +93,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   Future<void> onRefresh() async {
     Log.d("========onRefresh======refreshCount:${requestDataCount.value}===");
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future.delayed(const Duration(milliseconds: 1000));
     // 模拟第一次请求 无数据
     if (requestDataCount.value >= 1) {
       listSize = 10;
@@ -121,7 +104,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
 
   Future<void> onLoading() async {
     Log.d("========onLoading======refreshCount:${requestDataCount.value}===");
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future.delayed(const Duration(milliseconds: 1000));
     // 模拟第一次请求 无数据
     if (requestDataCount.value >= 1) {
       listSize += 10;

@@ -24,7 +24,13 @@ class _State extends State<CupertinoPickerTestPage> {
         body: SafeArea(
       child: ListView(
         children: [
-          Container(height: 50, color: Colors.yellow, child: const Center(child: Text("CupertinoPicker-用例"),),),
+          Container(
+            height: 50,
+            color: Colors.yellow,
+            child: const Center(
+              child: Text("CupertinoPicker-用例"),
+            ),
+          ),
           buildSample1(),
           buildSample2(),
           buildSample3(),
@@ -48,21 +54,23 @@ class _State extends State<CupertinoPickerTestPage> {
         // item高度
         useMagnifier: false,
         overAndUnderCenterOpacity: 1,
+
         /// 使用放大 magnification > 1，滚动时候 下面多一根横线
         magnification: 1,
+
         /// 两侧缩小比： squeeze
         squeeze: 1,
         children: List.generate(
             20,
-                (index) => Container(
-              height: 50,
-              alignment: Alignment.center,
-              color: index % 2 == 0 ? Colors.green : Colors.blue,
-              child: Text(
-                "item:$index",
-                style: const TextStyle(fontSize: 14),
-              ),
-            )),
+            (index) => Container(
+                  height: 50,
+                  alignment: Alignment.center,
+                  color: index % 2 == 0 ? Colors.green : Colors.blue,
+                  child: Text(
+                    "item:$index",
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                )),
       ),
     );
   }
@@ -73,88 +81,59 @@ class _State extends State<CupertinoPickerTestPage> {
       color: Colors.grey,
       child: MyCupertinoPicker(
         key: UniqueKey(),
+
         /// 偏转两侧UI形成的立体效果
         diameterRatio: 4,
         backgroundColor: Colors.transparent,
         onSelectedItemChanged: (int value) {},
-        itemExtent: 50,
         // item高度
+        itemExtent: 50,
+
         useMagnifier: false,
         kOverAndUnderCenterOpacity: 0.4,
+
         /// 使用放大 magnification > 1，滚动时候 下面多一根横线
         magnification: 1,
+
         /// 两侧缩小比： squeeze
         squeeze: 1,
-        selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(background: Colors.transparent,),
+        selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+          background: Colors.transparent,
+        ),
         looping: true,
         children: List.generate(
             20,
-                (index) => Container(
-              height: 50,
-              alignment: Alignment.center,
-              color: index % 2 == 0 ? Colors.green : Colors.blue,
-              child: Text(
-                "item:$index",
-                style: const TextStyle(fontSize: 14),
-              ),
-            )),
+            (index) => Container(
+                  height: 50,
+                  alignment: Alignment.center,
+                  color: index % 2 == 0 ? Colors.green : Colors.blue,
+                  child: Text(
+                    "item:$index",
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                )),
       ),
     );
   }
 
   Widget buildSample2() {
     return Container(
-          height: 150,
-          color: Colors.grey,
-          child: MyCupertinoPicker(
-            key: UniqueKey(),
-            /// 偏转两侧UI形成的立体效果
-            diameterRatio: 0.57,
-            backgroundColor: Colors.transparent,
-            onSelectedItemChanged: (int value) {},
-            itemExtent: 50,
-            // item高度
-            useMagnifier: false,
-            /// 使用放大 magnification > 1，滚动时候 下面多一根横线
-            magnification: 1,
-            /// 两侧缩小比： squeeze
-            squeeze: 1,
-            selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
-              background: Colors.transparent,
-              capEndEdge: false,
-              capStartEdge: false,
-            ),
-            looping: true,
-            children: List.generate(
-                20,
-                (index) => Container(
-                      height: 50,
-                      alignment: Alignment.center,
-                      color: index % 2 == 0 ? Colors.green : Colors.blue,
-                      child: Text(
-                        "item:$index",
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                    )),
-          ),
-        );
-  }
-
-  Widget buildSample1() {
-    return Container(
       height: 150,
-     color: Colors.grey,
+      color: Colors.grey,
       child: MyCupertinoPicker(
         key: UniqueKey(),
+
         /// 偏转两侧UI形成的立体效果
-        diameterRatio: 50,
+        diameterRatio: 0.57,
         backgroundColor: Colors.transparent,
         onSelectedItemChanged: (int value) {},
         itemExtent: 50,
         // item高度
         useMagnifier: false,
+
         /// 使用放大 magnification > 1，滚动时候 下面多一根横线
         magnification: 1,
+
         /// 两侧缩小比： squeeze
         squeeze: 1,
         selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
@@ -165,15 +144,63 @@ class _State extends State<CupertinoPickerTestPage> {
         looping: true,
         children: List.generate(
             20,
-                (index) => Container(
-              height: 50,
-              alignment: Alignment.center,
-              color: index % 2 == 0 ? Colors.green : Colors.blue,
-              child: Text(
-                "item:$index",
-                style: const TextStyle(fontSize: 14),
-              ),
-            )),
+            (index) => Container(
+                  height: 50,
+                  alignment: Alignment.center,
+                  color: index % 2 == 0 ? Colors.green : Colors.blue,
+                  child: Text(
+                    "item:$index",
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                )),
+      ),
+    );
+  }
+  FixedExtentScrollController controller = FixedExtentScrollController();
+
+
+  Widget buildSample1() {
+    return Container(
+      height: 150,
+      color: Colors.grey,
+      child: MyCupertinoPicker(
+        key: UniqueKey(),
+        scrollController: controller,
+        /// 偏转两侧UI形成的立体效果
+        diameterRatio: 50,
+        backgroundColor: Colors.transparent,
+        onSelectedItemChanged: (int value) {},
+        itemExtent: 50,
+        // item高度
+        useMagnifier: false,
+
+        /// 使用放大 magnification > 1，滚动时候 下面多一根横线
+        magnification: 1,
+
+        /// 两侧缩小比： squeeze
+        squeeze: 1,
+        selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+          background: Colors.transparent,
+          capEndEdge: false,
+          capStartEdge: false,
+        ),
+        looping: false,
+        children: List.generate(
+            20,
+            (index) => GestureDetector(
+                  onTap: () {
+                    controller.animateToItem(index, duration: const Duration(milliseconds: 300), curve: Curves.linear);
+                  },
+                  child: Container(
+                    height: 50,
+                    alignment: Alignment.center,
+                    color: index % 2 == 0 ? Colors.green : Colors.blue,
+                    child: Text(
+                      "item:$index",
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ),
+                )),
       ),
     );
   }

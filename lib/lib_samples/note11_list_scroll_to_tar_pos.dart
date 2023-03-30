@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../util/Log.dart';
 
@@ -94,16 +95,16 @@ class MessageItemWidget extends StatefulWidget {
 class MessageItemState extends State<MessageItemWidget> {
   final GlobalKey globalKey = GlobalKey();
   ImageStream? _imageStream;
-  bool _isImageLoaded = false;
+
+  // bool _isImageLoaded = true;
 
   void afterLayout(Duration duration) {
     final RenderObject? object = globalKey.currentContext?.findRenderObject();
     if (object != null) {
       RenderBox renderBox = object as RenderBox;
       final size = renderBox.size;
+      // 如果存在图片则不能准确获取宽高
       Log.d('index:${widget.index} Width: ${size.width}, Height: ${size.height}');
-    } else {
-      Log.e("object = null currentContext: ${globalKey.currentContext}");
     }
   }
 
@@ -112,7 +113,6 @@ class MessageItemState extends State<MessageItemWidget> {
     super.initState();
     _imageStream = AssetImage(widget.message.pic).resolve(ImageConfiguration.empty);
     _imageStream!.addListener(ImageStreamListener(_onImageLoaded));
-    WidgetsBinding.instance.addPostFrameCallback(afterLayout);
   }
 
   @override
@@ -123,9 +123,12 @@ class MessageItemState extends State<MessageItemWidget> {
 
   void _onImageLoaded(ImageInfo imageInfo, bool synchronousCall) {
     setState(() {
-      _isImageLoaded = true;
+      // _isImageLoaded = true;
       var width = imageInfo.image.width;
       var height = imageInfo.image.height;
+
+      /// 如果widget中有多张影响其大小的图片 则需要在最后一张图片加载完成后再设置其监听
+      WidgetsBinding.instance.addPostFrameCallback(afterLayout);
       Log.d("index：${widget.index}  图片已经加载======width:$width height:$height=======");
     });
   }
@@ -134,13 +137,14 @@ class MessageItemState extends State<MessageItemWidget> {
   Widget build(BuildContext context) {
     return Container(
       key: globalKey,
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(10),
       alignment: Alignment.center,
       color: Colors.blue,
       child: Column(
         children: [
-          _isImageLoaded ? Image.asset(widget.message.pic):const SizedBox(),
+          Image.asset(widget.message.pic),
+          const SizedBox(height: 10),
           Text(widget.message.content),
         ],
       ),

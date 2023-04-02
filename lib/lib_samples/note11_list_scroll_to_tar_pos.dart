@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../util/Log.dart';
 
@@ -97,6 +97,8 @@ class MessageItemState extends State<MessageItemWidget> {
   ImageStream? _imageStream;
 
   // bool _isImageLoaded = true;
+  double picWidth = 0;
+  final picHeight = 0.0.obs;
 
   void afterLayout(Duration duration) {
     final RenderObject? object = globalKey.currentContext?.findRenderObject();
@@ -104,6 +106,8 @@ class MessageItemState extends State<MessageItemWidget> {
       RenderBox renderBox = object as RenderBox;
       final size = renderBox.size;
       // 如果存在图片则不能准确获取宽高
+      picWidth = size.width;
+      picHeight.value = size.height;
       Log.d('index:${widget.index} Width: ${size.width}, Height: ${size.height}');
     }
   }
@@ -122,28 +126,31 @@ class MessageItemState extends State<MessageItemWidget> {
   }
 
   void _onImageLoaded(ImageInfo imageInfo, bool synchronousCall) {
-    setState(() {
-      // _isImageLoaded = true;
-      var width = imageInfo.image.width;
-      var height = imageInfo.image.height;
+    var width = imageInfo.image.width;
+    var height = imageInfo.image.height;
 
-      /// 如果widget中有多张影响其大小的图片 则需要在最后一张图片加载完成后再设置其监听
-      WidgetsBinding.instance.addPostFrameCallback(afterLayout);
-      Log.d("index：${widget.index}  图片已经加载======width:$width height:$height=======");
-    });
+    /// 如果widget中有多张影响其大小的图片 则需要在最后一张图片加载完成后再设置其监听
+    WidgetsBinding.instance.addPostFrameCallback(afterLayout);
+    Log.d("index：${widget.index}  图片已经加载======width:$width height:$height=======");
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: globalKey,
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(10),
       alignment: Alignment.center,
-      color: Colors.blue,
+      color: const Color(0xff387fde),
       child: Column(
         children: [
-          Image.asset(widget.message.pic),
+          Stack(children: [
+            Image.asset(widget.message.pic, key: globalKey),
+            Obx(() => Container(
+                  width: picWidth,
+                  height: picHeight.value,
+                  color: const Color(0xa337b73d),
+                )),
+          ]),
           const SizedBox(height: 10),
           Text(widget.message.content),
         ],

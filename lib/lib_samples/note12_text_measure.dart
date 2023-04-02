@@ -20,7 +20,8 @@ class TextMeasureWidgetState extends State<TextMeasureWidget> {
   @override
   void initState() {
     super.initState();
-    measureText(text: text, style: textStyle, maxWidth: maxWidth);
+    var textSize = getTextSize(text: text, style: textStyle, maxWidth: maxWidth);
+    Log.d("====== measure textSize:$textSize=============");
   }
 
   WidgetSizeHelper widgetSizeHelper = WidgetSizeHelper();
@@ -44,7 +45,9 @@ class TextMeasureWidgetState extends State<TextMeasureWidget> {
                 ),
               ),
               onPressed: () {
-                Log.d("=======size:${widgetSizeHelper.getSize()}=============");
+                var textSize = getTextSize(text: text, style: textStyle, maxWidth: maxWidth);
+                Log.d("====== measure textSize:$textSize=============");
+                Log.d("======real size:${widgetSizeHelper.getSize()}=============");
               })
         ],
       ),

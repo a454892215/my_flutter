@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:my_flutter_lib_3/util/text_util.dart';
-
 import '../my_widgets/measure_pic_state.dart';
 
 class ChatPage extends StatefulWidget {
@@ -27,8 +25,6 @@ class ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
-    String text = "Hello, World!\nThis is a new line. fdafdf dfaf dfasfas fdfaf dfdasdf fdffa fasf";
-    measureText(text: text, style: const TextStyle(fontSize: 16.0), maxWidth: 200);
     for (int i = 0; i < 200; i++) {
       var picPath = "images/${picList[i % 4]}";
       _messages.add(Message(content: "$i-Hello", sender: "Alice", pic: picPath));

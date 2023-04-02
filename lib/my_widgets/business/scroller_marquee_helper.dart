@@ -1,20 +1,28 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../util/Log.dart';
 
 
+typedef OnScrollToEndListener = void Function();
+
 class MarqueeHelper {
   late AnimationController animController;
+  OnScrollToEndListener? onScrollToEndListener;
 
   MarqueeHelper({required TickerProvider vsync}) {
     animController = AnimationController(vsync: vsync, duration: Duration(seconds: 60 * 5))..forward();
   }
 
+  void setOnScrollToEndListener(OnScrollToEndListener listener) {
+    onScrollToEndListener = listener;
+  }
+
   late double lastMaxScrollExtent;
   double lastScrollPos = 0;
+  double lastScrolledAnimValue = 0;
+  double lastScrolledAnimDistanceValue = 0;
 
   final ScrollController sc = ScrollController();
 
@@ -45,6 +53,7 @@ class MarqueeHelper {
         if (lastScrollPos < sc.position.maxScrollExtent) {
           /// 从上次滚动的地方开始滚动
           double lastScrollRatio = lastScrollPos / sc.position.maxScrollExtent;
+          // lastScrollRatio = lastScrollRatio + lastScrolledAnimDistanceValue;
           // Log.d("lastScrollRatio: $lastScrollRatio ${getCurCostTime()}");
           animController.stop();
           animController.forward(from: lastScrollRatio);
@@ -58,7 +67,13 @@ class MarqueeHelper {
       var tarScrollingPos = animController.value * sc.position.maxScrollExtent;
       sc.jumpTo(tarScrollingPos);
       lastScrollPos = tarScrollingPos;
+      lastScrolledAnimDistanceValue = animController.value - lastScrolledAnimValue;
+      lastScrolledAnimValue = animController.value;
+      // Log.d("lastScrolledAnimDistanceValue:  $lastScrolledAnimDistanceValue");
       if (tarScrollingPos == sc.position.maxScrollExtent) {
+        if (onScrollToEndListener != null) {
+          onScrollToEndListener!();
+        }
         reScroll();
       }
     });
@@ -71,7 +86,7 @@ class MarqueeHelper {
     startTimeStampOnStart = DateTime.now().millisecondsSinceEpoch; // 时间戳
   }
 
-  String getCurCostTime(){
+  String getCurCostTime() {
     int costTime = (DateTime.now().millisecondsSinceEpoch - startTimeStampOnStart) ~/ 1000;
     return "花费时间：$costTime 秒";
   }
@@ -79,7 +94,7 @@ class MarqueeHelper {
   /// 滚动速度受回调速度的影响： 每次滚动固定的长度
   void startScrollStrategy2() {
     animController.addListener(() {
-      var tarScrollingPos = lastScrollPos + 3.w;
+      var tarScrollingPos = lastScrollPos + 2;
       if (tarScrollingPos > sc.position.maxScrollExtent) {
         tarScrollingPos = sc.position.maxScrollExtent;
       }
@@ -89,5 +104,9 @@ class MarqueeHelper {
         reScroll();
       }
     });
+  }
+
+  void dispose() {
+    animController.dispose();
   }
 }

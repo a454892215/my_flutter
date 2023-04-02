@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../my_widgets/measure_pic_state.dart';
@@ -104,10 +105,10 @@ class MessageItemState extends SinglePicMeasureState<MessageItemWidget> {
       child: Column(
         children: [
           Stack(children: [
-            Image.asset(getPicPath(), key: picGlobalKey),
+            Image.asset(getPicPath(), width: 800.w, key: item.picGlobalKey),
             Obx(() => Container(
-                  width: picWidth,
-                  height: picHeight.value,
+                  width: 800.w,
+                  height: item.picHeightWidthRadio.value * 800.w,
                   color: const Color(0xa337b73d),
                 )),
           ]),

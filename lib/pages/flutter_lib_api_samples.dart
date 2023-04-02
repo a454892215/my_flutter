@@ -9,11 +9,11 @@ import '../lib_samples/note03_web_parser.dart';
 import '../lib_samples/note04_refresher_normal.dart';
 import '../lib_samples/note05_refresher_chatroom.dart';
 import '../lib_samples/note06_render_box1.dart';
-import '../lib_samples/note07_render_box2.dart';
 import '../lib_samples/note08_reskin.dart';
 import '../lib_samples/note09_InheritedWidget.dart';
 import '../lib_samples/note10_wrap.dart';
-import '../lib_samples/note11_list_scroll_to_tar_pos.dart';
+import '../lib_samples/note11_pic_measure.dart';
+import '../lib_samples/note12_text_measure.dart';
 import '../util/Log.dart';
 
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
@@ -59,7 +59,8 @@ class Page2State extends State {
                   MaterialButton(child: const Text("WrapTestPage"), onPressed: () => Get.to(() => const WrapTestPage())),
                   MaterialButton(child: const Text("EasyRefreshSamplePage-异常嵌套头模式"), onPressed: () => Get.to(() => const EasyRefreshSamplePage())),
                   MaterialButton(child: const Text("EasyRefreshSample2Page-正常嵌套头模式"), onPressed: () => Get.to(() => const EasyRefreshSample2Page())),
-                  MaterialButton(child: const Text("ChatPage-验证"), onPressed: () => Get.to(() =>  ChatPage())),
+                  MaterialButton(child: const Text("图片大小测量-验证"), onPressed: () => Get.to(() =>  const ChatPage())),
+                  MaterialButton(child: const Text("文字大小测量-验证"), onPressed: () => Get.to(() =>  const TextMeasureWidget())),
                 ],
               )),
         ));

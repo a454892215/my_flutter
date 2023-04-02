@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../my_widgets/measure_pic_state.dart';
 import '../util/Log.dart';
 
 class ChatPage extends StatefulWidget {
@@ -92,48 +93,7 @@ class MessageItemWidget extends StatefulWidget {
   MessageItemState createState() => MessageItemState();
 }
 
-class MessageItemState extends State<MessageItemWidget> {
-  final GlobalKey globalKey = GlobalKey();
-  ImageStream? _imageStream;
-
-  // bool _isImageLoaded = true;
-  double picWidth = 0;
-  final picHeight = 0.0.obs;
-
-  void afterLayout(Duration duration) {
-    final RenderObject? object = globalKey.currentContext?.findRenderObject();
-    if (object != null) {
-      RenderBox renderBox = object as RenderBox;
-      final size = renderBox.size;
-      // 如果存在图片则不能准确获取宽高
-      picWidth = size.width;
-      picHeight.value = size.height;
-      Log.d('index:${widget.index} Width: ${size.width}, Height: ${size.height}');
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _imageStream = AssetImage(widget.message.pic).resolve(ImageConfiguration.empty);
-    _imageStream!.addListener(ImageStreamListener(_onImageLoaded));
-  }
-
-  @override
-  void dispose() {
-    _imageStream!.removeListener(ImageStreamListener(_onImageLoaded));
-    super.dispose();
-  }
-
-  void _onImageLoaded(ImageInfo imageInfo, bool synchronousCall) {
-    var width = imageInfo.image.width;
-    var height = imageInfo.image.height;
-
-    /// 如果widget中有多张影响其大小的图片 则需要在最后一张图片加载完成后再设置其监听
-    WidgetsBinding.instance.addPostFrameCallback(afterLayout);
-    Log.d("index：${widget.index}  图片已经加载======width:$width height:$height=======");
-  }
-
+class MessageItemState extends SinglePicMeasureState<MessageItemWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -144,7 +104,7 @@ class MessageItemState extends State<MessageItemWidget> {
       child: Column(
         children: [
           Stack(children: [
-            Image.asset(widget.message.pic, key: globalKey),
+            Image.asset(getPicPath(), key: picGlobalKey),
             Obx(() => Container(
                   width: picWidth,
                   height: picHeight.value,
@@ -156,5 +116,10 @@ class MessageItemState extends State<MessageItemWidget> {
         ],
       ),
     );
+  }
+
+  @override
+  String getPicPath() {
+    return widget.message.pic;
   }
 }

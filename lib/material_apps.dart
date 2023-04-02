@@ -36,6 +36,13 @@ Widget getMaterialApp(BuildContext context) {
     onGenerateRoute: (RouteSettings settings) {
       return MaterialPageRoute(builder: (BuildContext context) => const ErrPage());
     },
+    builder: (context, widget) {
+      return MediaQuery(
+        ///设置文字大小不随系统设置改变
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: widget ?? const SizedBox(),
+      );
+    },
 
     /// 配置页面离开和进入的监听
     navigatorObservers: [MyNavigatorObserver(), routeObserver],

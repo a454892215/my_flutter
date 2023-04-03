@@ -12,6 +12,7 @@ import '../lib_samples/note06_render_box1.dart';
 import '../lib_samples/note08_reskin.dart';
 import '../lib_samples/note09_InheritedWidget.dart';
 import '../lib_samples/note10_wrap.dart';
+import '../lib_samples/note11_2_pic_measure.dart';
 import '../lib_samples/note11_pic_measure.dart';
 import '../lib_samples/note12_text_measure.dart';
 import '../lib_samples/note13_obx_sc.dart';
@@ -61,6 +62,7 @@ class Page2State extends State {
                   MaterialButton(child: const Text("EasyRefreshSamplePage-异常嵌套头模式"), onPressed: () => Get.to(() => const EasyRefreshSamplePage())),
                   MaterialButton(child: const Text("EasyRefreshSample2Page-正常嵌套头模式"), onPressed: () => Get.to(() => const EasyRefreshSample2Page())),
                   MaterialButton(child: const Text("图片大小测量-验证"), onPressed: () => Get.to(() =>  const ChatPage())),
+                  MaterialButton(child: const Text("带有图片的widget大小测量-验证2"), onPressed: () => Get.to(() =>  const WidgetMeasurePage())),
                   MaterialButton(child: const Text("文字大小测量-验证"), onPressed: () => Get.to(() =>  const TextMeasureWidget())),
                   MaterialButton(child: const Text("Obx嵌套-验证"), onPressed: () => Get.to(() =>  const ObxNestTestWidget())),
                 ],

@@ -16,6 +16,7 @@ import '../lib_samples/note11_2_pic_measure.dart';
 import '../lib_samples/note11_pic_measure.dart';
 import '../lib_samples/note12_text_measure.dart';
 import '../lib_samples/note13_obx_sc.dart';
+import '../lib_samples/note14_scroll_state_listener.dart';
 import '../util/Log.dart';
 
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
@@ -65,6 +66,7 @@ class Page2State extends State {
                   MaterialButton(child: const Text("带有图片的widget大小测量-验证2"), onPressed: () => Get.to(() =>  const WidgetMeasurePage())),
                   MaterialButton(child: const Text("文字大小测量-验证"), onPressed: () => Get.to(() =>  const TextMeasureWidget())),
                   MaterialButton(child: const Text("Obx嵌套-验证"), onPressed: () => Get.to(() =>  const ObxNestTestWidget())),
+                  MaterialButton(child: const Text("滚动状态监听-验证"), onPressed: () => Get.to(() =>  const ScrollStateListenerTestWidget())),
                 ],
               )),
         ));

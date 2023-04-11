@@ -39,8 +39,8 @@ class ObxNestTestWidgetState extends State<ScrollStateListenerTestWidget> {
         },
         child: Column(children: [
           CupertinoButton(child: const Text("滚动到指定位置"), onPressed: (){
-           // scrollController.animateTo(30000, duration: const Duration(milliseconds: 200), curve: Curves.ease);
-            scrollController.jumpTo(40000);
+            scrollController.animateTo(30000, duration: const Duration(milliseconds: 200), curve: Curves.ease);
+           // scrollController.jumpTo(40000);
           }),
           Expanded(child: ListView(
             controller: scrollController,

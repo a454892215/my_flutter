@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../system_widget_test/my_list_view.dart';
 import '../util/Log.dart';
 
 class ScrollStateListenerTestWidget extends StatefulWidget {
@@ -25,7 +26,7 @@ class ObxNestTestWidgetState extends State<ScrollStateListenerTestWidget> {
               Log.d("开始滚动");
               break;
             case ScrollUpdateNotification:
-              Log.d("正在滚动");
+            //  Log.d("正在滚动");
               break;
             case ScrollEndNotification:
               Log.d("滚动停止");
@@ -42,7 +43,7 @@ class ObxNestTestWidgetState extends State<ScrollStateListenerTestWidget> {
             scrollController.animateTo(30000, duration: const Duration(milliseconds: 200), curve: Curves.ease);
            // scrollController.jumpTo(40000);
           }),
-          Expanded(child: ListView(
+          Expanded(child: MyListView(
             controller: scrollController,
             physics: const BouncingScrollPhysics(),
             children: [

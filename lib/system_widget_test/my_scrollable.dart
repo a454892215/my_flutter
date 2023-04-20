@@ -160,7 +160,7 @@ class MyScrollableState extends State<MyScrollable> with TickerProviderStateMixi
       // position. So, schedule a microtask to do it.
       scheduleMicrotask(oldPosition.dispose);
     }
-
+    Log.d("==============updatePosition===============");
     _position = _effectiveScrollController.createScrollPosition(_physics!, this, oldPosition);
     assert(_position != null);
     _effectiveScrollController.attach(position);
@@ -435,8 +435,9 @@ class MyScrollableState extends State<MyScrollable> with TickerProviderStateMixi
         return;
       }
       final double delta = _pointerSignalEventDelta(event);
-      final double targetScrollOffset = _targetScrollOffsetForPointerScroll(delta);
+      final double targetScrollOffset =_targetScrollOffsetForPointerScroll(delta);
       // Only express interest in the event if it would actually result in a scroll.
+      Log.d("=============_receivedPointerSignal========delta:$delta==========");
       if (delta != 0.0 && targetScrollOffset != position.pixels) {
         GestureBinding.instance.pointerSignalResolver.register(event, _handlePointerScroll);
       }
@@ -532,6 +533,7 @@ class _RestorableScrollOffset extends RestorableValue<double?> {
 
   @override
   void didUpdateValue(double? oldValue) {
+    Log.d("=======_RestorableScrollOffset===didUpdateValue==============");
     notifyListeners();
   }
 
@@ -606,6 +608,7 @@ class _RenderScrollSemantics extends RenderProxyBox {
     _position.removeListener(markNeedsSemanticsUpdate);
     _position = value;
     _position.addListener(markNeedsSemanticsUpdate);
+    Log.d("=======_RenderScrollSemantics===position==============");
     markNeedsSemanticsUpdate();
   }
 

@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-/// 页面保活方法
-Widget keepAlivePage(Widget child) {
-  return AliveWidget(child: child);
-}
-
+/// 页面保活
 class AliveWidget extends StatefulWidget {
   final Widget child;
 

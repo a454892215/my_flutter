@@ -87,6 +87,7 @@ class ChatWidget2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       controller: scrollController,
+      cacheExtent: 600 * 100,
       itemBuilder: (BuildContext context, int index) {
         ChatMessage item = list[index];
         return Container(

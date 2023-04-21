@@ -68,6 +68,7 @@ dependencies:
   easy_debounce: ^2.0.3
   fast_gbk: 1.0.0
   stack_trace: ^1.10.0
+  scrollview_observer: 1.10.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -103,6 +104,7 @@ flutter:
   assets:
     # 不能在最外层再建assets目录， 否则Android加载不出来...
     - images/
+    - images/chat/
     # - assets/images/check
 
   # An image asset can refer to one or more resolution-specific "variants", see

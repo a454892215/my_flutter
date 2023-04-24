@@ -89,7 +89,7 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
                   Expanded(child: TextField(
                     onChanged: (String? text) {
                       try {
-                        if (text != null && text.length > 1) {
+                        if (text != null && text.isNotEmpty) {
                           int pos = int.parse(text);
                           itemScrollController.scrollTo(
                             index: pos,

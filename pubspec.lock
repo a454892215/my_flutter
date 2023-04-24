@@ -559,7 +559,7 @@ packages:
       name: path_provider_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.24"
+    version: "2.0.25"
   path_provider_foundation:
     dependency: transitive
     description:
@@ -622,7 +622,7 @@ packages:
       name: pointycastle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.7.2"
+    version: "3.7.3"
   pool:
     dependency: transitive
     description:
@@ -707,6 +707,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  scrollable_positioned_list:
+    dependency: "direct main"
+    description:
+      name: scrollable_positioned_list
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.5"
   scrollview_observer:
     dependency: "direct main"
     description:
@@ -727,14 +734,14 @@ packages:
       name: shared_preferences_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.1.2"
   shared_preferences_foundation:
     dependency: transitive
     description:
       name: shared_preferences_foundation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "2.2.1"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -935,7 +942,7 @@ packages:
       name: web_socket_channel
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.4.0"
   win32:
     dependency: transitive
     description:

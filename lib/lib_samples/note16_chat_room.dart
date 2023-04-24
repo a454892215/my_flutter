@@ -2,13 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scrollview_observer/scrollview_observer.dart';
-
-import '../my_widgets/chat/chat_painter.dart';
+import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../my_widgets/chat/entities.dart';
 import '../util/Log.dart';
 
-final List<ChatMessage> dataList = getTestData();
+final List<ChatMessage> dataList = getTestData(size: 40000);
+final dataSize = dataList.length.obs;
+int tarScrollPos = 0;
 
 class ChatRoomTest2Widget extends StatefulWidget {
   const ChatRoomTest2Widget({Key? key}) : super(key: key);
@@ -17,8 +18,7 @@ class ChatRoomTest2Widget extends StatefulWidget {
   ChatRoomTestWidgetState createState() => ChatRoomTestWidgetState();
 }
 
-ScrollController scrollController = ScrollController();
-ListObserverController observerController = ListObserverController(controller: scrollController);
+final ItemScrollController itemScrollController = ItemScrollController();
 
 class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
   @override
@@ -49,12 +49,34 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
         },
         child: Column(
           children: [
-            CupertinoButton(
-                child: const Text("滚动到指定位置"),
-                onPressed: () {
-                  //scrollController.animateTo(30000, duration: const Duration(milliseconds: 200), curve: Curves.ease);
-                  observerController.jumpTo(index: 20000);
-                }),
+            Row(
+              children: [
+                const SizedBox(width: 20),
+                CupertinoButton(
+                    color: Colors.grey,
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      itemScrollController.scrollTo(
+                        index: tarScrollPos += 5000,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOutCubic,
+                      );
+                    },
+                    child: const Text("滚动到下个5000")),
+                const SizedBox(width: 10),
+                CupertinoButton(
+                    color: Colors.grey,
+                    padding: EdgeInsets.zero,
+                    onPressed: () {
+                      List<ChatMessage> newList = getTestData(size: 5000);
+                      dataList.addAll(newList);
+                      dataSize.value = dataList.length;
+                    },
+                    child: const Text("新增 5000 条数据")),
+                const SizedBox(width: 10),
+                Obx(() => Text("总数据量:${dataSize.value}")),
+              ],
+            ),
             const Expanded(child: ChatWidget2()),
             Container(
               width: double.infinity,
@@ -87,17 +109,13 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
   }
 }
 
-
 class ChatWidget2 extends StatelessWidget {
   const ChatWidget2({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListViewObserver(
-        controller: observerController,
-        child: ListView.builder(
-          controller: scrollController,
-          cacheExtent: 600 * 100,
+    return Obx(() => ScrollablePositionedList.builder(
+          itemScrollController: itemScrollController,
           itemBuilder: (BuildContext context, int index) {
             ChatMessage item = dataList[index];
             return Container(
@@ -116,7 +134,7 @@ class ChatWidget2 extends StatelessWidget {
               ),
             );
           },
-          itemCount: dataList.length,
+          itemCount: dataSize.value,
         ));
   }
 }

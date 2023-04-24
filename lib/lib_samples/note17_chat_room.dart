@@ -3,13 +3,15 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
+
+import '../my_widgets/chat/chat_painter.dart';
 import '../my_widgets/chat/entities.dart';
 import '../util/Log.dart';
 
-final List<ChatMessage> dataList = getTestData(size: 40000);
+final List<ChatMessage> dataList = getTestData();
 
-class ChatRoomTest1Widget extends StatefulWidget {
-  const ChatRoomTest1Widget({Key? key}) : super(key: key);
+class ChatRoomTest3Widget extends StatefulWidget {
+  const ChatRoomTest3Widget({Key? key}) : super(key: key);
 
   @override
   ChatRoomTestWidgetState createState() => ChatRoomTestWidgetState();
@@ -18,7 +20,7 @@ class ChatRoomTest1Widget extends StatefulWidget {
 ScrollController scrollController = ScrollController();
 ListObserverController observerController = ListObserverController(controller: scrollController);
 
-class ChatRoomTestWidgetState extends State<ChatRoomTest1Widget> {
+class ChatRoomTestWidgetState extends State<ChatRoomTest3Widget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +55,7 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest1Widget> {
                   //scrollController.animateTo(30000, duration: const Duration(milliseconds: 200), curve: Curves.ease);
                   observerController.jumpTo(index: 20000);
                 }),
-            const Expanded(child: ListViewChatWidget()),
+            const Expanded(child: ChatWidget1()),
             Container(
               width: double.infinity,
               height: 50,
@@ -85,36 +87,19 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest1Widget> {
   }
 }
 
-class ListViewChatWidget extends StatelessWidget {
-  const ListViewChatWidget({Key? key}) : super(key: key);
+class ChatWidget1 extends StatelessWidget {
+  const ChatWidget1({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListViewObserver(
-        controller: observerController,
-        child: ListView.builder(
-          controller: scrollController,
-          cacheExtent: 800 * 100,
-          itemBuilder: (BuildContext context, int index) {
-            ChatMessage item = dataList[index];
-            return Container(
-              color: const Color(0xffcccccc),
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-              child: Column(
-                children: [
-                  Text("$index. ${item.text}", style: const TextStyle(fontSize: 14, color: Colors.black)),
-                  for (int i = 0; i < 1; i++)
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Image.asset(item.imgList[i]),
-                    )
-                ],
-              ),
-            );
-          },
-          itemCount: dataList.length,
-        ));
+    return ChatWidget(
+      outerBgColor: Colors.blue,
+      innerBgColor: Colors.yellow,
+      padding: 10,
+      width: double.infinity,
+      height: double.infinity,
+      list: dataList,
+    );
   }
 }
 

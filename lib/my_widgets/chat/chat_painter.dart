@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../util/Log.dart';
+import 'entities.dart';
 
 class ChatWidget extends StatefulWidget {
   const ChatWidget({
@@ -11,6 +11,7 @@ class ChatWidget extends StatefulWidget {
     this.outerBgColor,
     this.innerBgColor,
     this.padding = 0,
+    required this.list,
   });
 
   final double? width;
@@ -18,6 +19,7 @@ class ChatWidget extends StatefulWidget {
   final double padding;
   final Color? outerBgColor;
   final Color? innerBgColor;
+  final List<ChatMessage> list;
 
   @override
   State<StatefulWidget> createState() {
@@ -32,9 +34,9 @@ class MyChatState extends State<ChatWidget> with TickerProviderStateMixin {
     return MultiProvider(
       key: UniqueKey(),
       providers: [
-        ChangeNotifierProvider(create: (context) => OnRepaintNotifier()),
+        ChangeNotifierProvider(create: (context) => ChatRepaintNotifier()),
       ],
-      child: Consumer<OnRepaintNotifier>(builder: (context, OnRepaintNotifier notifier, child) {
+      child: Consumer<ChatRepaintNotifier>(builder: (context, ChatRepaintNotifier notifier, child) {
         Log.d("========Consumer========");
         return GestureDetector(
           onTapUp: notifier.onTapUp,
@@ -49,7 +51,7 @@ class MyChatState extends State<ChatWidget> with TickerProviderStateMixin {
               height: widget.height,
               color: widget.outerBgColor,
               child: CustomPaint(
-                painter: ChatPainter(context, notifier, this),
+                painter: ChatPainter(context, notifier, this, widget.list),
               ),
             ),
           ),
@@ -66,9 +68,11 @@ class ChatPainter extends CustomPainter {
 
   final BuildContext context;
 
-  final OnRepaintNotifier notifier;
+  final ChatRepaintNotifier notifier;
+  final List<ChatMessage> list;
 
-  ChatPainter(this.context, this.notifier, this.myChatState) : super(repaint: notifier) {
+  ChatPainter(this.context, this.notifier, this.myChatState, this.list) : super(repaint: notifier) {
+    Log.d("==========ChatPainter 构造函数调用===================");
     _paint.style = PaintingStyle.stroke;
     _paint.strokeWidth = notifier.stroke;
     widget = myChatState.widget;
@@ -78,10 +82,11 @@ class ChatPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Rect canvasRect = Rect.fromLTWH(0, 0, size.width, size.height);
     Rect contentRect = canvasRect.deflate(widget.padding);
-    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height)); // 裁剪越界绘制
+    Log.d("================paint======================");
+    // canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height)); // 裁剪越界绘制
     // canvas.drawColor(Colors.yellow, BlendMode.src);
     // canvas.translate(notifier.scrolledY, 0);
-    if(widget.innerBgColor != null){
+    if (widget.innerBgColor != null) {
       _paint.color = widget.innerBgColor!;
       _paint.style = PaintingStyle.fill;
       canvas.drawRect(contentRect, _paint);
@@ -94,15 +99,13 @@ class ChatPainter extends CustomPainter {
   }
 }
 
-class OnRepaintNotifier extends ChangeNotifier {
-  OnRepaintNotifier() {
-    Log.d("==========OnRepaintNotifier===========");
+class ChatRepaintNotifier extends ChangeNotifier {
+  ChatRepaintNotifier() {
+    Log.d("============OnRepaintNotifier 构造函数调用=============");
   }
 
   double scrolledY = 0;
   double stroke = 8;
-
-  get onTapDown => null;
 
   void onTapUp(TapUpDetails details) {}
 
@@ -111,4 +114,10 @@ class OnRepaintNotifier extends ChangeNotifier {
   void onVerticalDragUpdate(DragUpdateDetails details) {}
 
   void onHorizontalDragEnd(DragEndDetails details) {}
+
+  void onTapDown(TapDownDetails details) {}
+}
+
+class ChatController {
+  void notifyRefresh() {}
 }

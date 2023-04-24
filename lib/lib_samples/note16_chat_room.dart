@@ -3,13 +3,15 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
+
+import '../my_widgets/chat/chat_painter.dart';
 import '../my_widgets/chat/entities.dart';
 import '../util/Log.dart';
 
-final List<ChatMessage> dataList = getTestData(size: 40000);
+final List<ChatMessage> dataList = getTestData();
 
-class ChatRoomTest1Widget extends StatefulWidget {
-  const ChatRoomTest1Widget({Key? key}) : super(key: key);
+class ChatRoomTest2Widget extends StatefulWidget {
+  const ChatRoomTest2Widget({Key? key}) : super(key: key);
 
   @override
   ChatRoomTestWidgetState createState() => ChatRoomTestWidgetState();
@@ -18,7 +20,7 @@ class ChatRoomTest1Widget extends StatefulWidget {
 ScrollController scrollController = ScrollController();
 ListObserverController observerController = ListObserverController(controller: scrollController);
 
-class ChatRoomTestWidgetState extends State<ChatRoomTest1Widget> {
+class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +55,7 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest1Widget> {
                   //scrollController.animateTo(30000, duration: const Duration(milliseconds: 200), curve: Curves.ease);
                   observerController.jumpTo(index: 20000);
                 }),
-            const Expanded(child: ListViewChatWidget()),
+            const Expanded(child: ChatWidget2()),
             Container(
               width: double.infinity,
               height: 50,
@@ -85,8 +87,9 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest1Widget> {
   }
 }
 
-class ListViewChatWidget extends StatelessWidget {
-  const ListViewChatWidget({Key? key}) : super(key: key);
+
+class ChatWidget2 extends StatelessWidget {
+  const ChatWidget2({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +97,7 @@ class ListViewChatWidget extends StatelessWidget {
         controller: observerController,
         child: ListView.builder(
           controller: scrollController,
-          cacheExtent: 800 * 100,
+          cacheExtent: 600 * 100,
           itemBuilder: (BuildContext context, int index) {
             ChatMessage item = dataList[index];
             return Container(

@@ -6,8 +6,9 @@ import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../my_widgets/chat/entities.dart';
 import '../util/Log.dart';
+import '../util/toast_util.dart';
 
-final List<ChatMessage> dataList = getTestData(size: 40000);
+final List<ChatMessage> dataList = getTestData(size: 10000);
 final dataSize = dataList.length.obs;
 int tarScrollPos = 0;
 
@@ -87,9 +88,19 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
                 children: [
                   Expanded(child: TextField(
                     onChanged: (String? text) {
-                      var chatMessage = ChatMessage();
-                      chatMessage.text = "$text";
-                      dataList.insert(0, chatMessage);
+                      try {
+                        if (text != null && text.length > 1) {
+                          int pos = int.parse(text);
+                          itemScrollController.scrollTo(
+                            index: pos,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeInOutCubic,
+                          );
+                        }
+                      } catch (e) {
+                       // toast(e.toString());
+                        Log.e("e:$e");
+                      }
                     },
                   )),
                   CupertinoButton(
@@ -155,7 +166,7 @@ List<ChatMessage> getTestData({int size = 300}) {
 
 String generateRandomChineseString() {
   final random = Random();
-  final length = random.nextInt(109) + 12; // 生成12到120之间的随机数
+  final length = random.nextInt(409) + 12; // 生成12到120之间的随机数
   final buffer = StringBuffer();
 
   for (int i = 0; i < length; i++) {

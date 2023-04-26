@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:get/get.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart' as pull_refresh;
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../my_widgets/chat/entities.dart';
 import '../util/Log.dart';
@@ -78,7 +79,7 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
                 Obx(() => Text("总数据量:${dataSize.value}")),
               ],
             ),
-            Expanded(child: ChatWidget3()),
+            Expanded(child: ChatWidget1()),
             Container(
               width: double.infinity,
               height: 50,
@@ -121,7 +122,7 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
   }
 }
 
-/// 添加EasyRefresh.custom 后不能滚动到指定item
+/// 1. 无下拉刷新的 ScrollablePositionedList.builder
 class ChatWidget1 extends StatelessWidget {
   const ChatWidget1({Key? key}) : super(key: key);
 
@@ -153,7 +154,7 @@ class ChatWidget1 extends StatelessWidget {
   }
 }
 
-/// 添加EasyRefresh.custom 后不能滚动到指定item
+/// 2. 添加EasyRefresh.custom 后不能滚动到指定item
 class ChatWidget2 extends StatefulWidget {
   const ChatWidget2({Key? key}) : super(key: key);
 
@@ -232,7 +233,7 @@ class ChatWidget2State extends State {
   }
 }
 
-/// 使用 RefreshIndicator 实现的下拉刷新
+/// 3. 使用 RefreshIndicator 实现的下拉刷新
 class ChatWidget3 extends StatelessWidget {
   ChatWidget3({Key? key}) : super(key: key);
   final dataSize2 = 50.obs;
@@ -241,13 +242,13 @@ class ChatWidget3 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => RefreshIndicator(
           onRefresh: () async {
-             Log.d("============实现了下拉刷新=============");
+            Log.d("============实现了下拉刷新=============");
           },
           child: ScrollablePositionedList.builder(
             physics: const BouncingScrollPhysics(),
             itemScrollController: itemScrollController,
             shrinkWrap: true,
-          //  reverse: true,
+            //  reverse: true,
             itemBuilder: (BuildContext context, int index) {
               ChatMessage item = dataList[index];
               return Container(
@@ -267,6 +268,61 @@ class ChatWidget3 extends StatelessWidget {
               );
             },
             itemCount: dataSize2.value,
+          ),
+        ));
+  }
+}
+
+/// 4. 使用 SmartRefresher 实现的下拉刷新, 需要 shrinkWrap: true, 数据量过大会直接卡死
+class ChatWidget4 extends StatelessWidget {
+  ChatWidget4({Key? key}) : super(key: key);
+  final dataSize2 = 50.obs;
+  final controller = pull_refresh.RefreshController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => pull_refresh.SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: const pull_refresh.ClassicHeader(
+            refreshingIcon: CupertinoActivityIndicator(),
+            height: 60,
+          ),
+          footer: const pull_refresh.ClassicFooter(
+            loadingIcon: CupertinoActivityIndicator(),
+            height: 90,
+            loadStyle: pull_refresh.LoadStyle.ShowWhenLoading,
+          ),
+          controller: controller,
+          onRefresh: () async {
+            await Future.delayed(const Duration(milliseconds: 300));
+            controller.refreshCompleted();
+          },
+          onLoading: () async {
+            await Future.delayed(const Duration(milliseconds: 300));
+            controller.loadComplete();
+          },
+          child: ScrollablePositionedList.builder(
+            itemScrollController: itemScrollController,
+            itemBuilder: (BuildContext context, int index) {
+              ChatMessage item = dataList[index];
+              return Container(
+                color: const Color(0xffcccccc),
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                child: Column(
+                  children: [
+                    Text("$index. ${item.text}", style: const TextStyle(fontSize: 14, color: Colors.black)),
+                    for (int i = 0; i < 1; i++)
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Image.asset(item.imgList[i]),
+                      )
+                  ],
+                ),
+              );
+            },
+            itemCount: dataSize.value,
           ),
         ));
   }

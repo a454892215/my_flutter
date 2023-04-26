@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../my_widgets/chat/entities.dart';
 import '../util/Log.dart';
-import '../util/toast_util.dart';
 
 final List<ChatMessage> dataList = getTestData(size: 10000);
 final dataSize = dataList.length.obs;
@@ -78,7 +78,7 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
                 Obx(() => Text("总数据量:${dataSize.value}")),
               ],
             ),
-            const Expanded(child: ChatWidget2()),
+            Expanded(child: ChatWidget1()),
             Container(
               width: double.infinity,
               height: 50,
@@ -96,9 +96,10 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
                             duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOutCubic,
                           );
+                          Log.d("==============itemScrollController======pos:$pos=========");
                         }
                       } catch (e) {
-                       // toast(e.toString());
+                        // toast(e.toString());
                         Log.e("e:$e");
                       }
                     },
@@ -120,13 +121,15 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
   }
 }
 
-class ChatWidget2 extends StatelessWidget {
-  const ChatWidget2({Key? key}) : super(key: key);
+/// 添加EasyRefresh.custom 后不能滚动到指定item
+class ChatWidget1 extends StatelessWidget {
+  const ChatWidget1({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Obx(() => ScrollablePositionedList.builder(
           itemScrollController: itemScrollController,
+          shrinkWrap: true,
           itemBuilder: (BuildContext context, int index) {
             ChatMessage item = dataList[index];
             return Container(
@@ -146,6 +149,60 @@ class ChatWidget2 extends StatelessWidget {
             );
           },
           itemCount: dataSize.value,
+        ));
+  }
+}
+
+/// 添加EasyRefresh.custom 后不能滚动到指定item
+class ChatWidget2 extends StatelessWidget {
+  ChatWidget2({Key? key}) : super(key: key);
+  final dataSize2 = 50.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => EasyRefresh.custom(
+          //header: ClassicalHeader(),
+          // footer: ClassicalFooter(),
+          onRefresh: () async {},
+          onLoad: () async {},
+          slivers: [
+            SliverToBoxAdapter(
+              child: ScrollablePositionedList.builder(
+                itemScrollController: itemScrollController,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  ChatMessage item = dataList[index];
+                  return Container(
+                    color: const Color(0xffcccccc),
+                    padding: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                    child: Column(
+                      children: [
+                        Text("$index. ${item.text}", style: const TextStyle(fontSize: 14, color: Colors.black)),
+                        for (int i = 0; i < 1; i++)
+                          Container(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Image.asset(item.imgList[i]),
+                          )
+                      ],
+                    ),
+                  );
+                },
+                itemCount: dataSize2.value,
+              ),
+            )
+
+            // SliverList(
+            //   delegate: SliverChildBuilderDelegate((context, listIndex) {
+            //     return Container(
+            //       width: double.infinity,
+            //       height: 80,
+            //       color: Colors.blue,
+            //       margin: const EdgeInsets.only(bottom: 10),
+            //     );
+            //   }, childCount: dataSize.value),
+            // ),
+          ],
         ));
   }
 }

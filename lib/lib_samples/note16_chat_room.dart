@@ -79,7 +79,7 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
                 Obx(() => Text("总数据量:${dataSize.value}")),
               ],
             ),
-            Expanded(child: ChatWidget1()),
+            const Expanded(child: ChatWidget1()),
             Container(
               width: double.infinity,
               height: 50,
@@ -130,7 +130,7 @@ class ChatWidget1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() => ScrollablePositionedList.builder(
           itemScrollController: itemScrollController,
-          shrinkWrap: true,
+          physics: const BouncingScrollPhysics(),
           itemBuilder: (BuildContext context, int index) {
             ChatMessage item = dataList[index];
             return Container(

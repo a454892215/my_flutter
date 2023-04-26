@@ -78,7 +78,7 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest2Widget> {
                 Obx(() => Text("总数据量:${dataSize.value}")),
               ],
             ),
-            Expanded(child: ChatWidget1()),
+            Expanded(child: ChatWidget3()),
             Container(
               width: double.infinity,
               height: 50,
@@ -154,9 +154,31 @@ class ChatWidget1 extends StatelessWidget {
 }
 
 /// 添加EasyRefresh.custom 后不能滚动到指定item
-class ChatWidget2 extends StatelessWidget {
-  ChatWidget2({Key? key}) : super(key: key);
+class ChatWidget2 extends StatefulWidget {
+  const ChatWidget2({Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return ChatWidget2State();
+  }
+}
+
+class ChatWidget2State extends State {
   final dataSize2 = 50.obs;
+  var listener = ItemPositionsListener.create();
+  final _sc = ScrollController(keepScrollOffset: false);
+
+  @override
+  void initState() {
+    listener.itemPositions.addListener(() {
+      var currentIndex = listener.itemPositions.value.elementAt(0).index;
+      Log.d("currentIndex:$currentIndex");
+    });
+    _sc.addListener(() {
+      Log.d("======_sc:${_sc.position.pixels}==========");
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,10 +187,13 @@ class ChatWidget2 extends StatelessWidget {
           // footer: ClassicalFooter(),
           onRefresh: () async {},
           onLoad: () async {},
+          scrollController: _sc,
+          shrinkWrap: true,
           slivers: [
             SliverToBoxAdapter(
               child: ScrollablePositionedList.builder(
                 itemScrollController: itemScrollController,
+                itemPositionsListener: listener,
                 shrinkWrap: true,
                 itemBuilder: (BuildContext context, int index) {
                   ChatMessage item = dataList[index];
@@ -203,6 +228,46 @@ class ChatWidget2 extends StatelessWidget {
             //   }, childCount: dataSize.value),
             // ),
           ],
+        ));
+  }
+}
+
+/// 使用 RefreshIndicator 实现的下拉刷新
+class ChatWidget3 extends StatelessWidget {
+  ChatWidget3({Key? key}) : super(key: key);
+  final dataSize2 = 50.obs;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() => RefreshIndicator(
+          onRefresh: () async {
+             Log.d("============实现了下拉刷新=============");
+          },
+          child: ScrollablePositionedList.builder(
+            physics: const BouncingScrollPhysics(),
+            itemScrollController: itemScrollController,
+            shrinkWrap: true,
+          //  reverse: true,
+            itemBuilder: (BuildContext context, int index) {
+              ChatMessage item = dataList[index];
+              return Container(
+                color: const Color(0xffcccccc),
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                child: Column(
+                  children: [
+                    Text("$index. ${item.text}", style: const TextStyle(fontSize: 14, color: Colors.black)),
+                    for (int i = 0; i < 1; i++)
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Image.asset(item.imgList[i]),
+                      )
+                  ],
+                ),
+              );
+            },
+            itemCount: dataSize2.value,
+          ),
         ));
   }
 }

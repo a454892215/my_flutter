@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'dart:math' as math;
+import '../../util/Log.dart';
 import 'header_indicator_widget.dart';
 import 'refresh_state.dart';
 import 'refresher_param.dart';
@@ -82,13 +83,39 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
             child: Listener(
               onPointerUp: onPointerUp,
               onPointerMove: onPointerMove,
-              child: ScrollablePositionedList.builder(
-                physics: refresherPhysics,
-                itemScrollController: widget.itemScrollController,
-                itemPositionsListener: itemPositionsListener,
-                itemBuilder: widget.itemBuilder,
-                shrinkWrap: true,
-                itemCount: widget.dataSize,
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification notification) {
+                  switch (notification.runtimeType) {
+                    case ScrollStartNotification:
+                      Log.d("开始滚动");
+                      break;
+                    case ScrollUpdateNotification:
+                      //  Log.d("正在滚动");
+                      break;
+                    case ScrollEndNotification:
+                      Log.d("滚动停止");
+                      break;
+                    case OverscrollNotification:
+                      OverscrollNotification os = notification as OverscrollNotification;
+                      double velocity = os.velocity;
+                      List<ItemPosition> itemViewList = itemPositionsListener.itemPositions.value.toList();
+                      var isToTopEdge = itemViewList[0].index == 0;
+                      if (isToTopEdge && velocity.abs() > 0) {
+                        animToHeaderLoadingPos(during: 200);
+                      }
+                      Log.d("滚动到边界 velocity:$velocity  isToTopEdge:$isToTopEdge");
+                      break;
+                  }
+                  return true;
+                },
+                child: ScrollablePositionedList.builder(
+                  physics: refresherPhysics,
+                  itemScrollController: widget.itemScrollController,
+                  itemPositionsListener: itemPositionsListener,
+                  itemBuilder: widget.itemBuilder,
+                  shrinkWrap: true,
+                  itemCount: widget.dataSize,
+                ),
               ),
             ),
           ),
@@ -103,7 +130,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     });
   }
 
-  bool isScrollToTopEdge(PointerMoveEvent e) {
+  bool isScrollToTopEdge() {
     List<ItemPosition> itemViewList = itemPositionsListener.itemPositions.value.toList();
     bool isScrollToTopEdge = true;
     if (itemViewList.isNotEmpty) {
@@ -170,7 +197,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   void onPointerMove(PointerMoveEvent e) {
-    bool isHasScrollToTopEdge = isScrollToTopEdge(e);
+    bool isHasScrollToTopEdge = isScrollToTopEdge();
     bool headerShowing = headerIsShowing();
     if (isHasScrollToTopEdge || headerShowing) {
       onHeaderOffset(e.delta.dy);
@@ -196,11 +223,11 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     }
   }
 
-  Future<void> animToHeaderLoadingPos({during = 250}) async {
-    sc.animateTo(refresherParam.loadingPos, duration: const Duration(milliseconds: 250), curve: Curves.ease);
+  Future<void> animToHeaderLoadingPos({during = 200}) async {
+    sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.ease);
     if (!isHeaderProtectionState()) {
-      await Future.delayed(Duration(milliseconds: during));
       curRefreshState.value = RefreshState.header_loading;
+      await Future.delayed(Duration(milliseconds: during));
       widget.onHeaderStartLoad();
     }
   }

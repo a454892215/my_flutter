@@ -1,5 +1,5 @@
 class RefresherParam{
-   double headerHeight = 180;
+   double headerHeight = 250;
    double headerIndicatorHeight = 60;
    double headerTriggerRefreshDistance = 60;
    late double loadingPos = headerHeight - headerTriggerRefreshDistance;

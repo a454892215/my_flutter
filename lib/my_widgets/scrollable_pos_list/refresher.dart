@@ -173,8 +173,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
         curRefreshState.value = RefreshState.header_release_load;
       } else if (sc.position.pixels > refresherParam.loadingPos) {
         curRefreshState.value = RefreshState.def;
-      } else {
-        animToHeaderLoadingPos(during: 30);
       }
     }
   }
@@ -218,16 +216,14 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   Future<void> notifyHeaderLoadingFinish() async {
     curRefreshState.value = RefreshState.header_load_finished;
     await Future.delayed(const Duration(milliseconds: 100));
-    if (sc.position.pixels != headerHeight) {
-      animToDefPos(isForceUpdate: true);
-    }
+    animToDefPos(isForceUpdate: true);
   }
 
   Future<void> animToHeaderLoadingPos({during = 200}) async {
     sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.ease);
     if (!isHeaderProtectionState()) {
       curRefreshState.value = RefreshState.header_loading;
-      await Future.delayed(Duration(milliseconds: during));
+      await Future.delayed(Duration(milliseconds: during + 20));
       widget.onHeaderStartLoad();
     }
   }

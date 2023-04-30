@@ -80,7 +80,7 @@ class ChatWidget extends StatefulWidget {
 }
 
 class ChatWidget2State extends State {
-  final List<ChatMessage> dataList = getTestData(size: 20);
+  final List<ChatMessage> dataList = getTestData(size: 1);
   late final dataSize = dataList.length.obs;
   RefresherController refController = RefresherController();
   @override

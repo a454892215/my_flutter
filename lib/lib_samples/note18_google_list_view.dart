@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../my_widgets/chat/entities.dart';
-import '../my_widgets/scrollable_pos_list/load_more_func.dart';
+import '../my_widgets/scrollable_pos_list/refresher.dart';
 import '../util/Log.dart';
 
 int tarScrollPos = 0;
@@ -26,66 +26,45 @@ class ChatRoomTestWidgetState extends State<ScrollablePositionedListTest> {
       appBar: AppBar(
         title: const Text("自定义ChatRoomView"),
       ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification notification) {
-          switch (notification.runtimeType) {
-            case ScrollStartNotification:
-              Log.d("开始滚动");
-              break;
-            case ScrollUpdateNotification:
-              //  Log.d("正在滚动");
-              break;
-            case ScrollEndNotification:
-              Log.d("滚动停止");
-              break;
-            case OverscrollNotification:
-
-              /// 如果有 BouncingScrollPhysics 会无边界
-              Log.d("滚动到边界");
-              break;
-          }
-          return true;
-        },
-        child: Column(
-          children: [
-            const Expanded(child: ChatWidget()),
-            Container(
-              width: double.infinity,
-              height: 50,
-              color: Colors.yellow,
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                children: [
-                  Expanded(child: TextField(
-                    onChanged: (String? text) {
-                      try {
-                        if (text != null && text.isNotEmpty) {
-                          int pos = int.parse(text);
-                          itemScrollController.scrollTo(
-                            index: pos,
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOutCubic,
-                          );
-                          Log.d("==============itemScrollController======pos:$pos=========");
-                        }
-                      } catch (e) {
-                        // toast(e.toString());
-                        Log.e("e:$e");
+      body: Column(
+        children: [
+          const Expanded(child: ChatWidget()),
+          Container(
+            width: double.infinity,
+            height: 50,
+            color: Colors.yellow,
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: Row(
+              children: [
+                Expanded(child: TextField(
+                  onChanged: (String? text) {
+                    try {
+                      if (text != null && text.isNotEmpty) {
+                        int pos = int.parse(text);
+                        itemScrollController.scrollTo(
+                          index: pos,
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOutCubic,
+                        );
+                        Log.d("==============itemScrollController======pos:$pos=========");
                       }
+                    } catch (e) {
+                      // toast(e.toString());
+                      Log.e("e:$e");
+                    }
+                  },
+                )),
+                CupertinoButton(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    color: Colors.grey,
+                    onPressed: () {
+                      Log.d("===================");
                     },
-                  )),
-                  CupertinoButton(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      color: Colors.grey,
-                      onPressed: () {
-                        Log.d("===================");
-                      },
-                      child: const Text("发送")),
-                ],
-              ),
+                    child: const Text("发送")),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -103,40 +82,40 @@ class ChatWidget extends StatefulWidget {
 class ChatWidget2State extends State {
   final List<ChatMessage> dataList = getTestData(size: 20);
   late final dataSize = dataList.length.obs;
-  LoadMoreFunc loadMoreFunc = LoadMoreFunc();
-
-  @override
-  void initState() {
-    super.initState();
-    loadMoreFunc.initItemScrollListener();
-  }
-
+  RefresherController refController = RefresherController();
   @override
   Widget build(BuildContext context) {
-    return Obx(() => ScrollablePositionedList.builder(
+    return Obx(() => RefresherIndexListWidget(
+          dataSize: dataSize.value,
+          itemBuilder: buildItemWidget,
           itemScrollController: itemScrollController,
-          itemPositionsListener: loadMoreFunc.itemPositionsListener,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index) {
-            ChatMessage item = dataList[index];
-            return Container(
-              color: const Color(0xffcccccc),
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
-              child: Column(
-                children: [
-                  Text("$index. ${item.text}", style: const TextStyle(fontSize: 14, color: Colors.black)),
-                  for (int i = 0; i < 1; i++)
-                    Container(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Image.asset(item.imgList[i]),
-                    )
-                ],
-              ),
-            );
+          refresherController: refController,
+          onFooterStartLoad: () {},
+          onHeaderStartLoad: () async {
+            await Future.delayed(const Duration(milliseconds: 1000));
+            refController.notifyRefreshFinish();
+            Log.d("===========onHeaderStartLoad================");
           },
-          itemCount: dataSize.value,
         ));
+  }
+
+  Widget buildItemWidget(BuildContext context, int index) {
+    ChatMessage item = dataList[index];
+    return Container(
+      color: const Color(0xffcccccc),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+      child: Column(
+        children: [
+          Text("$index. ${item.text}", style: const TextStyle(fontSize: 14, color: Colors.black)),
+          for (int i = 0; i < 1; i++)
+            Container(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Image.asset(item.imgList[i]),
+            )
+        ],
+      ),
+    );
   }
 }
 

@@ -46,7 +46,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   late ScrollController sc = ScrollController(initialScrollOffset: headerHeight);
   HeaderWidgetBuilder headerBuilder = HeaderWidgetBuilder();
   final isProhibitListViewScroll = false.obs;
-  final ClampingScrollPhysics refresherPhysics = const ClampingScrollPhysics();
 
   final curRefreshState = RefreshState.def.obs;
 
@@ -57,6 +56,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   var isToTopEdge = false;
+  final isProhibitScroll = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -112,15 +112,15 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                   }
                   return true;
                 },
-                child: ScrollablePositionedList.builder(
-                  physics: refresherPhysics,
-                  itemScrollController: widget.itemScrollController,
-                  itemPositionsListener: itemPositionsListener,
-                  itemBuilder: widget.itemBuilder,
-                  shrinkWrap: true,
-                  reverse: widget.isReverse,
-                  itemCount: widget.dataList.length,
-                ),
+                child: Obx(() => ScrollablePositionedList.builder(
+                      physics: isProhibitScroll.value ? const NeverScrollableScrollPhysics() : const ClampingScrollPhysics(),
+                      itemScrollController: widget.itemScrollController,
+                      itemPositionsListener: itemPositionsListener,
+                      itemBuilder: widget.itemBuilder,
+                      shrinkWrap: true,
+                      reverse: widget.isReverse,
+                      itemCount: widget.dataList.length,
+                    )),
               ),
             ),
           ),
@@ -205,21 +205,22 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   void onPointerMove(PointerMoveEvent e) {
-    bool isHasScrollToTopEdge = isToTopEdge;
-    Log.d("isHasScrollToTopEdge: $isHasScrollToTopEdge");
+    isProhibitScroll.value = headerIsShowing();
+    Log.d("isToTopEdge: $isToTopEdge   isProhibitScroll:$isProhibitScroll");
     bool headerShowing = headerIsShowing();
-    if (isHasScrollToTopEdge || headerShowing) {
+    if (isToTopEdge || headerShowing) {
       offsetHeader(e.delta.dy);
-    }
-    if (headerShowing && widget.dataList.isNotEmpty && e.delta.dy < 0) {
-      widget.itemScrollController.jumpTo(index: widget.isReverse ? widget.dataList.length - 1 : 0);
     }
   }
 
   Future<void> animToDefPos({isForceUpdate = false, during = 250}) async {
-    sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.ease);
+    sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.ease).then((value){
+      isProhibitScroll.value = headerIsShowing();
+      Log.d("value: ===============animateTo========111======isProhibitScroll:${isProhibitScroll.value}====");
+    });
     if (!isHeaderProtectionState() || isForceUpdate) {
       await Future.delayed(const Duration(milliseconds: 50));
+      Log.d("value: ===============animateTo=========222=========");
       curRefreshState.value = RefreshState.def;
     }
   }

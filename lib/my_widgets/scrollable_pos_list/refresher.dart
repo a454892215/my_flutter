@@ -15,19 +15,21 @@ class RefresherIndexListWidget extends StatefulWidget {
   const RefresherIndexListWidget({
     Key? key,
     required this.itemBuilder,
-    required this.dataSize,
+    required this.dataList,
     required this.itemScrollController,
     required this.refresherController,
     required this.onHeaderStartLoad,
     required this.onFooterStartLoad,
+    this.isReverse = true,
   }) : super(key: key);
 
   final IndexedWidgetBuilder itemBuilder;
-  final int dataSize;
+  final List dataList;
   final ItemScrollController itemScrollController;
   final RefresherController refresherController;
   final OnHeaderStartLoad onHeaderStartLoad;
   final OnFooterStartLoad onFooterStartLoad;
+  final bool isReverse;
 
   @override
   State<StatefulWidget> createState() {
@@ -53,6 +55,8 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     widget.refresherController.attach(this);
     super.initState();
   }
+
+  var isToTopEdge = false;
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +94,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                       Log.d("开始滚动");
                       break;
                     case ScrollUpdateNotification:
+                      isToTopEdge = false;
                       //  Log.d("正在滚动");
                       break;
                     case ScrollEndNotification:
@@ -98,10 +103,9 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                     case OverscrollNotification:
                       OverscrollNotification os = notification as OverscrollNotification;
                       double velocity = os.velocity;
-                      List<ItemPosition> itemViewList = itemPositionsListener.itemPositions.value.toList();
-                      var isToTopEdge = itemViewList[0].index == 0;
+                      isToTopEdge = checkToTopEdge();
                       if (isToTopEdge && velocity.abs() > 0) {
-                        animToHeaderLoadingPos(during: 200);
+                        //  animToHeaderLoadingPos(during: 200);
                       }
                       Log.d("滚动到边界 velocity:$velocity  isToTopEdge:$isToTopEdge");
                       break;
@@ -114,7 +118,8 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                   itemPositionsListener: itemPositionsListener,
                   itemBuilder: widget.itemBuilder,
                   shrinkWrap: true,
-                  itemCount: widget.dataSize,
+                  reverse: widget.isReverse,
+                  itemCount: widget.dataList.length,
                 ),
               ),
             ),
@@ -130,18 +135,23 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     });
   }
 
-  bool isScrollToTopEdge() {
+  bool checkToTopEdge() {
     List<ItemPosition> itemViewList = itemPositionsListener.itemPositions.value.toList();
-    bool isScrollToTopEdge = true;
-    if (itemViewList.isNotEmpty) {
-      ItemPosition item = itemViewList[0];
-      var index = item.index;
-      var itemLeadingEdge = item.itemLeadingEdge;
-      // var itemTrailingEdge = item.itemTrailingEdge;
-      isScrollToTopEdge = index == 0 && itemLeadingEdge >= 0;
-      // Log.d(" index:$index  itemLeadingEdge:$itemLeadingEdge  itemTrailingEdge:$itemTrailingEdge delta:${e.delta} isToTopEdge:$isScrollToTopEdge");
+    if (widget.isReverse) {
+      for (var element in itemViewList) {
+        Log.d(" ==== index: ${element.index}  lastIndex:${(widget.dataList.length - 1)}");
+        if (element.index == widget.dataList.length - 1) {
+          return true;
+        }
+      }
+    } else {
+      for (var element in itemViewList) {
+        if (element.index == 0) {
+          return true;
+        }
+      }
     }
-    return isScrollToTopEdge;
+    return false;
   }
 
   bool canHeaderOffset() {
@@ -156,7 +166,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     return sc.position.pixels < headerHeight;
   }
 
-  onHeaderOffset(double delta) {
+  void offsetHeader(double delta) {
     double scrolledHeaderY = getScrolledHeaderY();
     double scrolledRatio = scrolledHeaderY / headerHeight;
     double tarScrollDy = 0;
@@ -195,20 +205,21 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   void onPointerMove(PointerMoveEvent e) {
-    bool isHasScrollToTopEdge = isScrollToTopEdge();
+    bool isHasScrollToTopEdge = isToTopEdge;
+    Log.d("isHasScrollToTopEdge: $isHasScrollToTopEdge");
     bool headerShowing = headerIsShowing();
     if (isHasScrollToTopEdge || headerShowing) {
-      onHeaderOffset(e.delta.dy);
+      offsetHeader(e.delta.dy);
     }
-    if (headerShowing) {
-      widget.itemScrollController.jumpTo(index: 0);
+    if (headerShowing && widget.dataList.isNotEmpty && e.delta.dy < 0) {
+      widget.itemScrollController.jumpTo(index: widget.isReverse ? widget.dataList.length - 1 : 0);
     }
   }
 
-  Future<void> animToDefPos({isForceUpdate = false}) async {
-    sc.animateTo(headerHeight, duration: const Duration(milliseconds: 250), curve: Curves.ease);
+  Future<void> animToDefPos({isForceUpdate = false, during = 250}) async {
+    sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.ease);
     if (!isHeaderProtectionState() || isForceUpdate) {
-      await Future.delayed(const Duration(milliseconds: 250));
+      await Future.delayed(const Duration(milliseconds: 50));
       curRefreshState.value = RefreshState.def;
     }
   }

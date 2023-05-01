@@ -80,23 +80,24 @@ class ChatWidget extends StatefulWidget {
 }
 
 class ChatWidget2State extends State {
-  final List<ChatMessage> dataList = getTestData(size: 1);
+  final List<ChatMessage> dataList = getTestData(size: 20).obs;
   late final dataSize = dataList.length.obs;
   RefresherController refController = RefresherController();
+
   @override
   Widget build(BuildContext context) {
-    return Obx(() => RefresherIndexListWidget(
-          dataSize: dataSize.value,
-          itemBuilder: buildItemWidget,
-          itemScrollController: itemScrollController,
-          refresherController: refController,
-          onFooterStartLoad: () {},
-          onHeaderStartLoad: () async {
-            await Future.delayed(const Duration(milliseconds: 1000));
-            refController.notifyRefreshFinish();
-            Log.d("===========onHeaderStartLoad================");
-          },
-        ));
+    return RefresherIndexListWidget(
+      dataList: dataList,
+      itemBuilder: buildItemWidget,
+      itemScrollController: itemScrollController,
+      refresherController: refController,
+      onFooterStartLoad: () {},
+      onHeaderStartLoad: () async {
+        await Future.delayed(const Duration(milliseconds: 1000));
+        refController.notifyRefreshFinish();
+        Log.d("===========onHeaderStartLoad================");
+      },
+    );
   }
 
   Widget buildItemWidget(BuildContext context, int index) {

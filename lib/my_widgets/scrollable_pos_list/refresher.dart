@@ -105,7 +105,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                       double velocity = os.velocity;
                       isToTopEdge = checkToTopEdge();
                       if (isToTopEdge && velocity.abs() > 0) {
-                        //  animToHeaderLoadingPos(during: 200);
+                          animToHeaderLoadingPos(during: 200);
                       }
                       Log.d("滚动到边界 velocity:$velocity  isToTopEdge:$isToTopEdge");
                       break;

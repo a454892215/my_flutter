@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../my_widgets/chat/entities.dart';
 import '../my_widgets/scrollable_pos_list/refresher.dart';
@@ -80,10 +79,8 @@ class ChatWidget extends StatefulWidget {
 }
 
 class ChatWidget2State extends State {
-  final List<ChatMessage> dataList = getTestData(size: 20).obs;
-  late final dataSize = dataList.length.obs;
+  final List<ChatMessage> dataList = getTestData(size: 3);
   RefresherController refController = RefresherController();
-
   @override
   Widget build(BuildContext context) {
     return RefresherIndexListWidget(
@@ -94,7 +91,8 @@ class ChatWidget2State extends State {
       onFooterStartLoad: () {},
       onHeaderStartLoad: () async {
         await Future.delayed(const Duration(milliseconds: 1000));
-        refController.notifyRefreshFinish();
+        dataList.addAll(getTestData(size: 2));
+        refController.notifyHeaderLoadFinish();
         Log.d("===========onHeaderStartLoad================");
       },
     );

@@ -44,9 +44,8 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   double headerHeight = refresherParam.headerHeight;
   double footerHeight = refresherParam.footerHeight;
   late ScrollController sc = ScrollController(initialScrollOffset: headerHeight);
-  HeaderWidgetBuilder headerBuilder = HeaderWidgetBuilder();
+  final HeaderWidgetBuilder headerBuilder = HeaderWidgetBuilder();
   final isProhibitListViewScroll = false.obs;
-
   final curRefreshState = RefreshState.def.obs;
 
   @override
@@ -55,7 +54,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     super.initState();
   }
 
-  var isToTopEdge = false;
   final isProhibitScroll = false.obs;
 
   @override
@@ -94,7 +92,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                       Log.d("开始滚动");
                       break;
                     case ScrollUpdateNotification:
-                      isToTopEdge = false;
                       //  Log.d("正在滚动");
                       break;
                     case ScrollEndNotification:
@@ -103,24 +100,28 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                     case OverscrollNotification:
                       OverscrollNotification os = notification as OverscrollNotification;
                       double velocity = os.velocity;
-                      isToTopEdge = checkToTopEdge();
-                      if (isToTopEdge && velocity.abs() > 0) {
-                          animToHeaderLoadingPos(during: 200);
+                      if (velocity > 0) {
+                        animToHeaderLoadingPos(during: 200);
                       }
-                      Log.d("滚动到边界 velocity:$velocity  isToTopEdge:$isToTopEdge");
+                      Log.d("滚动到边界 velocity:$velocity");
                       break;
                   }
                   return true;
                 },
-                child: Obx(() => ScrollablePositionedList.builder(
-                      physics: isProhibitScroll.value ? const NeverScrollableScrollPhysics() : const ClampingScrollPhysics(),
-                      itemScrollController: widget.itemScrollController,
-                      itemPositionsListener: itemPositionsListener,
-                      itemBuilder: widget.itemBuilder,
-                      shrinkWrap: true,
-                      reverse: widget.isReverse,
-                      itemCount: widget.dataList.length,
-                    )),
+                child: ValueListenableBuilder(
+                    valueListenable: widget.refresherController.dataChangedNotifier,
+                    builder: (c, data, child) {
+                      Log.d("length: ${widget.dataList.length}");
+                      return Obx(() => ScrollablePositionedList.builder(
+                            physics: isProhibitScroll.value ? const NeverScrollableScrollPhysics() : const ClampingScrollPhysics(),
+                            itemScrollController: widget.itemScrollController,
+                            itemPositionsListener: itemPositionsListener,
+                            itemBuilder: widget.itemBuilder,
+                            shrinkWrap: true,
+                            reverse: widget.isReverse,
+                            itemCount: widget.dataList.length,
+                          ));
+                    }),
               ),
             ),
           ),
@@ -135,17 +136,26 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     });
   }
 
-  bool checkToTopEdge() {
+  bool checkIsToTopOnMove() {
     List<ItemPosition> itemViewList = itemPositionsListener.itemPositions.value.toList();
     if (widget.isReverse) {
+      /// reverse模式下：itemLeadingEdge 是item底部到ListView底部的距离相对于ListView视口高度的百分比，在ListView的底部下方为负数，上方为正数
+      ///              itemTrailingEdge 是item顶部到ListView底部的距离相对于ListView视口高度的百分比，在ListView的底部下方为负数，上方为正数
+      ///              故，此模式下，当 itemTrailingEdge > 0 && itemTrailingEdge <= 1的时候，表示item顶部处于ListView的Viewport范围
       for (var element in itemViewList) {
-        Log.d(" ==== index: ${element.index}  lastIndex:${(widget.dataList.length - 1)}");
         if (element.index == widget.dataList.length - 1) {
-          return true;
+          Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
+          if (element.itemTrailingEdge > 0 && element.itemTrailingEdge <= 1.01) {
+            return true;
+          }
         }
       }
     } else {
+      /// 非reverse模式下：itemLeadingEdge 是item顶部到ListView顶部的距离相对于ListView视口高度的百分比，在ListView的底部下方为负数，上方为正数
+      ///              itemTrailingEdge 是item顶部到ListView底部的距离相对于ListView视口高度的百分比，在ListView的底部下方为负数，上方为正数
+      ///              故，此模式下，当 itemTrailingEdge > 0 && itemTrailingEdge <= 1的时候，表示item顶部处于ListView的Viewport范围
       for (var element in itemViewList) {
+        Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
         if (element.index == 0) {
           return true;
         }
@@ -190,6 +200,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   onFooterOffset(double offset) {}
 
   void onPointerUp(PointerUpEvent event) {
+    isProhibitScroll.value = false;
     if (headerIsShowing()) {
       var scrolledHeaderY = getScrolledHeaderY();
       if (scrolledHeaderY >= refresherParam.headerTriggerRefreshDistance) {
@@ -205,20 +216,21 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   void onPointerMove(PointerMoveEvent e) {
-    isProhibitScroll.value = headerIsShowing();
-    Log.d("isToTopEdge: $isToTopEdge   isProhibitScroll:$isProhibitScroll");
+    isProhibitScroll.value = e.delta.dy > 0 && headerIsShowing();
+    bool isToTopEdge = checkIsToTopOnMove();
+    //  Log.d("isToTopEdge: $isToTopEdge   isProhibitScroll:$isProhibitScroll  向下滑动：${e.delta.dy > 0}");
     bool headerShowing = headerIsShowing();
     if (isToTopEdge || headerShowing) {
       offsetHeader(e.delta.dy);
     }
   }
 
-  Future<void> animToDefPos({isForceUpdate = false, during = 250}) async {
-    sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.ease).then((value){
-      isProhibitScroll.value = headerIsShowing();
-      Log.d("value: ===============animateTo========111======isProhibitScroll:${isProhibitScroll.value}====");
+  Future<void> animToDefPos({isDataUpdate = false, during = 250}) async {
+    sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.ease).then((value) {
+      isProhibitScroll.value = false;
+      widget.refresherController.dataChangedNotifier.value++;
     });
-    if (!isHeaderProtectionState() || isForceUpdate) {
+    if (!isHeaderProtectionState() || isDataUpdate) {
       await Future.delayed(const Duration(milliseconds: 50));
       Log.d("value: ===============animateTo=========222=========");
       curRefreshState.value = RefreshState.def;
@@ -228,7 +240,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   Future<void> notifyHeaderLoadingFinish() async {
     curRefreshState.value = RefreshState.header_load_finished;
     await Future.delayed(const Duration(milliseconds: 100));
-    animToDefPos(isForceUpdate: true);
+    animToDefPos(isDataUpdate: true);
   }
 
   Future<void> animToHeaderLoadingPos({during = 200}) async {
@@ -250,14 +262,16 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
 
 class RefresherController {
   MyRefreshState? myRefreshState;
+  final ValueNotifier<int> dataChangedNotifier = ValueNotifier<int>(0);
 
   void attach(MyRefreshState state) {
     myRefreshState = state;
   }
 
-  void notifyRefreshFinish() {
+  void notifyHeaderLoadFinish() {
     if (myRefreshState != null) {
       myRefreshState!.notifyHeaderLoadingFinish();
     }
   }
 }
+

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:my_flutter_lib_3/my_widgets/scrollable_pos_list/scrollable_positioned_list_my.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart' as pos_list;
+
 import 'dart:math' as math;
 import '../../util/Log.dart';
 import 'header_indicator_widget.dart';
@@ -40,7 +42,7 @@ class RefresherIndexListWidget extends StatefulWidget {
 RefresherParam refresherParam = RefresherParam();
 
 class MyRefreshState extends State<RefresherIndexListWidget> {
-  ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
+  pos_list.ItemPositionsListener itemPositionsListener = pos_list.ItemPositionsListener.create();
   double headerHeight = refresherParam.headerHeight;
   double footerHeight = refresherParam.footerHeight;
   late ScrollController sc = ScrollController(initialScrollOffset: headerHeight);
@@ -137,7 +139,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   bool checkIsToTopOnMove() {
-    List<ItemPosition> itemViewList = itemPositionsListener.itemPositions.value.toList();
+    List<pos_list.ItemPosition> itemViewList = itemPositionsListener.itemPositions.value.toList();
     if (widget.isReverse) {
       /// reverse模式下：itemLeadingEdge 是item底部到ListView底部的距离相对于ListView视口高度的百分比，在ListView的底部下方为负数，上方为正数
       ///              itemTrailingEdge 是item顶部到ListView底部的距离相对于ListView视口高度的百分比，在ListView的底部下方为负数，上方为正数

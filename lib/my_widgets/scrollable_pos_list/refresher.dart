@@ -231,6 +231,16 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.ease).then((value) {
       isProhibitScroll.value = false;
       widget.refresherController.dataChangedNotifier.value++;
+      if(isDataUpdate){
+        ScrollablePositionedListState? state = widget.itemScrollController.getState();
+        Log.d("==============动画滚动=========000===$state========");
+        if(state != null){
+          Log.d("==============动画滚动=========111===========");
+          var offset = state.primary.scrollController.offset;
+          state.primary.scrollController.jumpTo(refresherParam.headerTriggerRefreshDistance + offset);
+          Log.d("==============动画滚动==========222==========");
+        }
+      }
     });
     if (!isHeaderProtectionState() || isDataUpdate) {
       await Future.delayed(const Duration(milliseconds: 50));
@@ -242,7 +252,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   Future<void> notifyHeaderLoadingFinish() async {
     curRefreshState.value = RefreshState.header_load_finished;
     await Future.delayed(const Duration(milliseconds: 100));
-    animToDefPos(isDataUpdate: true);
+    animToDefPos(isDataUpdate: true, during: 1);
   }
 
   Future<void> animToHeaderLoadingPos({during = 200}) async {

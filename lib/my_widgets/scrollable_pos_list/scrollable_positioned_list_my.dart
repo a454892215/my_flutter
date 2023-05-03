@@ -179,7 +179,10 @@ class ItemScrollController {
   ///
   /// If `false`, then [jumpTo] and [scrollTo] must not be called.
   bool get isAttached => scrollableListState != null;
-  ScrollablePositionedListState? get state => scrollableListState;
+
+  ScrollablePositionedListState? getState(){
+    return scrollableListState;
+  }
 
 
   ScrollablePositionedListState? scrollableListState;
@@ -244,8 +247,9 @@ class ItemScrollController {
     );
   }
 
-  void _attach(ScrollablePositionedListState scrollableListState) {
-    scrollableListState = scrollableListState;
+  void _attach(ScrollablePositionedListState state) {
+
+    scrollableListState = state;
   }
 
   void _detach() {

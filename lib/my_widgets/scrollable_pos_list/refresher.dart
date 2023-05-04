@@ -86,6 +86,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
             color: Colors.pink,
             child: Listener(
               onPointerUp: onPointerUp,
+              onPointerDown: onPointerDown,
               onPointerMove: onPointerMove,
               child: NotificationListener<ScrollNotification>(
                 onNotification: (ScrollNotification notification) {
@@ -201,10 +202,16 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   onFooterOffset(double offset) {}
+  bool isPressing = false;
 
   void onPointerUp(PointerUpEvent event) {
     isProhibitScroll.value = false;
+    isPressing = false;
     toNextOnHeaderShowing();
+  }
+
+  void onPointerDown(PointerDownEvent event) {
+    isPressing = true;
   }
 
   void toNextOnHeaderShowing() {
@@ -233,7 +240,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   Future<void> animToDefPos({isLoadFinished = false, during = 250}) async {
-    sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.ease).then((value) {
+    sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) {
       isProhibitScroll.value = false;
       widget.refresherController.dataChangedNotifier.value++;
       if (isLoadFinished && during < 10) {
@@ -258,7 +265,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   Future<void> animToHeaderLoadingPos({during = 200}) async {
-    sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.ease);
+    sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.easeInSine);
     if (!isHeaderProtectionState()) {
       curRefreshState.value = RefreshState.header_loading;
       await Future.delayed(Duration(milliseconds: during + 20));
@@ -267,11 +274,13 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   }
 
   Future<void> scrollShowingHeaderByFlingVelocity(double velocity, {maxVelocity = 12000}) async {
-    // 0-maxVelocity 转成 => 0-1
+    // 0-velocity 转成 => 0-1
     velocity = velocity.abs() > maxVelocity ? maxVelocity : velocity.abs();
     late double showingHeaderHeight = refresherParam.headerHeight * velocity / maxVelocity;
     sc.animateTo(sc.offset - showingHeaderHeight, duration: const Duration(milliseconds: 200), curve: Curves.decelerate).then((value) {
-      toNextOnHeaderShowing();
+      if (!isPressing) {
+        toNextOnHeaderShowing();
+      }
     });
   }
 

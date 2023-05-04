@@ -225,7 +225,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
       if (scrolledHeaderY >= refresherParam.headerTriggerRefreshDistance) {
         animToHeaderLoadingPos();
       } else {
-        animToDefPos();
+        animToResetPos();
       }
     }
   }
@@ -247,10 +247,10 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     }
   }
 
-  Future<void> animToDefPos({isLoadFinished = false, during = 250}) async {
-    sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) {
+  Future<void> animToResetPos({isLoadFinished = false, during = 250}) async {
+    sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
       isProhibitScroll.value = false;
-      widget.refresherController.dataChangedNotifier.value++;
+      /// 加载更多结束后 偏移显示出新数据
       if (isLoadFinished && during < 10) {
         ScrollablePositionedListState? state = widget.itemScrollController.getState();
         if (state != null) {
@@ -258,27 +258,30 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
           state.primary.scrollController.jumpTo(refresherParam.headerTriggerRefreshDistance + offset);
         }
       }
+      if (!isHeaderProtectionState() || isLoadFinished) {
+        await Future.delayed(const Duration(milliseconds: 20));
+        curRefreshState.value = RefreshState.def;
+        if(isLoadFinished){ /// 刷新List data
+          widget.refresherController.dataChangedNotifier.value++;
+        }
+      }
+
+
     });
-    if (!isHeaderProtectionState() || isLoadFinished) {
-      await Future.delayed(const Duration(milliseconds: 50));
-      curRefreshState.value = RefreshState.def;
-    }
   }
 
   Future<void> notifyHeaderLoadingFinish() async {
     curRefreshState.value = RefreshState.header_load_finished;
-    await Future.delayed(const Duration(milliseconds: 100));
+    await Future.delayed(const Duration(milliseconds: 150));
     int during = widget.isReverse ? 1 : 250;
-    animToDefPos(isLoadFinished: true, during: during);
+    animToResetPos(isLoadFinished: true, during: during);
   }
 
   bool isHeaderLoadingPosProtectionState = false;
 
   Future<void> animToHeaderLoadingPos() async {
-    Log.d("=========animToHeaderLoadingPos======111====");
     if (!isHeaderLoadingPosProtectionState) {
       isHeaderLoadingPosProtectionState = true;
-      Log.d("=========animToHeaderLoadingPos=====222=====");
       var rate = (refresherParam.loadingPos - sc.offset).abs() / refresherParam.headerToLoadingMaxDistance;
       int during = 100 + (rate * 200).toInt();
       sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {

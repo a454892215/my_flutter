@@ -73,12 +73,10 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
           Container(
             width: maxWidth,
             height: headerHeight,
-            color: Colors.blue,
             alignment: Alignment.bottomCenter,
             child: Container(
               height: refresherParam.headerIndicatorHeight,
               width: double.infinity,
-              color: Colors.orange,
               alignment: Alignment.center,
               child: Obx(() => headerBuilder.getHeaderWidget(curRefreshState.value, RefresherFunc.refresh)),
             ),

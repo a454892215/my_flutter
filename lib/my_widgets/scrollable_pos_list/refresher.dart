@@ -54,6 +54,9 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   void initState() {
     widget.refresherController.attach(this);
     super.initState();
+    sc.addListener(() {
+      updateHeaderState();
+    });
   }
 
   final isProhibitScroll = false.obs;
@@ -192,6 +195,9 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     if (tarScrollDy < 0) tarScrollDy = 0;
     if (tarScrollDy > headerHeight) tarScrollDy = headerHeight;
     sc.position.jumpTo(tarScrollDy);
+  }
+
+  void updateHeaderState() {
     if (!isHeaderProtectionState()) {
       if (sc.position.pixels < refresherParam.loadingPos) {
         curRefreshState.value = RefreshState.header_release_load;
@@ -207,6 +213,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   void onPointerUp(PointerUpEvent event) {
     isProhibitScroll.value = false;
     isPressing = false;
+    isHeaderLoadingPosProtectionState = false;
     toNextOnHeaderShowing();
   }
 
@@ -231,6 +238,9 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
 
   void onPointerMove(PointerMoveEvent e) {
     isProhibitScroll.value = e.delta.dy > 0 && headerIsShowing();
+    if (isHeaderLoadingPosProtectionState) {
+      return;
+    }
     bool isToTopEdge = checkIsToTopOnMove();
     //  Log.d("isToTopEdge: $isToTopEdge   isProhibitScroll:$isProhibitScroll  向下滑动：${e.delta.dy > 0}");
     bool headerShowing = headerIsShowing();
@@ -264,12 +274,23 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     animToDefPos(isLoadFinished: true, during: during);
   }
 
-  Future<void> animToHeaderLoadingPos({during = 200}) async {
-    sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.easeInSine);
-    if (!isHeaderProtectionState()) {
-      curRefreshState.value = RefreshState.header_loading;
-      await Future.delayed(Duration(milliseconds: during + 20));
-      widget.onHeaderStartLoad();
+  bool isHeaderLoadingPosProtectionState = false;
+
+  Future<void> animToHeaderLoadingPos() async {
+    Log.d("=========animToHeaderLoadingPos======111====");
+    if (!isHeaderLoadingPosProtectionState) {
+      isHeaderLoadingPosProtectionState = true;
+      Log.d("=========animToHeaderLoadingPos=====222=====");
+      var rate = (refresherParam.loadingPos - sc.offset).abs() / refresherParam.headerToLoadingMaxDistance;
+      int during = 100 + (rate * 200).toInt();
+      sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
+        if (!isHeaderProtectionState()) {
+          curRefreshState.value = RefreshState.header_loading;
+          await Future.delayed(const Duration(milliseconds: 100));
+          widget.onHeaderStartLoad();
+          isHeaderLoadingPosProtectionState = false;
+        }
+      });
     }
   }
 
@@ -277,7 +298,8 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     // 0-velocity 转成 => 0-1
     velocity = velocity.abs() > maxVelocity ? maxVelocity : velocity.abs();
     late double showingHeaderHeight = refresherParam.headerHeight * velocity / maxVelocity;
-    sc.animateTo(sc.offset - showingHeaderHeight, duration: const Duration(milliseconds: 200), curve: Curves.decelerate).then((value) {
+    int during = 100 + (showingHeaderHeight.abs() / refresherParam.headerHeight * 200).toInt();
+    sc.animateTo(sc.offset - showingHeaderHeight, duration: Duration(milliseconds: during), curve: Curves.decelerate).then((value) {
       if (!isPressing) {
         toNextOnHeaderShowing();
       }

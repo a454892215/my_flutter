@@ -3,6 +3,7 @@ class RefresherParam{
    double headerIndicatorHeight = 60;
    double headerTriggerRefreshDistance = 60;
    late double loadingPos = headerHeight - headerTriggerRefreshDistance;
+   late double headerToLoadingMaxDistance = headerHeight - headerIndicatorHeight;
    /// 加载结束后，瞬时偏移量，使部分新内容自然显示出来
    double loadFinishOffset = 0;
 

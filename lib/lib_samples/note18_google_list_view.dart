@@ -95,7 +95,7 @@ class ChatWidget2State extends State {
       onHeaderStartLoad: () async {
         await Future.delayed(const Duration(milliseconds: 300));
         if (isReverse) {
-          dataList.addAll(getTestData(size: 2));
+          dataList.addAll(getTestData(size: 1));
           refController.notifyHeaderLoadFinish();
         } else {
           dataList.clear();

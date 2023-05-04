@@ -104,13 +104,13 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                       double velocity = os.velocity;
                       if (velocity > 0 && widget.isReverse) {
                         // header加载更多
-                        animToHeaderLoadingPos(during: 200);
+                        scrollShowingHeaderByFlingVelocity(velocity, maxVelocity: 8000);
                       }
                       if (velocity < 0 && !widget.isReverse) {
                         // header刷新
-                        animToHeaderLoadingPos(during: 200);
+                        scrollShowingHeaderByFlingVelocity(velocity, maxVelocity: 12000);
                       }
-                      //  Log.d("滚动到边界 velocity:$velocity");
+                      Log.d("滚动到边界 velocity:$velocity");
                       break;
                   }
                   return true;
@@ -151,7 +151,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
       ///              故，此模式下，当 itemTrailingEdge > 0 && itemTrailingEdge <= 1的时候，表示item顶部处于ListView的Viewport范围
       for (var element in itemViewList) {
         if (element.index == widget.dataList.length - 1) {
-        //  Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
+          //  Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
           if (element.itemTrailingEdge > 0 && element.itemTrailingEdge <= 1.01) {
             return true;
           }
@@ -162,21 +162,16 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
       ///              故，此模式下，当 itemLeadingEdge >= 0 && itemLeadingEdge < 1的时候，表示item顶部处于ListView的Viewport范围
       for (var element in itemViewList) {
         if (element.index == 0) {
-        //  Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
+          //  Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
           if (element.itemLeadingEdge >= -0.01 && element.itemLeadingEdge < 1) {
             return true;
           }
         }
       }
     }
-    return false;
-  }
-
-  bool canHeaderOffset() {
-    return false;
-  }
-
-  bool canFooterOffset() {
+    if (itemViewList.isEmpty) {
+      return true;
+    }
     return false;
   }
 
@@ -209,6 +204,10 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
 
   void onPointerUp(PointerUpEvent event) {
     isProhibitScroll.value = false;
+    toNextOnHeaderShowing();
+  }
+
+  void toNextOnHeaderShowing() {
     if (headerIsShowing()) {
       var scrolledHeaderY = getScrolledHeaderY();
       if (scrolledHeaderY >= refresherParam.headerTriggerRefreshDistance) {
@@ -265,6 +264,15 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
       await Future.delayed(Duration(milliseconds: during + 20));
       widget.onHeaderStartLoad();
     }
+  }
+
+  Future<void> scrollShowingHeaderByFlingVelocity(double velocity, {maxVelocity = 12000}) async {
+    // 0-maxVelocity 转成 => 0-1
+    velocity = velocity.abs() > maxVelocity ? maxVelocity : velocity.abs();
+    late double showingHeaderHeight = refresherParam.headerHeight * velocity / maxVelocity;
+    sc.animateTo(sc.offset - showingHeaderHeight, duration: const Duration(milliseconds: 200), curve: Curves.decelerate).then((value) {
+      toNextOnHeaderShowing();
+    });
   }
 
   double getScrolledHeaderY() {

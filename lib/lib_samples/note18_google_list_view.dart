@@ -81,19 +81,28 @@ class ChatWidget extends StatefulWidget {
 class ChatWidget2State extends State {
   final List<ChatMessage> dataList = getTestData(size: 3);
   RefresherController refController = RefresherController();
+
   @override
   Widget build(BuildContext context) {
+    bool isReverse = true;
     return RefresherIndexListWidget(
       dataList: dataList,
       itemBuilder: buildItemWidget,
       itemScrollController: itemScrollController,
       refresherController: refController,
-      isReverse: true,
+      isReverse: isReverse,
       onFooterStartLoad: () {},
       onHeaderStartLoad: () async {
-        await Future.delayed(const Duration(milliseconds: 1000));
-        dataList.addAll(getTestData(size: 2));
-        refController.notifyHeaderLoadFinish();
+        await Future.delayed(const Duration(milliseconds: 300));
+        if (isReverse) {
+          dataList.addAll(getTestData(size: 2));
+          refController.notifyHeaderLoadFinish();
+        } else {
+          dataList.clear();
+          dataList.addAll(getTestData(size: 10));
+          refController.notifyHeaderLoadFinish();
+        }
+
         Log.d("===========onHeaderStartLoad================");
       },
     );

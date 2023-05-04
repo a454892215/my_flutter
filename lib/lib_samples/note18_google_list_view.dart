@@ -88,6 +88,7 @@ class ChatWidget2State extends State {
       itemBuilder: buildItemWidget,
       itemScrollController: itemScrollController,
       refresherController: refController,
+      isReverse: true,
       onFooterStartLoad: () {},
       onHeaderStartLoad: () async {
         await Future.delayed(const Duration(milliseconds: 1000));

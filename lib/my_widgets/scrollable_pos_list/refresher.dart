@@ -102,10 +102,15 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                     case OverscrollNotification:
                       OverscrollNotification os = notification as OverscrollNotification;
                       double velocity = os.velocity;
-                      if (velocity > 0) {
+                      if (velocity > 0 && widget.isReverse) {
+                        // header加载更多
                         animToHeaderLoadingPos(during: 200);
                       }
-                      Log.d("滚动到边界 velocity:$velocity");
+                      if (velocity < 0 && !widget.isReverse) {
+                        // header刷新
+                        animToHeaderLoadingPos(during: 200);
+                      }
+                      //  Log.d("滚动到边界 velocity:$velocity");
                       break;
                   }
                   return true;
@@ -146,20 +151,21 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
       ///              故，此模式下，当 itemTrailingEdge > 0 && itemTrailingEdge <= 1的时候，表示item顶部处于ListView的Viewport范围
       for (var element in itemViewList) {
         if (element.index == widget.dataList.length - 1) {
-          Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
+        //  Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
           if (element.itemTrailingEdge > 0 && element.itemTrailingEdge <= 1.01) {
             return true;
           }
         }
       }
     } else {
-      /// 非reverse模式下：itemLeadingEdge 是item顶部到ListView顶部的距离相对于ListView视口高度的百分比，在ListView的底部下方为负数，上方为正数
-      ///              itemTrailingEdge 是item顶部到ListView底部的距离相对于ListView视口高度的百分比，在ListView的底部下方为负数，上方为正数
-      ///              故，此模式下，当 itemTrailingEdge > 0 && itemTrailingEdge <= 1的时候，表示item顶部处于ListView的Viewport范围
+      /// 非reverse模式下：itemLeadingEdge 是item顶部到ListView顶部的距离相对于ListView视口高度的百分比，在ListView的底部下方为正数，上方为负数
+      ///              故，此模式下，当 itemLeadingEdge >= 0 && itemLeadingEdge < 1的时候，表示item顶部处于ListView的Viewport范围
       for (var element in itemViewList) {
-        Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
         if (element.index == 0) {
-          return true;
+        //  Log.d("index: ${element.index} itemLeadingEdge ${element.itemLeadingEdge}  itemTrailingEdge ${element.itemTrailingEdge}");
+          if (element.itemLeadingEdge >= -0.01 && element.itemLeadingEdge < 1) {
+            return true;
+          }
         }
       }
     }
@@ -227,24 +233,20 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     }
   }
 
-  Future<void> animToDefPos({isDataUpdate = false, during = 250}) async {
+  Future<void> animToDefPos({isLoadFinished = false, during = 250}) async {
     sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.ease).then((value) {
       isProhibitScroll.value = false;
       widget.refresherController.dataChangedNotifier.value++;
-      if(isDataUpdate){
+      if (isLoadFinished && during < 10) {
         ScrollablePositionedListState? state = widget.itemScrollController.getState();
-        Log.d("==============动画滚动=========000===$state========");
-        if(state != null){
-          Log.d("==============动画滚动=========111===========");
+        if (state != null) {
           var offset = state.primary.scrollController.offset;
           state.primary.scrollController.jumpTo(refresherParam.headerTriggerRefreshDistance + offset);
-          Log.d("==============动画滚动==========222==========");
         }
       }
     });
-    if (!isHeaderProtectionState() || isDataUpdate) {
+    if (!isHeaderProtectionState() || isLoadFinished) {
       await Future.delayed(const Duration(milliseconds: 50));
-      Log.d("value: ===============animateTo=========222=========");
       curRefreshState.value = RefreshState.def;
     }
   }
@@ -252,7 +254,8 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   Future<void> notifyHeaderLoadingFinish() async {
     curRefreshState.value = RefreshState.header_load_finished;
     await Future.delayed(const Duration(milliseconds: 100));
-    animToDefPos(isDataUpdate: true, during: 1);
+    int during = widget.isReverse ? 1 : 250;
+    animToDefPos(isLoadFinished: true, during: during);
   }
 
   Future<void> animToHeaderLoadingPos({during = 200}) async {
@@ -286,4 +289,3 @@ class RefresherController {
     }
   }
 }
-

@@ -44,6 +44,7 @@ RefresherParam refresherParam = RefresherParam();
 class MyRefreshState extends State<RefresherIndexListWidget> {
   pos_list.ItemPositionsListener itemPositionsListener = pos_list.ItemPositionsListener.create();
   double headerHeight = refresherParam.headerHeight;
+  double resetPos = refresherParam.headerHeight;
   double footerHeight = refresherParam.footerHeight;
   late ScrollController sc = ScrollController(initialScrollOffset: headerHeight);
   final HeaderWidgetBuilder headerBuilder = HeaderWidgetBuilder();
@@ -122,15 +123,15 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                     valueListenable: widget.refresherController.dataChangedNotifier,
                     builder: (c, data, child) {
                       Log.d("length: ${widget.dataList.length}");
-                      return Obx(() => ScrollablePositionedList.builder(
-                            physics: isProhibitScroll.value ? const NeverScrollableScrollPhysics() : const ClampingScrollPhysics(),
-                            itemScrollController: widget.itemScrollController,
-                            itemPositionsListener: itemPositionsListener,
-                            itemBuilder: widget.itemBuilder,
-                            shrinkWrap: true,
-                            reverse: widget.isReverse,
-                            itemCount: widget.dataList.length,
-                          ));
+                      return ScrollablePositionedList.builder(
+                        physics: ClampingScrollPhysics(),
+                        itemScrollController: widget.itemScrollController,
+                        itemPositionsListener: itemPositionsListener,
+                        itemBuilder: widget.itemBuilder,
+                        shrinkWrap: true,
+                        reverse: widget.isReverse,
+                        itemCount: widget.dataList.length,
+                      );
                     }),
               ),
             ),
@@ -217,6 +218,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     isProhibitScroll.value = false;
     isPressing = false;
     isHeaderLoadingPosProtectionState = false;
+    isHandScrollListViewOnHeaderShow = false;
     toNextStateOnHeaderShowing();
   }
 
@@ -239,10 +241,21 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     return curRefreshState.value == RefreshState.header_loading || curRefreshState.value == RefreshState.header_load_finished;
   }
 
+  bool isHandScrollListViewOnHeaderShow = false;
+
   void onPointerMove(PointerMoveEvent e) {
     isProhibitScroll.value = e.delta.dy > 0 && headerIsShowing();
     if (isHeaderLoadingPosProtectionState) {
       return;
+    }
+    var isHeaderShowing = headerIsShowing();
+    if (isHeaderShowing) {
+      isHandScrollListViewOnHeaderShow = true;
+    }
+    if (isHandScrollListViewOnHeaderShow) {
+      double headPos = widget.isReverse ? getListScrollController()?.position.maxScrollExtent ?? 0 : 0;
+      double scrolledPos = getListScrollController()!.offset + (widget.isReverse ? e.delta.dy : -e.delta.dy);
+      getListScrollController()?.jumpTo(isHeaderShowing ? headPos : scrolledPos);
     }
     bool isToTopEdge = checkIsToTopOnMove();
     bool headerShowing = headerIsShowing();
@@ -272,6 +285,14 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
         }
       }
     });
+  }
+
+  ScrollController? getListScrollController() {
+    ScrollablePositionedListState? state = widget.itemScrollController.getState();
+    if (state != null) {
+      return state.primary.scrollController;
+    }
+    return null;
   }
 
   Future<void> notifyHeaderLoadingFinish() async {

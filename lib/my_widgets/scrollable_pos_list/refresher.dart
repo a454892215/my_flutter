@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:my_flutter_lib_3/my_widgets/scrollable_pos_list/scrollable_positioned_list_my.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart' as pos_list;
 
 import 'dart:math' as math;
 import '../../util/Log.dart';
+import 'footer_indicator_widget.dart';
 import 'header_indicator_widget.dart';
 import 'refresh_state.dart';
 import 'refresher_param.dart';
@@ -47,6 +47,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   double footerHeight = refresherParam.footerHeight;
   late ScrollController sc = ScrollController(initialScrollOffset: headerHeight);
   final HeaderWidgetBuilder headerBuilder = HeaderWidgetBuilder();
+  final FooterWidgetBuilder footerWidgetBuilder = FooterWidgetBuilder();
   final isProhibitListViewScroll = false.obs;
   final curRefreshState = RefreshState.def.obs;
 
@@ -135,10 +136,15 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
             ),
           ),
           Container(
-            width: 1.sw,
+            width: maxWidth,
             height: footerHeight,
-            alignment: Alignment.center,
-            color: Colors.purple,
+            alignment: Alignment.topCenter,
+            child: Container(
+              height: refresherParam.footerIndicatorHeight,
+              width: double.infinity,
+              alignment: Alignment.center,
+              child: Obx(() => footerWidgetBuilder.getFooterWidget(curRefreshState.value, RefresherFunc.refresh)),
+            ),
           ),
         ],
       );
@@ -205,21 +211,20 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     }
   }
 
-  onFooterOffset(double offset) {}
   bool isPressing = false;
 
   void onPointerUp(PointerUpEvent event) {
     isProhibitScroll.value = false;
     isPressing = false;
     isHeaderLoadingPosProtectionState = false;
-    toNextOnHeaderShowing();
+    toNextStateOnHeaderShowing();
   }
 
   void onPointerDown(PointerDownEvent event) {
     isPressing = true;
   }
 
-  void toNextOnHeaderShowing() {
+  void toNextStateOnHeaderShowing() {
     if (headerIsShowing()) {
       var scrolledHeaderY = getScrolledHeaderY();
       if (scrolledHeaderY >= refresherParam.headerTriggerRefreshDistance) {
@@ -240,7 +245,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
       return;
     }
     bool isToTopEdge = checkIsToTopOnMove();
-    //  Log.d("isToTopEdge: $isToTopEdge   isProhibitScroll:$isProhibitScroll  向下滑动：${e.delta.dy > 0}");
     bool headerShowing = headerIsShowing();
     if (isToTopEdge || headerShowing) {
       offsetHeader(e.delta.dy);
@@ -250,6 +254,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   Future<void> animToResetPos({isLoadFinished = false, during = 250}) async {
     sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
       isProhibitScroll.value = false;
+
       /// 加载更多结束后 偏移显示出新数据
       if (isLoadFinished && during < 10) {
         ScrollablePositionedListState? state = widget.itemScrollController.getState();
@@ -261,12 +266,11 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
       if (!isHeaderProtectionState() || isLoadFinished) {
         await Future.delayed(const Duration(milliseconds: 20));
         curRefreshState.value = RefreshState.def;
-        if(isLoadFinished){ /// 刷新List data
+        if (isLoadFinished) {
+          /// 刷新List data
           widget.refresherController.dataChangedNotifier.value++;
         }
       }
-
-
     });
   }
 
@@ -302,7 +306,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     int during = 100 + (showingHeaderHeight.abs() / refresherParam.headerHeight * 200).toInt();
     sc.animateTo(sc.offset - showingHeaderHeight, duration: Duration(milliseconds: during), curve: Curves.decelerate).then((value) {
       if (!isPressing) {
-        toNextOnHeaderShowing();
+        toNextStateOnHeaderShowing();
       }
     });
   }

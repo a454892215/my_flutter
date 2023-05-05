@@ -214,7 +214,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
 
   void onPointerUp(PointerUpEvent event) {
     isPressing = false;
-    isHeaderLoadingPosProtectionState = false;
     isHandScrollListViewOnHeaderShow = false;
     toNextStateOnHeaderShowing();
   }
@@ -241,9 +240,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   bool isHandScrollListViewOnHeaderShow = false;
 
   void onPointerMove(PointerMoveEvent e) {
-    if (isHeaderLoadingPosProtectionState) {
-      return;
-    }
     var isHeaderShowing = headerIsShowing();
     if (isHeaderShowing) {
       isHandScrollListViewOnHeaderShow = true;
@@ -293,22 +289,17 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     animToResetPos(isLoadFinished: true, during: during);
   }
 
-  bool isHeaderLoadingPosProtectionState = false;
-
   Future<void> animToHeaderLoadingPos() async {
-    if (!isHeaderLoadingPosProtectionState) {
-      isHeaderLoadingPosProtectionState = true;
-      var rate = (refresherParam.loadingPos - sc.offset).abs() / refresherParam.headerToLoadingMaxDistance;
-      int during = 100 + (rate * 200).toInt();
-      sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
-        if (!isHeaderProtectionState()) {
-          curRefreshState.value = RefreshState.header_loading;
-          await Future.delayed(const Duration(milliseconds: 100));
-          widget.onHeaderStartLoad();
-          isHeaderLoadingPosProtectionState = false;
-        }
-      });
-    }
+    var rate = (refresherParam.loadingPos - sc.offset).abs() / refresherParam.headerToLoadingMaxDistance;
+    int during = 100 + (rate * 200).toInt();
+    sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
+      /// 加上sc.offset == refresherParam.loadingPos 可能发生动画未执行完成就被挤掉导致回调
+      if (!isHeaderProtectionState() && sc.offset == refresherParam.loadingPos) {
+        curRefreshState.value = RefreshState.header_loading;
+        await Future.delayed(const Duration(milliseconds: 100));
+        widget.onHeaderStartLoad();
+      }
+    });
   }
 
   Future<void> scrollShowingHeaderByFlingVelocity(double velocity, {maxVelocity = 12000}) async {

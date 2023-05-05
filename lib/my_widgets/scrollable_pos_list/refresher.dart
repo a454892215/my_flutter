@@ -61,8 +61,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     });
   }
 
-  final isProhibitScroll = false.obs;
-
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (c, b) {
@@ -124,7 +122,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
                     builder: (c, data, child) {
                       Log.d("length: ${widget.dataList.length}");
                       return ScrollablePositionedList.builder(
-                        physics: ClampingScrollPhysics(),
+                        physics: const ClampingScrollPhysics(),
                         itemScrollController: widget.itemScrollController,
                         itemPositionsListener: itemPositionsListener,
                         itemBuilder: widget.itemBuilder,
@@ -215,7 +213,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   bool isPressing = false;
 
   void onPointerUp(PointerUpEvent event) {
-    isProhibitScroll.value = false;
     isPressing = false;
     isHeaderLoadingPosProtectionState = false;
     isHandScrollListViewOnHeaderShow = false;
@@ -244,7 +241,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   bool isHandScrollListViewOnHeaderShow = false;
 
   void onPointerMove(PointerMoveEvent e) {
-    isProhibitScroll.value = e.delta.dy > 0 && headerIsShowing();
     if (isHeaderLoadingPosProtectionState) {
       return;
     }
@@ -266,8 +262,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
 
   Future<void> animToResetPos({isLoadFinished = false, during = 250}) async {
     sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
-      isProhibitScroll.value = false;
-
       /// 加载更多结束后 偏移显示出新数据
       if (isLoadFinished && during < 10) {
         ScrollablePositionedListState? state = widget.itemScrollController.getState();
@@ -279,10 +273,6 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
       if (!isHeaderProtectionState() || isLoadFinished) {
         await Future.delayed(const Duration(milliseconds: 20));
         curRefreshState.value = RefreshState.def;
-        if (isLoadFinished) {
-          /// 刷新List data
-          widget.refresherController.dataChangedNotifier.value++;
-        }
       }
     });
   }
@@ -297,6 +287,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
 
   Future<void> notifyHeaderLoadingFinish() async {
     curRefreshState.value = RefreshState.header_load_finished;
+    widget.refresherController.dataChangedNotifier.value++;
     await Future.delayed(const Duration(milliseconds: 150));
     int during = widget.isReverse ? 1 : 250;
     animToResetPos(isLoadFinished: true, during: during);

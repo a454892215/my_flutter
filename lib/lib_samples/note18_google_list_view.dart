@@ -84,7 +84,7 @@ class ChatWidget2State extends State {
 
   @override
   Widget build(BuildContext context) {
-    bool isReverse = true;
+    bool isReverse = false;
     return RefresherIndexListWidget(
       dataList: dataList,
       itemBuilder: buildItemWidget,

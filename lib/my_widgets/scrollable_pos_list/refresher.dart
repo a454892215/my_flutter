@@ -51,10 +51,12 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   final FooterWidgetBuilder footerWidgetBuilder = FooterWidgetBuilder();
   final isProhibitListViewScroll = false.obs;
   final curRefreshState = RefreshState.def.obs;
+  int oriDataListSize = 0;
 
   @override
   void initState() {
     widget.refresherController.attach(this);
+    oriDataListSize = widget.dataList.length;
     super.initState();
     sc.addListener(() {
       updateHeaderState();
@@ -259,7 +261,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
   Future<void> animToResetPos({isOffsetShowingMoreData = false, isFromHeaderLoadFinish = false, during = 250}) async {
     sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
       /// 加载更多结束后 偏移显示出新数据
-      if (isOffsetShowingMoreData && during < 10) {
+      if (isOffsetShowingMoreData) {
         ScrollablePositionedListState? state = widget.itemScrollController.getState();
         if (state != null) {
           var offset = state.primary.scrollController.offset;
@@ -281,12 +283,15 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     return null;
   }
 
-  Future<void> notifyHeaderLoadingFinish({isOffsetShowingMoreData = false}) async {
+  Future<void> notifyHeaderLoadingFinish() async {
     curRefreshState.value = RefreshState.header_load_finished;
     widget.refresherController.dataChangedNotifier.value++;
     await Future.delayed(const Duration(milliseconds: 150));
-    int during = widget.isReverse ? 1 : 250;
+    /// 如果头部是加载更多 并且有新的数据
+    bool isOffsetShowingMoreData = widget.isReverse && widget.dataList.length > oriDataListSize;
+    int during = isOffsetShowingMoreData ? 1 : 250;
     animToResetPos(isOffsetShowingMoreData: isOffsetShowingMoreData, isFromHeaderLoadFinish: true, during: during);
+    oriDataListSize = widget.dataList.length;
   }
 
   Future<void> animToHeaderLoadingPos() async {
@@ -330,7 +335,7 @@ class RefresherController {
     myRefreshState = state;
   }
 
-  void notifyHeaderLoadFinish() {
+  void notifyHeaderLoadFinish({isOffsetShowingMoreData = false}) {
     if (myRefreshState != null) {
       myRefreshState!.notifyHeaderLoadingFinish();
     }

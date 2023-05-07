@@ -96,7 +96,8 @@ class ChatWidget2State extends State {
         await Future.delayed(const Duration(milliseconds: 300));
         if (isReverse) {
           dataList.addAll(getTestData(size: 1));
-          refController.notifyHeaderLoadFinish();
+          bool isNoNewDataOnLoadMore = dataList.length >= 8;
+          refController.notifyHeaderLoadFinish(isNoNewDataOnLoadMore: isNoNewDataOnLoadMore);
         } else {
           dataList.clear();
           dataList.addAll(getTestData(size: 10));

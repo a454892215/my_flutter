@@ -202,8 +202,9 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     sc.position.jumpTo(tarScrollDy);
   }
 
+  /// 只处理释放刷加载和默认状态
   void updateHeaderState() {
-    if (!isHeaderProtectionState()) {
+    if (isTouchScrollStateOfHeader()) {
       if (sc.position.pixels < refresherParam.loadingPos) {
         curRefreshState.value = RefreshState.header_release_load;
       } else if (sc.position.pixels > refresherParam.loadingPos) {
@@ -226,17 +227,25 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
 
   void toNextStateOnHeaderShowing() {
     if (headerIsShowing()) {
-      var scrolledHeaderY = getScrolledHeaderY();
-      if (scrolledHeaderY >= refresherParam.headerTriggerRefreshDistance) {
-        animToHeaderLoadingPos();
-      } else {
+      if (isAllDataLoadFinishedState()) {
         animToResetPos();
+      } else {
+        var scrolledHeaderY = getScrolledHeaderY();
+        if (scrolledHeaderY >= refresherParam.headerTriggerRefreshDistance) {
+          animToHeaderLoadingPos();
+        } else {
+          animToResetPos();
+        }
       }
     }
   }
 
-  bool isHeaderProtectionState() {
-    return curRefreshState.value == RefreshState.header_loading || curRefreshState.value == RefreshState.header_load_finished;
+  bool isTouchScrollStateOfHeader() {
+    return curRefreshState.value == RefreshState.def || curRefreshState.value == RefreshState.header_release_load;
+  }
+
+  bool isAllDataLoadFinishedState() {
+    return curRefreshState.value == RefreshState.header_all_data_load_finished;
   }
 
   bool isHandScrollListViewOnHeaderShow = false;
@@ -258,7 +267,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     }
   }
 
-  Future<void> animToResetPos({isOffsetShowingMoreData = false, isFromHeaderLoadFinish = false, during = 250}) async {
+  Future<void> animToResetPos({isOffsetShowingMoreData = false, isNotifyHeaderLoadFinish = false, during = 250}) async {
     sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
       /// 加载更多结束后 偏移显示出新数据
       if (isOffsetShowingMoreData) {
@@ -268,9 +277,12 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
           state.primary.scrollController.jumpTo(refresherParam.headerTriggerRefreshDistance + offset);
         }
       }
-      if (!isHeaderProtectionState() || isFromHeaderLoadFinish) {
+      if (isNotifyHeaderLoadFinish) {
         await Future.delayed(const Duration(milliseconds: 20));
         curRefreshState.value = RefreshState.def;
+      }
+      if (widget.refresherController.isNoNewDataOnLoadMore) {
+        curRefreshState.value = RefreshState.header_all_data_load_finished;
       }
     });
   }
@@ -287,10 +299,11 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     curRefreshState.value = RefreshState.header_load_finished;
     widget.refresherController.dataChangedNotifier.value++;
     await Future.delayed(const Duration(milliseconds: 150));
+
     /// 如果头部是加载更多 并且有新的数据
     bool isOffsetShowingMoreData = widget.isReverse && widget.dataList.length > oriDataListSize;
     int during = isOffsetShowingMoreData ? 1 : 250;
-    animToResetPos(isOffsetShowingMoreData: isOffsetShowingMoreData, isFromHeaderLoadFinish: true, during: during);
+    animToResetPos(isOffsetShowingMoreData: isOffsetShowingMoreData, isNotifyHeaderLoadFinish: true, during: during);
     oriDataListSize = widget.dataList.length;
   }
 
@@ -299,7 +312,7 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     int during = 100 + (rate * 200).toInt();
     sc.animateTo(refresherParam.loadingPos, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
       /// 加上sc.offset == refresherParam.loadingPos 可能发生动画未执行完成就被挤掉导致回调
-      if (!isHeaderProtectionState() && sc.offset == refresherParam.loadingPos) {
+      if (isTouchScrollStateOfHeader() && sc.offset == refresherParam.loadingPos) {
         curRefreshState.value = RefreshState.header_loading;
         await Future.delayed(const Duration(milliseconds: 100));
         widget.onHeaderStartLoad();
@@ -335,7 +348,10 @@ class RefresherController {
     myRefreshState = state;
   }
 
-  void notifyHeaderLoadFinish({isOffsetShowingMoreData = false}) {
+  bool isNoNewDataOnLoadMore = false;
+
+  void notifyHeaderLoadFinish({isNoNewDataOnLoadMore = false}) {
+    this.isNoNewDataOnLoadMore = isNoNewDataOnLoadMore;
     if (myRefreshState != null) {
       myRefreshState!.notifyHeaderLoadingFinish();
     }

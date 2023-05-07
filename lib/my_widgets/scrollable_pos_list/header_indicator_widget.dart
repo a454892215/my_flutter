@@ -19,6 +19,8 @@ class HeaderWidgetBuilder {
       return _buildRefreshingWidget();
     } else if (curRefreshState == RefreshState.header_load_finished) {
       return _buildRefreshingFinishedWidget();
+    } else if (curRefreshState == RefreshState.header_all_data_load_finished) {
+      return _buildAllDataLoadFinishedWidget();
     }
     return const SizedBox();
   }
@@ -67,6 +69,18 @@ class HeaderWidgetBuilder {
         Icon(Icons.done, color: fontColor, size: 20),
         const SizedBox(width: 6),
         Text('加载完成.', style: TextStyle(fontSize: 15, color: fontColor)),
+      ],
+    );
+  }
+
+  Widget _buildAllDataLoadFinishedWidget() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.done, color: fontColor, size: 20),
+        const SizedBox(width: 6),
+        Text('所有数据已加载完毕.', style: TextStyle(fontSize: 15, color: fontColor)),
       ],
     );
   }

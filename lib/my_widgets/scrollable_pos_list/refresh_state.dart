@@ -7,7 +7,8 @@ enum RefreshState {
 
   footer_release_load,
   footer_loading,
-  footer_load_finished;
+  footer_load_finished,
+  footer_all_data_load_finished,
 }
 
 enum RefresherFunc {

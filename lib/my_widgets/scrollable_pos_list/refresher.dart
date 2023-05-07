@@ -256,17 +256,17 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     }
   }
 
-  Future<void> animToResetPos({isLoadFinished = false, during = 250}) async {
+  Future<void> animToResetPos({isOffsetShowingMoreData = false, isFromHeaderLoadFinish = false, during = 250}) async {
     sc.animateTo(headerHeight, duration: Duration(milliseconds: during), curve: Curves.easeInSine).then((value) async {
       /// 加载更多结束后 偏移显示出新数据
-      if (isLoadFinished && during < 10) {
+      if (isOffsetShowingMoreData && during < 10) {
         ScrollablePositionedListState? state = widget.itemScrollController.getState();
         if (state != null) {
           var offset = state.primary.scrollController.offset;
           state.primary.scrollController.jumpTo(refresherParam.headerTriggerRefreshDistance + offset);
         }
       }
-      if (!isHeaderProtectionState() || isLoadFinished) {
+      if (!isHeaderProtectionState() || isFromHeaderLoadFinish) {
         await Future.delayed(const Duration(milliseconds: 20));
         curRefreshState.value = RefreshState.def;
       }
@@ -281,12 +281,12 @@ class MyRefreshState extends State<RefresherIndexListWidget> {
     return null;
   }
 
-  Future<void> notifyHeaderLoadingFinish() async {
+  Future<void> notifyHeaderLoadingFinish({isOffsetShowingMoreData = false}) async {
     curRefreshState.value = RefreshState.header_load_finished;
     widget.refresherController.dataChangedNotifier.value++;
     await Future.delayed(const Duration(milliseconds: 150));
     int during = widget.isReverse ? 1 : 250;
-    animToResetPos(isLoadFinished: true, during: during);
+    animToResetPos(isOffsetShowingMoreData: isOffsetShowingMoreData, isFromHeaderLoadFinish: true, during: during);
   }
 
   Future<void> animToHeaderLoadingPos() async {

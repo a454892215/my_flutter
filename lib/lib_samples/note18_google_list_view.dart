@@ -97,11 +97,11 @@ class ChatWidget2State extends State {
         if (isReverse) {
           dataList.addAll(getTestData(size: 1));
           bool isNoNewDataOnLoadMore = dataList.length >= 8;
-          refController.notifyHeaderLoadFinish(isNoNewDataOnLoadMore: isNoNewDataOnLoadMore);
+          refController.notifyLoadFinish(isOffsetShowNewData: false);
         } else {
           dataList.clear();
           dataList.addAll(getTestData(size: 10));
-          refController.notifyHeaderLoadFinish();
+          refController.notifyLoadFinish();
         }
 
         Log.d("===========onHeaderStartLoad================");

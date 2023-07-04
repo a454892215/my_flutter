@@ -1,0 +1,3 @@
+fvm install 3.10.5
+fvm list
+fvm global 3.0.4  //将3.0.4版本设置为全局默认版本

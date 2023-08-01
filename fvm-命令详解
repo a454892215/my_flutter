@@ -4,3 +4,6 @@ fvm global 3.0.4  //将3.0.4版本设置为全局默认版本
 fvm use 3.10.5 使用某个版本的flutter
 fvm remove 2.2.0 移除某个版本的flutter
 fvm releases 列举远程可用的 flutter SDK 发行版。
+
+fvm 看官网安装教程
+https://fvm.app/docs/getting_started/installation/

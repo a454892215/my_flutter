@@ -16,3 +16,6 @@ adb connect 192.168.3.88:40825  // 2. 建立连接
 
 git config  --global user.name "lp" 你的目标用户名；
 git config  --global user.email "1573802540@qq.com" 你的目标邮箱名;
+
+adb pair 192.168.1.4:43251 657769
+adb connect 192.168.1.4:37253

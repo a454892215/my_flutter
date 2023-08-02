@@ -69,6 +69,15 @@ Widget getRow() {
   );
 }
 
+Widget getContainer() {
+  return Container(
+    width: 100.w,
+    height: 100.w,
+    decoration: const BoxDecoration(color: Color(0xffcccccc)),
+    child: SizedBox(),
+  );
+}
+
 Widget getText() {
   return Text(
     "",

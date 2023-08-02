@@ -1,50 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_lib_3/util/toast_util.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-String summary = '''
-''';
-
-void main() {
-  runApp(const MaterialApp(
-    title: "MaterialApp",
-    home: _Page(),
-  ));
+Widget getListView() {
+  return ListView.builder(
+      itemCount: 20,
+      physics: const BouncingScrollPhysics(),
+      controller: ScrollController(),
+      shrinkWrap: true,
+      itemBuilder: (BuildContext context, int index) {
+        return Container(
+          width: double.infinity,
+          height: 50,
+          color: index % 2 == 0 ? Colors.blue : Colors.amberAccent,
+        );
+      });
 }
 
-class _Page extends StatefulWidget {
-  const _Page();
-
-  @override
-  State<StatefulWidget> createState() {
-    return _State();
-  }
-}
-
-class _State extends State {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Sample"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Toast.show("FloatingActionButton");
-        },
-
-        child: const Text("按钮"),
-      ),
-      body: Container(
+Widget getGridView() {
+  return GridView.builder(
+    itemCount: 20,
+    physics: const BouncingScrollPhysics(),
+    controller: ScrollController(),
+    shrinkWrap: true,
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.2),
+    itemBuilder: (BuildContext context, int index) {
+      return Container(
         width: double.infinity,
-        height: double.infinity,
-        color: Colors.grey,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Container(width: 120, height: 120, color: Colors.blue),
-          ],
+        height: 50,
+        color: index % 2 == 0 ? Colors.blue : Colors.amberAccent,
+      );
+    },
+  );
+}
+
+Widget getColumn() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Text(
+        "",
+        style: TextStyle(
+          fontSize: 24.w,
+          color: const Color(0xffcccccc),
+          fontWeight: FontWeight.w400,
         ),
-      ),
-    );
-  }
+      )
+    ],
+  );
+}
+
+Widget getRow() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      Text(
+        "",
+        style: TextStyle(
+          fontSize: 24.w,
+          color: const Color(0xffcccccc),
+          fontWeight: FontWeight.w400,
+        ),
+      )
+    ],
+  );
+}
+
+Widget getText() {
+  return Text(
+    "",
+    style: TextStyle(
+      fontSize: 24.w,
+      color: const Color(0xffcccccc),
+      fontWeight: FontWeight.w400,
+    ),
+  );
+}
+
+Widget getImage() {
+  return Image.asset("", width: 60.w);
 }

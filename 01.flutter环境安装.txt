@@ -33,9 +33,9 @@ export PUB_HOSTED_URL=https://pub.dev
 export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
 # flutter 环境变量配置
-export PATH=${PATH}:/Users/sam/dev/flutter/bin
+export PATH=${PATH}:/Users/henry2023/Desktop/env/flutter-3-7-12/bin
 # Android sdk 环境变量配置
-export ANDROID_HOME="/Users/sam/Library/Android/sdk"
+export ANDROID_HOME="/Users/henry2023/Library/Android/sdk"
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
 Mac 电脑添加环境变量步骤：

@@ -92,3 +92,26 @@ Widget getText() {
 Widget getImage() {
   return Image.asset("", width: 60.w);
 }
+
+Widget getPositioned() {
+  return Positioned(
+    right: 0.w,
+    left: 0.w,
+    child: SizedBox(),
+  );
+}
+
+Widget getPageView() {
+  return PageView.builder(
+    itemCount: 3,
+    physics: const BouncingScrollPhysics(),
+    itemBuilder: (BuildContext context, int index) {
+      return Container(
+        width: 100.w,
+        height: 100.w,
+        decoration: const BoxDecoration(color: Color(0xffcccccc)),
+        child: const SizedBox(),
+      );
+    },
+  );
+}

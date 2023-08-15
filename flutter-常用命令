@@ -22,6 +22,9 @@
 9.  flutter build apk/ios 打包项目，生成可安装文件
     flutter build apk --release
 
+flutter run --dart-define=API_KEY=your_api_key
+const apiKey = String.fromEnvironment('API_KEY');
+
 
 10. flutter emulators 查看模拟器列表
 11. flutter packages get/upgrade 获取或升级依赖

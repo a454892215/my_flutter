@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget getListView() {
   return ListView.builder(
       itemCount: 20,
+      padding: EdgeInsets.only(left: 0.w, right: 0.w, top: 0.w, bottom: 0.w),
       physics: const BouncingScrollPhysics(),
       controller: ScrollController(),
       shrinkWrap: true,
@@ -19,6 +21,7 @@ Widget getListView() {
 Widget getGridView() {
   return GridView.builder(
     itemCount: 20,
+    padding: EdgeInsets.only(left: 0.w, right: 0.w, top: 0.w, bottom: 0.w),
     physics: const BouncingScrollPhysics(),
     controller: ScrollController(),
     shrinkWrap: true,
@@ -73,8 +76,22 @@ Widget getContainer() {
   return Container(
     width: 100.w,
     height: 100.w,
-    decoration: const BoxDecoration(color: Color(0xffcccccc)),
-    child: SizedBox(),
+    padding: EdgeInsets.only(left: 0.w, right: 0.w, top: 0.w, bottom: 0.w),
+    decoration: BoxDecoration(
+      color: const Color(0xffcccccc),
+      borderRadius: BorderRadius.circular(12.w),
+      border: Border.all(color: const Color(0xff000000), width: 1.w),
+    ),
+    child: const SizedBox(),
+  );
+}
+
+Widget getCupertinoButton() {
+  return CupertinoButton(
+    padding: EdgeInsets.only(left: 0.w, right: 0.w, top: 0.w, bottom: 0.w),
+    minSize: 0,
+    onPressed: () {  },
+    child: const SizedBox(),
   );
 }
 
@@ -97,7 +114,7 @@ Widget getPositioned() {
   return Positioned(
     right: 0.w,
     left: 0.w,
-    child: SizedBox(),
+    child: const SizedBox(),
   );
 }
 
@@ -105,6 +122,7 @@ Widget getPageView() {
   return PageView.builder(
     itemCount: 3,
     physics: const BouncingScrollPhysics(),
+    controller: PageController(),
     itemBuilder: (BuildContext context, int index) {
       return Container(
         width: 100.w,

@@ -42,3 +42,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/walle_cli/app-release.apk
+/walle_cli/app-release_new.apk

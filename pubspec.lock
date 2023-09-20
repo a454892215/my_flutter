@@ -573,6 +573,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2"
+  package_by_walle:
+    dependency: "direct main"
+    description:
+      name: package_by_walle
+      sha256: "81237f1b1e2a7c099bbec2c2bc376d825a509a9c95985486a156c03f1e44ce90"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   package_config:
     dependency: transitive
     description:

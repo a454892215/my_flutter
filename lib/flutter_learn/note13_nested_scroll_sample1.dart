@@ -412,7 +412,17 @@ class Sample5 extends StatelessWidget {
               SliverOverlapInjector(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               ),
-              buildSliverList(),
+              SliverFixedExtentList(
+                delegate: SliverChildBuilderDelegate(
+                      (ctx, index) {
+                    return ListTile(
+                      leading: Text("Item $index"),
+                    );
+                  },
+                  childCount: 50,
+                ),
+                itemExtent: 50, //height
+              ),
             ],
           );
         }),

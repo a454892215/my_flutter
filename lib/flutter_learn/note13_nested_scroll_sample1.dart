@@ -33,6 +33,7 @@ class _SamplePageState extends State {
           CupertinoButton(child: const Text("问题示例2"), onPressed: () => Get.to(() => const Sample2())),
           CupertinoButton(child: const Text("正常示例3"), onPressed: () => Get.to(() => const Sample3())),
           CupertinoButton(child: const Text("正常示例4"), onPressed: () => Get.to(() => const Sample4())),
+          CupertinoButton(child: const Text("正常示例5"), onPressed: () => Get.to(() => const Sample5())),
         ],
       ),
     );
@@ -265,6 +266,94 @@ class Sample4 extends StatelessWidget {
                   height: 30,
                   color: Colors.green,
                   child: const Text("主标题栏", style: TextStyle(fontSize: 12)),
+                ),
+                // 去掉主标题栏左右间距
+                titleSpacing: 0,
+
+                /// SliverAppBar  pinned 表示SliverAppBar/flexibleSpace的title 是否跟着一起滑动到不可见（true 钉住，不滑动到不可见）
+                leading: const SizedBox(),
+                pinned: true,
+                floating: true,
+                bottom: const PreferredSize(
+                  preferredSize: Size(0, 0),
+                  child: SizedBox(),
+                ),
+                expandedHeight: 180,
+                collapsedHeight: 30,
+                leadingWidth: 0,
+                //  collapsedHeight >= toolbarHeight
+                toolbarHeight: 30,
+
+                flexibleSpace: FlexibleSpaceBar(
+                  titlePadding: const EdgeInsets.all(0),
+                  expandedTitleScale: 1,
+                  collapseMode: CollapseMode.parallax,
+                  title: Container(
+                    width: double.infinity,
+                    height: 30,
+                    color: Colors.pink,
+                    child: const Text(
+                      "子标题栏",
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ),
+                  background: Container(
+                    color: Colors.yellow,
+                    child: Column(
+                      children: const [
+                        Text("data ============== 1"),
+                        Text("data ============== 2"),
+                        Text("data ============== 3"),
+                        Text("data ============== 4"),
+                        Text("data    ===========   5"),
+                        Text("data =================== 6"),
+                        Text("data =================== 7"),
+                        Text("data =================== 8"),
+                        Text("data =================== 9"),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ];
+        },
+        body: Builder(builder: (BuildContext context) {
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverOverlapInjector(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
+              buildSliverList(),
+            ],
+          );
+        }),
+      ),
+    );
+  }
+}
+
+class Sample5 extends StatelessWidget {
+  const Sample5({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Sample5")),
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                forceElevated: innerBoxIsScrolled,
+                // 收起的过渡颜色
+                backgroundColor: Colors.white,
+                title: Container(
+                  width: double.infinity,
+                  height: 30,
+                  color: Colors.transparent,
+                  child: const Text("", style: TextStyle(fontSize: 12)),
                 ),
                 // 去掉主标题栏左右间距
                 titleSpacing: 0,

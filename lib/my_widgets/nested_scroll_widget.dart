@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class NestedScrollWidget extends StatefulWidget {
-  const NestedScrollWidget({
+class MyNestedScrollWidget extends StatefulWidget {
+  const MyNestedScrollWidget({
     Key? key,
     this.topTitle,
     this.bottomTitle,
@@ -26,7 +26,7 @@ class NestedScrollWidget extends StatefulWidget {
   }
 }
 
-class MyState extends State<NestedScrollWidget> {
+class MyState extends State<MyNestedScrollWidget> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(

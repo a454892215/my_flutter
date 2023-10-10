@@ -23,7 +23,7 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   Scaffold buildScaffold() {
     return Scaffold(
       appBar: AppBar(title: const Text("标题栏")),
-      body: NestedScrollWidget(
+      body: MyNestedScrollWidget(
         topTitle: Container(
           width: double.infinity,
           height: 30,

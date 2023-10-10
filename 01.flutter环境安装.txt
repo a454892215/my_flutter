@@ -32,13 +32,18 @@ export FLUTTER_STORAGE_BASE_URL=https://mirrors.sjtug.sjtu.edu.cn/
 export PUB_HOSTED_URL=https://pub.dev
 export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
-# flutter 环境变量配置
-export PATH=${PATH}:/Users/henry2023/Desktop/env/flutter-3-7-12/bin
+# flutter 环境变量配置 [FlutterSDK安装目录]\bin\cache\dart-sdk\bin 和 [FlutterSDK安装目录]\.pub-cache\bin
+export FLUTTER_HOME="/Users/henry2023/Desktop/env/flutter-3-7-12"
+export HOME="/Users/henry2023/Desktop/env/flutter-3-7-12"
+export PATH=${PATH}:${FLUTTER_HOME}/bin
+export PATH=${PATH}:${FLUTTER_HOME}/bin/cache/dart-sdk/bin
+export PATH=${PATH}:${FLUTTER_HOME}/.pub-cache/bin
 export PATH=${PATH}:/Users/henry2023/.gem/ruby/2.6.0/gems/cocoapods-1.12.1/bin
 # Android sdk 环境变量配置
 export ANDROID_HOME="/Users/henry2023/Library/Android/sdk"
 export PATH=${PATH}:${ANDROID_HOME}/tools
 export PATH=${PATH}:${ANDROID_HOME}/platform-tools
+
 chatgpt 搜索Mac永久添加环境变量，自行添加以上环境变量
 
 gem environment 查看已经配置好的环境变量

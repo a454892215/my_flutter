@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../my_widgets/scrollable_pos_list/scrollable_positioned_list_my.dart';
 
 typedef ItemBuilder = Widget Function(BuildContext context, int realItemIndex, int dataItemIndex);
@@ -47,3 +48,4 @@ class LoopScrollWidget extends StatelessWidget {
     );
   }
 }
+

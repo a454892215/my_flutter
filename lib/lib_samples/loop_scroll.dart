@@ -32,7 +32,7 @@ class LoopScrollTestWidgetState extends State<LoopScrollTestWidget> {
                 width: 660.w,
                 child: LoopScrollWidget(
                   itemCount: 6,
-                  itemMargin: 12.w,
+                  itemMargin: 0.w,
                   itemScrollController: itemScrollController,
                   itemBuilder: (BuildContext context, int realItemIndex, int dataItemIndex) {
                     return CupertinoButton(

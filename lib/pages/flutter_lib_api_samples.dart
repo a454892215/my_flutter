@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:my_flutter_lib_3/env.dart';
 import '../flutter_learn/note14_nested_scroll_sample2_2.dart';
 import '../flutter_learn/note14_nested_scroll_sample2_3.dart';
+import '../lib_samples/index_stack.dart';
 import '../lib_samples/loop_scroll.dart';
 import '../lib_samples/note01_picker.dart';
 import '../lib_samples/note02_screenshot_event.dart';
@@ -78,7 +79,8 @@ class Page2State extends State {
                   MaterialButton(child: const Text("聊天室3-测试"), onPressed: () => Get.to(() =>  const ChatRoomTest3Widget())),
                   MaterialButton(child: const Text("ScrollablePositionedList-下拉刷新和加载更多"), onPressed: () => Get.to(() =>  const ScrollablePositionedListTest())),
                   MaterialButton(child: const Text("flutter_sticky_header"), onPressed: () => Get.to(() =>  const StickerHeaderWidget())),
-                  MaterialButton(child: const Text("左右循环组建"), onPressed: () => Get.to(() =>  const LoopScrollTestWidget())),
+                  MaterialButton(child: const Text("左右循环组件"), onPressed: () => Get.to(() =>  const LoopScrollTestWidget())),
+                  MaterialButton(child: const Text("IndexedStack组件"), onPressed: () => Get.to(() =>  const IndexedStackTestWidget())),
                 ],
               )),
         ));

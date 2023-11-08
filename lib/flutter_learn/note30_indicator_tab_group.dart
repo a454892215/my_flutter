@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../my_widgets/indicator_tab_group.dart';
+import '../my_widgets/horizontal_tab_group.dart';
 import '../my_widgets/vetival_tab_group.dart';
 
 void main() {
@@ -30,7 +30,7 @@ class _State extends State {
       ),
       body: Column(
         children: [
-          IndicatorTabGroup(
+          HorizontalTabGroup(
             size: 12,
             itemBuilder: _buildIndicatorTabItemBuilder,
             width: 320,

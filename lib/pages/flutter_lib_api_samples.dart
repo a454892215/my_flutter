@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:my_flutter_lib_3/env.dart';
 import '../flutter_learn/note14_nested_scroll_sample2_2.dart';
 import '../flutter_learn/note14_nested_scroll_sample2_3.dart';
+import '../lib_samples/drawer_test.dart';
+import '../lib_samples/index_stack.dart';
+import '../lib_samples/loop_scroll.dart';
 import '../lib_samples/note01_picker.dart';
 import '../lib_samples/note02_screenshot_event.dart';
 import '../lib_samples/note03_web_parser.dart';
@@ -21,6 +24,7 @@ import '../lib_samples/note15_chat_room.dart';
 import '../lib_samples/note16_chat_room.dart';
 import '../lib_samples/note17_chat_room.dart';
 import '../lib_samples/note18_google_list_view.dart';
+import '../lib_samples/sticky_header_test.dart';
 import '../util/Log.dart';
 
 ///Navigator.of(context).pushNamed("/page2"); 这种方式跳转页面是整个页面的跳转
@@ -75,6 +79,10 @@ class Page2State extends State {
                   MaterialButton(child: const Text("聊天室2-测试"), onPressed: () => Get.to(() =>  const ChatRoomTest2Widget())),
                   MaterialButton(child: const Text("聊天室3-测试"), onPressed: () => Get.to(() =>  const ChatRoomTest3Widget())),
                   MaterialButton(child: const Text("ScrollablePositionedList-下拉刷新和加载更多"), onPressed: () => Get.to(() =>  const ScrollablePositionedListTest())),
+                  MaterialButton(child: const Text("flutter_sticky_header"), onPressed: () => Get.to(() =>  const StickerHeaderWidget())),
+                  MaterialButton(child: const Text("左右循环组件"), onPressed: () => Get.to(() =>  const LoopScrollTestWidget())),
+                  MaterialButton(child: const Text("IndexedStack组件"), onPressed: () => Get.to(() =>  const IndexedStackTestWidget())),
+                  MaterialButton(child: const Text("抽屉折叠效果组件"), onPressed: () => Get.to(() =>  const DrawerTestWidget())),
                 ],
               )),
         ));

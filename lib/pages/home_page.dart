@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import '../env.dart';
 import '../my_widgets/comm_widgets.dart';
 import '../util/Log.dart';
 
@@ -16,9 +19,15 @@ class HomePage extends StatefulWidget {
 class Page2State extends State {
   bool isDebug = false;
 
+  final appInfo = ''.obs;
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  Future<void> init() async {
+    appInfo.value = await EnvironmentConfig.getAppInfo();
   }
 
   @override
@@ -34,9 +43,20 @@ class Page2State extends State {
             alignment: Alignment.topCenter,
             child: ListView(
               shrinkWrap: true,
-              children: const <RouterButton>[
-                RouterButton(params: ["/SystemApiSampleListPage", "api用例1"]),
-                RouterButton(params: ["/LibApiSamplesPage", "api用例2"]),
+              children:  <Widget>[
+                const RouterButton(params: ["/SystemApiSampleListPage", "api用例1"]),
+                const RouterButton(params: ["/LibApiSamplesPage", "api用例2"]),
+                Obx(() {
+                    return Text(
+                      appInfo.value,
+                        style: const TextStyle(
+                          fontSize:15,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      );
+                  }
+                ),
               ],
             )));
   }

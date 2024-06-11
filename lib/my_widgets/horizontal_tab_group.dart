@@ -4,8 +4,8 @@ import 'comm_anim2.dart';
 typedef ItemBuilder = Widget Function(BuildContext context, int index, int selectedPos);
 typedef Callback<T> = void Function(T t);
 
-class IndicatorTabGroup extends StatefulWidget {
-  const IndicatorTabGroup({
+class HorizontalTabGroup extends StatefulWidget {
+  const HorizontalTabGroup({
     super.key,
     required this.size,
     required this.itemBuilder,
@@ -38,7 +38,7 @@ class IndicatorTabGroup extends StatefulWidget {
   }
 }
 
-class _MyState extends State<IndicatorTabGroup> with TickerProviderStateMixin {
+class _MyState extends State<HorizontalTabGroup> with TickerProviderStateMixin {
   final GlobalKey rootKey = GlobalKey();
   final ScrollController scrollController = ScrollController();
   late CommonTweenAnim<double> anim = CommonTweenAnim<double>()

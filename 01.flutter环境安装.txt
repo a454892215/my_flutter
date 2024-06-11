@@ -1,13 +1,9 @@
 windows环境安装：
 1. 安装Chocolatey： 先以管理员权限打开powerShell, 根据https://chocolatey.org/install#individual 网站提示，以命令行方式安装Chocolatey
 
-2. 安装dart： 
-         01. 以管理员权限打开cmd, 输入: choco install dart-sdk， 进行安装dart sdk.  
-	02. Android studio中配置dart sdk路径
-
-3. 安装和配置Android Studio：   
+2. 安装和配置Android Studio及其插件插件：
 	01. android studio中 安装flutter插件
-	02.  android studio中 安装flutter dart插件
+	02. android studio中 安装flutter dart插件
 
 
 4. 安装flutter（https://docs.flutter.dev/get-started/install/windows）：

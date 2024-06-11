@@ -79,5 +79,18 @@
 
 18. 旧项目flutter版本的选择需要根据pubspec.yaml文件 中的environment: sdk: '>=2.17.2 <3.0.0'    dart版本号，找到对应的flutter版本号
 
+ Android Studio Unable to find bundled Java version 解决方法：
+ 如果是macOS系统，在jbr同目录下创建一个jre目录，然后将jbr目录内的全部文件复制一份到jre目录
+ 下即可。
+ 如果是Windows系统，jre目录是存在的，不过里面几乎没东西，可以直接将jbr目录内的全部文件复制
+ 一份到jre目录下即可。
+
+
+在cmd中输入命令flutter doctor --android-licenses时报如下错误：
+com.android.sdklib.tool.sdkmanager.SdkManagerCli ʱ LinkageError
+        java.lang.UnsupportedClassVersionError: com/android/sdklib/tool/sdkmanager/SdkManagerCli has been compiled by a more recent version of the Java Runtime (class file version 61.0), this version of the Java Runtime only recognizes class file versions up to 55.0
+勾选下载与jdk版本对应的Android SDK Command-line Tools，对应版本自行搜索
+
+查看android gradle构建进度：xxx(项目路径)\android\gradlew.bat
 
 

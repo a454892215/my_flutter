@@ -16,6 +16,8 @@ windows环境安装：
 06.重启电脑
 
 flutter config --android-sdk  D:\android-sdk    # 给flutter设置Android sdk位置
+D:\flutter\flutter_windows_3.7.8-stable\flutter\bin\flutter.bat config --android-sdk  D:\android-sdk    # 给flutter设置Android sdk位置
+D:\flutter\flutter_windows_3.7.8-stable\flutter\bin\flutter.bat doctor --android-licenses
 flutter doctor  查看所需的软件工具是否全部安装完成
 当 flutter doctor 命令 最终提示： • No issues found!  表示flutter相关软件工具全部安装完毕
 

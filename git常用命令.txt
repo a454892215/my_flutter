@@ -1,0 +1,72 @@
+git config --list 
+git log -10 --oneline
+git cherry-pick commitId 把指定提交 合并到当前分支
+git config --global gui.encoding utf-8 gitk乱码
+
+git config  --global user.name 你的目标用户名；
+git config  --global user.email 你的目标邮箱名;
+
+git remote set-url origin http://...git 重新设置名为origin对应的远程仓库url
+git remote add 增加远程仓库URL
+git remote -v 查看远程配置
+git remote rm paul 移除远程地址
+git remote rename old_name new_name 重命名远程url
+git remote show origin 查看指定远程url详情
+
+
+git branch --set-upstream-to origin/dev 给当前本地分支指定服务器跟踪分支
+git branch -vv 查看本地分支跟踪信息
+Git checkout 分支名 切换到指定分支
+git checkout -b 本地分支名x origin/远程分支名x  
+git branch -d <branch_name> 删除非当前分支
+git branch -m oldBranchName newBranchName  分支重命名
+Git branch 查看分支
+
+
+git rm --cached readme1.txt 取消已经跟踪的文件
+
+git add filename 添加z指定文件到git
+git add .  添加到git 管理/标记为待提交
+git commit -m "提交信息"
+git status 查看git 状态
+git fetch 
+git pull 更新代码
+git push 上传代码
+gitk 使用gitk界面查看git信息
+
+查看是否生成密匙 和查看密匙路径：
+cd ~/.ssh
+pwd
+
+win10 删除git账号：进入控制面板 =>用户账户=>管理Windows凭据
+
+//git log格式化配置
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit  
+git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"  
+git config --global gui.encoding utf-8  gitk 乱码解决
+
+git log -1 --pretty=format:"%h-%ci-%s" //指定log格式
+
+git checkout branch1 -- filename 把指定分支的文件拷贝到当前分支
+git commit --amend  commit message修改
+
+git tag 查看本地分支标签
+git ls-remote --tags 查看远程所有标签
+git tag -a <版本号> -m "<备注信息>" 给当前分支打标签
+git tag -d v1.0.0 删除指定tag
+git push -d origin v1.0.0 删除远程的某个标签
+git push origin --tags 将本地标签一次性推送到远程
+git push origin v1.0.0 将本地某个特定标签推送到远程
+git show v1.0.0 查看某一个标签的提交信息
+git checkout -b branch_name tag_name 为tag版本代码创建指定分支
+
+git reset HEAD 如果后面什么都不跟的话 就是上一次add 里面的全部撤销了 
+git reset HEAD XXX/XXX/XXX.java 就是对某个文件进行撤销了
+git reset --hard commit_id     退到/进到 指定commit的sha码
+
+git clean -fd 删除没有跟踪的文件和目录
+
+git分支太多了，清理步骤：
+git remote update    同步远程分支
+git remote prune origin --dry-run  查看server上已删除,本地残留的远端分支
+git remote prune origin    删除远程已删分支

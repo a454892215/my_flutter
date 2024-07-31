@@ -62,6 +62,7 @@ flutter doctor                  //检测flutter运行环境
 flutter run                     //运行
 flutter build ios --release     //iOS打包 -lstdc++
 flutter build apk  --release //安卓打包
+flutter run apk  --release
 flutter clean //清理工程
 flutter pub get //更新应用的库
 flutter build appbundle   //打google play上架的aab包

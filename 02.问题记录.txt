@@ -93,4 +93,6 @@ com.android.sdklib.tool.sdkmanager.SdkManagerCli ʱ LinkageError
 
 查看android gradle构建进度：xxx(项目路径)\android\gradlew.bat
 
+19. 如果json属性封装失败，但是使用在线json编辑器又又格式化成功，可能是json编码问题，比如是带有BOM utf-8格式
+
 

@@ -16,7 +16,6 @@ class ChatRoomTest12Widget extends StatefulWidget {
   ChatRoomTestWidgetState createState() => ChatRoomTestWidgetState();
 }
 
-
 // ListObserverController observerController = ListObserverController(controller: scrollController);
 
 class ChatRoomTestWidgetState extends State<ChatRoomTest12Widget> {
@@ -33,8 +32,9 @@ class ChatRoomTestWidgetState extends State<ChatRoomTest12Widget> {
               onPressed: () {
                 //scrollController.animateTo(30000, duration: const Duration(milliseconds: 200), curve: Curves.ease);
                 tarScrollPos = 20000;
-              //  observerController.jumpTo(index: tarScrollPos);
-                 controller.scrollToIndex(tarScrollPos, preferPosition: AutoScrollPosition.begin);
+                //  observerController.jumpTo(index: tarScrollPos);
+                controller.scrollToIndex(tarScrollPos,
+                    preferPosition: AutoScrollPosition.begin);
               }),
           Expanded(child: ListViewChatWidget()),
           Container(
@@ -72,19 +72,18 @@ var tarScrollPos = 0;
 class ListViewChatWidget extends StatefulWidget {
   const ListViewChatWidget({Key? key}) : super(key: key);
 
-
   @override
   State<StatefulWidget> createState() {
     return _MyListViewWidgetState();
   }
 }
+
 late AutoScrollController controller;
 
 class _MyListViewWidgetState extends State<ListViewChatWidget> {
   final scrollDirection = Axis.vertical;
 
   final int initialIndex = 50;
-
 
   @override
   void initState() {
@@ -97,7 +96,8 @@ class _MyListViewWidgetState extends State<ListViewChatWidget> {
   }
 
   Future _scrollToIndex(int index) async {
-    await controller.scrollToIndex(index, preferPosition: AutoScrollPosition.begin);
+    await controller.scrollToIndex(index,
+        preferPosition: AutoScrollPosition.begin);
   }
 
   @override
@@ -107,7 +107,12 @@ class _MyListViewWidgetState extends State<ListViewChatWidget> {
       cacheExtent: 3.sh,
       itemBuilder: (BuildContext context, int index) {
         if (tarScrollPos > -1 && (tarScrollPos - index).abs() > 5) {
-          return const SizedBox();
+          return AutoScrollTag(
+            key: ValueKey(index),
+            controller: controller,
+            index: index,
+            child: const SizedBox(),
+          );
         }
         tarScrollPos = -1;
         ChatMessage item = dataList[index];
@@ -122,8 +127,7 @@ class _MyListViewWidgetState extends State<ListViewChatWidget> {
             child: Column(
               children: [
                 Text("$index. ${item.text}",
-                    style:
-                    const TextStyle(fontSize: 14, color: Colors.black)),
+                    style: const TextStyle(fontSize: 14, color: Colors.black)),
                 for (int i = 0; i < 1; i++)
                   Container(
                     padding: const EdgeInsets.only(bottom: 10),

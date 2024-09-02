@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:scrollview_observer/scrollview_observer.dart';
 import '../my_widgets/chat/entities.dart';
 import '../util/Log.dart';
@@ -16,74 +17,57 @@ class ChatRoomTest1Widget extends StatefulWidget {
 }
 
 ScrollController scrollController = ScrollController();
-ListObserverController observerController = ListObserverController(controller: scrollController);
+ListObserverController observerController =
+    ListObserverController(controller: scrollController);
 
 class ChatRoomTestWidgetState extends State<ChatRoomTest1Widget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("自定义ChatRoomView"),
+        title: const Text("自定义 ChatRoomView 1"),
       ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification notification) {
-          switch (notification.runtimeType) {
-            case ScrollStartNotification:
-              Log.d("开始滚动");
-              break;
-            case ScrollUpdateNotification:
-              //  Log.d("正在滚动");
-              break;
-            case ScrollEndNotification:
-              Log.d("滚动停止");
-              break;
-            case OverscrollNotification:
-
-              /// 如果有 BouncingScrollPhysics 会无边界
-              Log.d("滚动到边界");
-              break;
-          }
-          return true;
-        },
-        child: Column(
-          children: [
-            CupertinoButton(
-                child: const Text("滚动到指定位置"),
-                onPressed: () {
-                  //scrollController.animateTo(30000, duration: const Duration(milliseconds: 200), curve: Curves.ease);
-                  observerController.jumpTo(index: 20000);
-                }),
-            const Expanded(child: ListViewChatWidget()),
-            Container(
-              width: double.infinity,
-              height: 50,
-              color: Colors.yellow,
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                children: [
-                  Expanded(child: TextField(
-                    onChanged: (String? text) {
-                      var chatMessage = ChatMessage();
-                      chatMessage.text = "$text";
-                      dataList.insert(0, chatMessage);
+      body: Column(
+        children: [
+          CupertinoButton(
+              child: const Text("滚动到指定位置"),
+              onPressed: () {
+                //scrollController.animateTo(30000, duration: const Duration(milliseconds: 200), curve: Curves.ease);
+                tarScrollPos = 20000;
+                observerController.jumpTo(index: tarScrollPos);
+              }),
+          const Expanded(child: ListViewChatWidget()),
+          Container(
+            width: double.infinity,
+            height: 50,
+            color: Colors.yellow,
+            padding: const EdgeInsets.only(left: 10, right: 10),
+            child: Row(
+              children: [
+                Expanded(child: TextField(
+                  onChanged: (String? text) {
+                    var chatMessage = ChatMessage();
+                    chatMessage.text = "$text";
+                    dataList.insert(0, chatMessage);
+                  },
+                )),
+                CupertinoButton(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    color: Colors.grey,
+                    onPressed: () {
+                      Log.d("===================");
                     },
-                  )),
-                  CupertinoButton(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      color: Colors.grey,
-                      onPressed: () {
-                        Log.d("===================");
-                      },
-                      child: const Text("发送")),
-                ],
-              ),
+                    child: const Text("发送")),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
+
+var tarScrollPos = 0;
 
 class ListViewChatWidget extends StatelessWidget {
   const ListViewChatWidget({Key? key}) : super(key: key);
@@ -94,8 +78,12 @@ class ListViewChatWidget extends StatelessWidget {
         controller: observerController,
         child: ListView.builder(
           controller: scrollController,
-         // cacheExtent: 800 * 100,
+          cacheExtent: 3.sh,
           itemBuilder: (BuildContext context, int index) {
+            if (tarScrollPos > -1 && (tarScrollPos - index).abs() > 5) {
+              return const SizedBox();
+            }
+            tarScrollPos = -1;
             ChatMessage item = dataList[index];
             return Container(
               color: const Color(0xffcccccc),
@@ -103,7 +91,9 @@ class ListViewChatWidget extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 10, left: 10, right: 10),
               child: Column(
                 children: [
-                  Text("$index. ${item.text}", style: const TextStyle(fontSize: 14, color: Colors.black)),
+                  Text("$index. ${item.text}",
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.black)),
                   for (int i = 0; i < 1; i++)
                     Container(
                       padding: const EdgeInsets.only(bottom: 10),
@@ -126,7 +116,10 @@ List<ChatMessage> getTestData({int size = 300}) {
     chatMessage.userIcon = "";
     var next1 = Random().nextInt(11);
     var next2 = Random().nextInt(11);
-    chatMessage.imgList = ["images/chat/chat$next1.jpg", "images/chat/chat$next2.jpg"];
+    chatMessage.imgList = [
+      "images/chat/chat$next1.jpg",
+      "images/chat/chat$next2.jpg"
+    ];
     list.add(chatMessage);
   }
   return list;

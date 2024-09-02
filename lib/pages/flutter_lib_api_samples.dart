@@ -21,6 +21,7 @@ import '../lib_samples/note12_text_measure.dart';
 import '../lib_samples/note13_obx_sc.dart';
 import '../lib_samples/note14_scroll_state_listener.dart';
 import '../lib_samples/note15_chat_room.dart';
+import '../lib_samples/note15_chat_room2.dart';
 import '../lib_samples/note16_chat_room.dart';
 import '../lib_samples/note17_chat_room.dart';
 import '../lib_samples/note18_google_list_view.dart';
@@ -75,7 +76,8 @@ class Page2State extends State {
                   MaterialButton(child: const Text("文字大小测量-验证"), onPressed: () => Get.to(() =>  const TextMeasureWidget())),
                   MaterialButton(child: const Text("Obx嵌套-验证"), onPressed: () => Get.to(() =>  const ObxNestTestWidget())),
                   MaterialButton(child: const Text("滚动状态监听-验证"), onPressed: () => Get.to(() =>  const ScrollStateListenerTestWidget())),
-                  MaterialButton(child: const Text("聊天室1-测试"), onPressed: () => Get.to(() =>  const ChatRoomTest1Widget())),
+                  MaterialButton(child: const Text("聊天室1.1-测试"), onPressed: () => Get.to(() =>  const ChatRoomTest1Widget())),
+                  MaterialButton(child: const Text("聊天室1.2-测试"), onPressed: () => Get.to(() =>  const ChatRoomTest12Widget())),
                   MaterialButton(child: const Text("聊天室2-测试"), onPressed: () => Get.to(() =>  const ChatRoomTest2Widget())),
                   MaterialButton(child: const Text("聊天室3-测试"), onPressed: () => Get.to(() =>  const ChatRoomTest3Widget())),
                   MaterialButton(child: const Text("ScrollablePositionedList-下拉刷新和加载更多"), onPressed: () => Get.to(() =>  const ScrollablePositionedListTest())),

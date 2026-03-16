@@ -107,14 +107,14 @@ class _SamplePageState extends State with SingleTickerProviderStateMixin {
   /// 2. 按需加载，当需要显示就返回指定index的Item Widget： ListView.builder
   ListView buildListView2() {
     return ListView.builder(
-        itemCount: 100,
+        itemCount: 600,
         physics: const BouncingScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           // Log.d("itemBuilder index: $index");
           return Container(
             height: 30,
             margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
-            color: Colors.green,
+            color: Colors.amberAccent,
             alignment: Alignment.center,
             child: Text("文本$index"),
           );

@@ -72,7 +72,6 @@ dependencies:
   stack_trace: ^1.10.0
   scrollview_observer: ^1.26.3
   scrollable_positioned_list: ^0.3.5
-  package_by_walle: ^1.0.2
   flutter_sticky_header: ^0.8.0
   package_info_plus: ^9.0.0
 

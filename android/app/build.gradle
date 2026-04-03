@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace "com.flt.my_flutter_lib_3" // 建议增加 namespace，适配 AGP 7.0+
+    namespace "com.quick.my_flutter_02" // 建议增加 namespace，适配 AGP 7.0+
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
@@ -19,10 +19,17 @@ android {
         jvmTarget = '17'
     }
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+//    sourceSets {
+//        main.java.srcDirs += 'src/main/kotlin'
+//    }
 
+    sourceSets {
+        // 修改点：显式声明 java 目录。
+        // 注意：不要在 src/main/java 目录下手动放置 GeneratedPluginRegistrant.java
+        main.java.srcDirs = ['src/main/java']
+        // 建议保留 kotlin 路径声明，因为部分 Flutter 插件可能生成 Kotlin 代码
+        main.kotlin.srcDirs = ['src/main/kotlin']
+    }
     defaultConfig {
         applicationId "com.flt.my_flutter_lib_3"
         minSdkVersion flutter.minSdkVersion
@@ -45,4 +52,7 @@ flutter {
 dependencies {
 // 修改后（推荐方式）：直接使用标准库，不带版本号，Gradle 会自动对齐 plugins 块中的版本
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    // 显式引入 androidx 注解库，解决 GeneratedPluginRegistrant 的报错
+    implementation "androidx.annotation:annotation:1.7.0"
 }

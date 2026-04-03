@@ -1,4 +1,4 @@
-import 'package:package_by_walle/package_by_walle.dart';
+
 import 'package:package_info_plus/package_info_plus.dart';
 
 class EnvironmentConfig {
@@ -20,11 +20,6 @@ class EnvironmentConfig {
     String version = packageInfo.version;
     String buildNum = packageInfo.buildNumber;
 
-    // 获取渠道号
-    String channel = await PackageByWalle.getPackingChannel ?? "test";
-
-// 获取额外打包参数（configFile文件中配置）
-    Map? info = await PackageByWalle.getPackingInfo;
-    return " appName:$appName  packageName:$packageName  version:$version  buildNum:$buildNum  channel:$channel info:$info";
+    return " appName:$appName  packageName:$packageName  version:$version  buildNum:$buildNum ";
   }
 }

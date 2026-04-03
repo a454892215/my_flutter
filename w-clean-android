@@ -1,0 +1,13 @@
+#!/bin/bash
+# 指向你本地存放该版本的绝对路径, 改变类路径后，或者改变本地资源后，如果报错 可以运行此脚本尝试解决
+# chmod +x .cleanw
+./flutterw clean
+rm -rf android/.gradle
+rm -rf android/app/build
+
+# 3. 进入 Android 目录执行 Gradle 层的清理
+cd android
+./gradlew clean
+cd ..
+./flutterw pub get
+echo "Clean and Sync finished successfully."

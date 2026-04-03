@@ -525,6 +525,9 @@ class MyScrollableState extends State<MyScrollable> with TickerProviderStateMixi
 
   @override
   String? get restorationId => widget.restorationId;
+
+  @override
+  double get devicePixelRatio => View.of(context).devicePixelRatio;
 }
 
 class _RestorableScrollOffset extends RestorableValue<double?> {

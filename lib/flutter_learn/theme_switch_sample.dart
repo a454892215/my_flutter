@@ -28,7 +28,6 @@ class _MyState extends State {
       } else if (type == 3) {
         _curTheme = ThemeData(
             primarySwatch: Colors.purple,
-            backgroundColor: Colors.red,
             //  body 背景颜色
             canvasColor: Colors.blue,
             brightness: Brightness.light);

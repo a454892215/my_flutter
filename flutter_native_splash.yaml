@@ -1,0 +1,19 @@
+flutter_native_splash:
+  color: "#ffffff" # 背景颜色
+  # ./flutterw pub run flutter_native_splash:create --path=flutter_native_splash.yaml
+  background_image: assets/images/splash.png # 启动图路径
+
+  # 针对 Android 12+ 的适配（API 31+ 强制要求使用 SplashScreen API）
+  # 系统会自动把你这个正方形图片裁切成一个圆形。如果你的 Logo 边缘靠近图片边界，Logo 的四个角会被切掉
+  # 为了省事 可以配置相同的图片源
+  android_12:
+    image: assets/images/splash.png
+    icon_background_color: "#ffffff"
+
+  # 是否铺满全屏
+  fullscreen: true
+
+  # 适配各种平台
+  android: true
+  ios: true
+  web: false

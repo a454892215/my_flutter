@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_picker_plus/picker.dart';
+import 'package:flutter_picker_plus/picker_localizations.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'package:flutter_picker/flutter_picker.dart';
 import '../util/Log.dart';
 import 'picker_test.dart';
 import 'PickerData.dart';

@@ -1,11 +1,31 @@
+// 这里的代码已经按照 Flutter 最新标准重构，支持声明式插件加载
+pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def flutterSdkPath = properties.getProperty("flutter.sdk")
+        assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
+        return flutterSdkPath
+    }()
+
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/nexus/content/groups/public'}
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    // 修改点：通过 id 声明插件，取代旧的 apply from 方式
+    id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
+     // 修改点：升级 AGP 到 8.1.0
+    id "com.android.application" version "8.6.0" apply false
+    // 修改点：Kotlin 建议使用 1.9.20 或更高
+    id "org.jetbrains.kotlin.android" version "2.1.0" apply false
+}
+
 include ':app'
-
-def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
-def properties = new Properties()
-
-assert localPropertiesFile.exists()
-localPropertiesFile.withReader("UTF-8") { reader -> properties.load(reader) }
-
-def flutterSdkPath = properties.getProperty("flutter.sdk")
-assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
-apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"

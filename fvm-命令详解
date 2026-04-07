@@ -7,3 +7,14 @@ fvm releases 列举远程可用的 flutter SDK 发行版。
 
 fvm 看官网安装教程
 https://fvm.app/docs/getting_started/installation/
+
+
+
+2. 在项目中应用
+进入你的 Flutter 项目根目录，执行：
+
+Bash
+fvm use 3.41.4
+执行后，FVM 会在项目根目录下创建一个 .fvm/ 文件夹，其中包含一个指向对应 SDK 版本的符号链接。
+你可以通过以下指令确认当前项目的 SDK 路径和架构：
+fvm flutter --version
